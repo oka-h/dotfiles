@@ -1,9 +1,23 @@
 # ------------------------------------------------------------------------------
-# ~/.vim/rc/dein.toml
+# ~/vimsettings/dein.toml
 # ------------------------------------------------------------------------------
 
 [[plugins]]
 repo = 'Shougo/dein.vim'
+
+[[plugins]]
+repo = 'vim-jp/vimdoc-ja'
+on_ft = 'help'
+hook_post_update = '''
+    execute 'helptags '
+        \ . g:dein_dir . expand('/repos/github.com/vim-jp/vimdoc-ja/doc')
+'''
+hook_add = '''
+    if &runtimepath !~# expand('/vimdoc-ja')
+        execute 'set runtimepath+='
+            \ . g:dein_dir . expand('/repos/github.com/vim-jp/vimdoc-ja')
+    endif
+'''
 
 # [[plugins]]
 # repo = 'Shougo/vimproc.vim'
@@ -23,28 +37,35 @@ repo = 'Shougo/dein.vim'
 
 [[plugins]]
 repo = 'Shougo/unite.vim'
+depends = 'neomru.vim'
 hook_add = '''
-    nnoremap [unite] <Nop>
-    nmap <Space>u [unite]
-    nnoremap <silent> [unite]f :Unite file<CR>
-    " nnoremap <expr> <silent> [unite]f ':Unite file' . <SID>open_unite('%') . '<CR>'
+    if !(has('python3') && (has('nvim') || v:version >= 800))
+        nnoremap [unite] <Nop>
+        nmap <Space>u [unite]
+        nnoremap <silent> [unite]f :<C-U>Unite file<CR>
+        nnoremap <silent> [unite]m :<C-U>Unite file_mru<CR>
+    endif
+'''
+
+[[plugins]]
+repo = 'Shougo/denite.nvim'
+if = ''' has('python3') && (has('nvim') || v:version >= 800)'''
+depends = 'neomru.vim'
+on_cmd = ['Denite', 'DeniteBufferDir', 'DeniteCursorWord', 'DeniteProjectDir']
+hook_add = '''
+    nnoremap [denite] <Nop>
+    nmap <Space>u [denite]
+    nnoremap <silent> [denite]f :<C-U>Denite file_rec<CR>
+    nnoremap <silent> [denite]m :<C-U>Denite -mode=normal file_mru<CR>
+'''
+hook_post_source = '''
+    call denite#custom#source('file_rec', 'matchers', ['matcher_regexp'])
+    call denite#custom#source('file_mru', 'matchers', ['matcher_regexp'])
 '''
 
 [[plugins]]
 repo = 'Shougo/neomru.vim'
-depends = ['unite.vim']
-hook_add = '''
-    nnoremap [unite] <Nop>
-    nmap <Space>u [unite]
-    nnoremap <expr> <silent> [unite]m ':Unite file_mru' . <SID>open_unite('%') . '<CR>'
-    function! s:open_unite(filename)
-        if expand(a:filename) == ''
-            return ''
-        else
-            return ' -default-action=tabopen'
-        endif
-    endfunction
-'''
+on_source = ['unite.vim', 'denite.nvim']
 
 [[plugins]]
 repo = 'ctrlpvim/ctrlp.vim'
@@ -56,7 +77,22 @@ hook_add = '''
 '''
 
 [[plugins]]
+repo = 'thinca/vim-singleton'
+if = ''' has('gui_running')'''
+hook_source = '''
+    call singleton#enable()
+'''
+
+[[plugins]]
+repo = 'Yggdroot/indentLine'
+hook_source = '''
+    let g:indentLine_fileTypeExclude = ['help']
+'''
+
+[[plugins]]
 repo = 'haya14busa/incsearch.vim'
+on_map = ['<plug>(incsearch-']
+on_cmd = ['IncSearchMap', 'IncSearchNoreMap']
 hook_add = '''
     let g:incsearch#auto_nohlsearch = 1
     map / <plug>(incsearch-forward)
@@ -69,6 +105,7 @@ hook_add = '''
 
 [[plugins]]
 repo = 'easymotion/vim-easymotion'
+on_map = ['<plug>(easymotion-']
 hook_add = '''
     let g:EasyMotion_do_mapping       = 0
     let g:EasyMotion_enter_jump_first = 1
@@ -76,10 +113,10 @@ hook_add = '''
     let g:EasyMotion_use_migemo       = 1
 
     nmap <Space>f <plug>(easymotion-s2)
-    map         f <plug>(easymotion-fl)
-    map         t <plug>(easymotion-tl)
-    map         F <plug>(easymotion-Fl)
-    map         T <plug>(easymotion-Tl)
+    " map         f <plug>(easymotion-fl)
+    " map         t <plug>(easymotion-tl)
+    " map         F <plug>(easymotion-Fl)
+    " map         T <plug>(easymotion-Tl)
 '''
 
 # [[plugins]]
@@ -114,21 +151,22 @@ hook_add = '''
 # repo    = 'osyo-manga/vim-watchdogs'
 # depends = ['vimproc.vim', 'vim-quickrun', 'shabadou', 'vim-javaclasspath']
 # hook_add = '''
-#     " " 書き込み後にシンタックスチェックを行う
+#     " Check syntax after save the file.
 #     " let g:watchdogs_check_BufWeitePost_enable = 1
 # 
-#     " 一定時間キー入力がなかった場合にシンタックスチェックを行う
+#     " Check syntax when no key has pressed long time.
 #     let g:watchdogs_check_CursorHold_enable = 1
 # '''
 
 [[plugins]]
 repo = 'thinca/vim-ref'
 if = ''' executable('w3m') || executable('lynx')'''
+on_cmd = 'Ref'
 hook_add = '''
     let g:ref_source_webdict_cmd =
     \   executable('w3m')  ? 'w3m -dump %s' :
     \   executable('lynx') ? 'lynx -dump -nonumbers %s' :
-    \   ''
+    \                        ''
 
     let g:ref_source_webdict_sites = {
     \   'alc' : {
@@ -139,6 +177,8 @@ hook_add = '''
     \   }
     \}
 
+    let g:ref_source_webdict_sites.default = 'alc'
+
     function! g:ref_source_webdict_sites.alc.filter(output)
         return s:remove_lines(a:output, 24)
     endfunction
@@ -148,47 +188,28 @@ hook_add = '''
     function! s:remove_lines(output, head_lines)
         let l:removeCR = a:output
         let l:removeCR = substitute(l:removeCR, '\n\{3,}',   '\n\n',     'g')
-        " let l:removeCR = substitute(l:removeCR, '\r\{3,}',   '\r\r',     'g')
-        " let l:removeCR = substitute(l:removeCR, '\r\n\{3,}', '\r\n\r\n', 'g')
         return join(split(l:removeCR, "\n")[a:head_lines:], "\n")
     endfunction
-    let g:ref_source_webdict_sites.default = 'alc'
 
     nnoremap [ref] <Nop>
     nmap <Space>r [ref]
     nnoremap [ref]a :<C-U>Ref webdict alc<Space>
-    nnoremap [ref]w :<C-u>Ref webdict wiki<Space>
+    nnoremap [ref]w :<C-U>Ref webdict wiki<Space>
 '''
-
-# [[plugins]]
-# repo = 'osyo-manga/ref-lynx'
-# if = ''' executable('lynx')'''
-# hook_add = '''
-#     let g:ref_lynx_cmd              = 'lynx -dump -nonumbers %s'
-#     let g:ref_lynx_use_cache        = 1
-#     let g:ref_lynx_start_linenumber = 0
-# '''
 
 [[plugins]]
 repo = 'yuratomo/w3m.vim'
+on_cmd = ['W3m',      'W3mHistory', 'W3mHistoryClear', 'W3mLocal',
+          'W3mSplit', 'W3mTab',     'W3mVSplit']
 if = ''' executable('w3m')'''
 hook_add = '''
-    nnoremap <expr> <Space>w <SID>open_w3m('%')
-    function! s:open_w3m(filename)
-        if expand(a:filename) == ''
-            return ':W3m '
-        else
-            return ':W3mTab '
-        endif
-    endfunction
+    nnoremap <expr> <Space>w expand('%') == '' ? ':W3m ' : ':W3mTab '
 '''
 
 # [[plugins]]
 # repo = 'altercation/vim-colors-solarized'
 # hook_add = '''
 #     set background=dark
-#     " colorscheme設定はsource後に行う必要があるのでVimEnterで行う
-#     " ただし，colorschemeイベントの発生が抑制されないようにnestedを付ける
 #     augroup VimEnter * nested colorscheme solarized
 # '''
 
