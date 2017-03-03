@@ -411,8 +411,7 @@ colorscheme torte
 
 " Set the color of front of each line.
 " highlight LineNr ctermbg=8 guibg=8
-" highlight CursorLineNr ctermbg=black guibg=black
-highlight CursorLineNr ctermfg=black guifg=black
+highlight CursorLineNr ctermfg=red guifg=red
 
 " ------------------------------------------------------------------------------
 " Search settings
