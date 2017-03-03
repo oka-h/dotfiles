@@ -317,7 +317,7 @@ set matchpairs& matchpairs+=<:>
 
 " Setting of the status line.
 set laststatus=2
-set statusline=%!My_status_line()
+set statusline=%!g:My_status_line()
 
 function! g:My_status_line()
     return ' %F%m%r%h%w%='
