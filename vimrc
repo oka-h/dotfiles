@@ -391,7 +391,7 @@ if has('syntax')
         autocmd!
         " Remove next line if you set two_byte_space in colorscheme.
         autocmd ColorScheme * call s:set_tbs_hl()
-        " Coordinate the highlight with two byte spaces.
+        " Associate the highlight with two byte spaces.
         autocmd VimEnter,WinEnter * match two_byte_space /　/
         autocmd VimEnter,WinEnter * match two_byte_space '\%u3000'
     augroup END
@@ -406,7 +406,6 @@ syntax enable
 colorscheme torte
 
 " Set the color of front of each line.
-" highlight LineNr ctermbg=8 guibg=8
 highlight CursorLineNr ctermfg=red guifg=red
 
 " ------------------------------------------------------------------------------
@@ -431,12 +430,12 @@ augroup hl_search
     autocmd VimEnter * set hlsearch
 augroup END
 
-" Save the last search word and "hlsearch" for each buffers.
-" augroup localized_search
-"     autocmd!
-"     autocmd WinLeave * let b:vimrc_pattern = @/
-"     autocmd WinEnter * let @/ = get(b:, 'vimrc_pattern', @/)
-" augroup END
+" Save the last search word and hlsearch for each buffers.
+augroup localized_search
+    autocmd!
+    autocmd WinLeave * let b:vimrc_pattern = @/
+    autocmd WinEnter * let @/ = get(b:, 'vimrc_pattern', @/)
+augroup END
 
 " In visual mode, search the selected string by "*" or "#".
 xnoremap * :<C-U>call <SID>visual_star_search()<CR>/<C-R>=@/<CR><CR>
