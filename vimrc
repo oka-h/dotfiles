@@ -417,10 +417,10 @@ highlight CursorLineNr ctermfg=red guifg=red
 " Search settings
 " ------------------------------------------------------------------------------
 
-" Ignore capital letters if the search word don't contain a capital letter.
+" Ignore capital letters when searching.
 set ignorecase
 
-" Don't ignore capital letters if the search word contain a capital letter.
+" Don't ignore capital letters if the search word contain capital letters.
 set smartcase
 
 " Enable incremental search.
@@ -486,7 +486,6 @@ set textwidth=0
 set whichwrap=h,l,<,>,[,]
 
 " Set complementary settings in command line mode.
-set wildmenu
 set wildmode=longest:full,full
 
 " Ignore Japanese when check spelling
