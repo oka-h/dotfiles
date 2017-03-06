@@ -228,12 +228,13 @@ nnoremap <ESC><ESC> :<C-U>nohlsearch<CR>
 inoremap {     {}<LEFT>
 inoremap {<CR> {<CR>}<ESC>O
 inoremap {}    {}
+inoremap {{{   {{{
 inoremap (     ()<LEFT>
 inoremap ()    ()
-inoremap <     <><LEFT>
-inoremap <>    <>
 inoremap [     []<LEFT>
 inoremap []    []
+inoremap <     <><LEFT>
+inoremap <>    <>
 inoremap "     ""<LEFT>
 inoremap ""    ""
 inoremap '     ''<LEFT>
