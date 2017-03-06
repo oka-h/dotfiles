@@ -43,8 +43,6 @@ if has('iconv')
             execute 'set fileencodings+=' . s:enc_euc
         endif
     endif
-    unlet s:enc_euc
-    unlet s:enc_jis
 endif
 
 " Set a value of encoding to fileencoding
@@ -250,12 +248,6 @@ inoremap <C-L> <RIGHT>
 " In command line mode, assign complementing history to <C-P> and <C-N>.
 cnoremap <C-P> <UP>
 cnoremap <C-N> <DOWN>
-
-" In command line mode, assign movement to <C-H>, <C-J>, <C-K> and <C-L>.
-cnoremap <C-H> <LEFT>
-cnoremap <C-L> <RIGHT>
-cnoremap <C-J> <S-LEFT>
-cnoremap <C-K> <S-RIGHT>
 
 " Assign <Home> and <End> to "<Space>h" and "<Space>l".
 " This uses "g^", "^" and 0 or "g$" and "$" for different purposes
