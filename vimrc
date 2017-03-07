@@ -6,63 +6,17 @@
 " Pre-settings
 " ------------------------------------------------------------------------------
 
-" Check encode automatically.
-if &encoding !=# 'utf-8'
-    set encoding=japan
-    set fileencoding=japan
-endif
-
-if has('iconv')
-    let s:enc_euc = 'euc-jp'
-    let s:enc_jis = 'iso-2022-jp'
-
-    " Check if iconv corrsponds to eucJP-ms.
-    if iconv("\x87\x64\x87\x6a", 'cp932', 'eucjp-ms') ==# "\xad\xc5\xad\xcb"
-        let s:enc_euc = 'eucjp-ms'
-        let s:enc_jis = 'iso-2022-jp-3'
-    " Check if iconv corrsponds to JISX0213.
-    elseif iconv("\x87\x64\x87\x6a", 'cp932', 'euc-jisx0213') ==# "\xad\xc5\xad\xcb"
-        let s:enc_euc = 'euc-jisx0213'
-        let s:enc_jis = 'iso-2022-jp-3'
-    endif
-
-    " Setting of fileencodings.
-    if &encoding ==# 'utf-8'
-        execute 'set fileencodings^=' . s:enc_jis . ','. s:enc_euc . ',cp932'
+" Settings of encoding.
+if has('vim_starting') && &encoding !=# 'utf-8'
+    if (has('win32') || has('win64')) && !has('gui_running')
+        set encoding=cp932
     else
-        execute 'set fileencodings+=' . s:enc_jis . ',utf-8,ucs-2le,ucs-2'
-
-        if &encoding =~# '^\(euc-jp\|euc-jisx0213\|eucjp-ms\)$'
-            set fileencodings+=cp932
-            set fileencodings-=euc-jp
-            set fileencodings-=euc-jisx0213
-            set fileencodings-=eucjp-ms
-            execute 'set encoding=' . s:enc_euc
-            execute 'set fileencoding=' . s:enc_euc
-        else
-            execute 'set fileencodings+=' . s:enc_euc
-        endif
+        set encoding=utf-8
     endif
 endif
 
-" Set a value of encoding to fileencoding
-" if the file has not contained Japanese character.
-if has('autocmd')
-    function! AU_ReCheck_FENC()
-        if &fileencoding =~# 'iso-2022-jp' && search("[^\x01-\x7e]", 'n') == 0
-            execute 'set fileencoding=' . &encoding
-        endif
-    endfunction
-    autocmd BufReadPost * call AU_ReCheck_FENC()
-endif
+set fileencodings=usc-bom,iso-2022-jp-3,utf-8,euc-jp,cp932
 
-" Check line feed format automatically.
-set fileformats=unix,dos,mac
-
-" In Unicode, show some symbols as two-byte character.
-if has('multi_byte')
-    set ambiwidth=double
-endif
 
 " ------------------------------------------------------------------------------
 " dein.vim settings
@@ -288,14 +242,14 @@ endfunction
 " Display settings
 " ------------------------------------------------------------------------------
 
-" Show current file name.
+" Display current file name.
 set title
 
-" Show relative line numbers.
+" Display relative line numbers.
 set relativenumber
 set numberwidth=3
  
-" Show the cursor line.
+" Display the cursor line.
 " set cursorline
 
 " Set the minimal number of screen lines to keep above and below the cursor.
@@ -303,6 +257,10 @@ set scrolloff=4
 
 " Highlight pairs of "<>"
 set matchpairs& matchpairs+=<:>
+
+" Display tabs and lines continue beyond the right of the screen.
+set list
+set listchars=tab:>-,extends:>
 
 " Setting of the status line.
 set laststatus=2
@@ -475,6 +433,7 @@ set textwidth=0
 set whichwrap=h,l,<,>,[,]
 
 " Set complementary settings in command line mode.
+set wildmenu
 set wildmode=longest:full,full
 
 " Ignore Japanese when check spelling
@@ -487,10 +446,10 @@ augroup auto_comment_off
     autocmd BufEnter * setlocal formatoptions-=o
 augroup END
 
-" Show the last modification of the current file by <C-G>.
-nnoremap <C-G> :<C-U>call <SID>show_file_info()<CR>
+" Display the last modification of the current file by <C-G>.
+nnoremap <C-G> :<C-U>call <SID>display_file_info()<CR>
 
-function! s:show_file_info()
+function! s:display_file_info()
     let l:time = getftime(expand('%'))
     if l:time < 0
         normal! 
