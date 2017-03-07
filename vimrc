@@ -309,7 +309,7 @@ set laststatus=2
 set statusline=%!g:My_status_line()
 
 function! g:My_status_line()
-    return ' %F%m%r%h%w%='
+    return ' %F%m%r%h%w%= '
        \ . '%{&fileformat!=''''?&fileformat.'' | '':''''}'
        \ . '%{&fileencoding!=''''?&fileencoding.'' | '':''''}'
        \ . '%{&filetype!=''''?&filetype.'' | '':''''}'
@@ -328,6 +328,9 @@ augroup sethighlights
 augroup END
 
 function! s:define_hilights()
+    " Set the color of front of each line.
+    highlight CursorLineNr ctermfg=red guifg=red
+
     " Set the color of the cursor line.
     highlight CursorLine term=underline cterm=underline gui=underline
 
@@ -398,8 +401,6 @@ syntax enable
 " Setting of the colorscheme.
 colorscheme torte
 
-" Set the color of front of each line.
-highlight CursorLineNr ctermfg=red guifg=red
 
 " ------------------------------------------------------------------------------
 " Search settings
