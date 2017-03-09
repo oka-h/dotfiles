@@ -187,8 +187,6 @@ inoremap (     ()<LEFT>
 inoremap ()    ()
 inoremap [     []<LEFT>
 inoremap []    []
-inoremap <     <><LEFT>
-inoremap <>    <>
 inoremap "     ""<LEFT>
 inoremap ""    ""
 inoremap '     ''<LEFT>
@@ -447,7 +445,7 @@ augroup auto_comment_off
 augroup END
 
 " Display the last modification of the current file by <C-G>.
-nnoremap <C-G> :<C-U>call <SID>display_file_info()<CR>
+nnoremap <silent> <C-G> :<C-U>call <SID>display_file_info()<CR>
 
 function! s:display_file_info()
     let l:time = getftime(expand('%'))

@@ -201,9 +201,9 @@ hook_add = '''
 
 [[plugins]]
 repo = 'yuratomo/w3m.vim'
+if = ''' executable('w3m')'''
 on_cmd = ['W3m',      'W3mHistory', 'W3mHistoryClear', 'W3mLocal',
           'W3mSplit', 'W3mTab',     'W3mVSplit']
-if = ''' executable('w3m')'''
 hook_add = '''
     nnoremap <expr> <Space>w expand('%') == '' ? ':W3m ' : ':W3mTab '
 '''
