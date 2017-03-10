@@ -236,6 +236,12 @@ function! s:go_to_foot()
 endfunction
 
 
+" In a terminal emulator, change from terminal mode to normal mode.
+if has('nvim')
+    tnoremap <ESC><ESC> <C-\><C-N>
+endif
+
+
 " ------------------------------------------------------------------------------
 " Display settings
 " ------------------------------------------------------------------------------
