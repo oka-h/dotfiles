@@ -208,10 +208,14 @@ hook_add = '''
     nnoremap <expr> <Space>w expand('%') == '' ? ':W3m ' : ':W3mTab '
 '''
 
-# [[plugins]]
-# repo = 'altercation/vim-colors-solarized'
-# hook_add = '''
-#     set background=dark
-#     augroup VimEnter * nested colorscheme solarized
-# '''
+[[plugins]]
+repo = 'tomasr/molokai'
+hook_add = '''
+    set background=dark
+    augroup colorscheme
+        autocmd!
+        autocmd VimEnter * nested colorscheme molokai
+        autocmd ColorScheme * highlight LineNr ctermbg=233 guibg=#1B1D1E
+    augroup END
+'''
 

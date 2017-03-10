@@ -236,7 +236,8 @@ function! s:go_to_foot()
 endfunction
 
 
-" In a terminal emulator, change from terminal mode to normal mode.
+" In a terminal emulator,
+" change from terminal mode to normal mode by <ESC><ESC>.
 if has('nvim')
     tnoremap <ESC><ESC> <C-\><C-N>
 endif
@@ -286,10 +287,10 @@ endfunction
 " Setting of highlights.
 augroup sethighlights
     autocmd!
-    autocmd ColorScheme * call s:define_hilights()
+    autocmd ColorScheme * call s:define_highlights()
 augroup END
 
-function! s:define_hilights()
+function! s:define_highlights()
     " Set the color of front of each line.
     highlight CursorLineNr ctermfg=red guifg=red
 
@@ -360,8 +361,10 @@ endif
 " Enable syntax highlight.
 syntax enable
 
-" Setting of the colorscheme.
-colorscheme torte
+" Set the colorscheme if no colorscheme is loaded.
+if !exists('g:colors_name')
+    colorscheme torte
+endif
 
 
 " ------------------------------------------------------------------------------
