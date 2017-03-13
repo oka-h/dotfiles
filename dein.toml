@@ -88,6 +88,7 @@ hook_source = '''
 [[plugins]]
 repo = 'Yggdroot/indentLine'
 hook_source = '''
+    let g:indentLine_color_term = 241
     let g:indentLine_fileTypeExclude = ['help']
 '''
 
@@ -208,14 +209,14 @@ hook_add = '''
     nnoremap <expr> <Space>w expand('%') == '' ? ':W3m ' : ':W3mTab '
 '''
 
-[[plugins]]
-repo = 'tomasr/molokai'
-hook_add = '''
-    set background=dark
-    augroup colorscheme
-        autocmd!
-        autocmd VimEnter * nested colorscheme molokai
-        autocmd ColorScheme * highlight LineNr ctermbg=233 guibg=#1B1D1E
-    augroup END
-'''
+# [[plugins]]
+# repo = 'tomasr/molokai'
+# hook_add = '''
+#     set background=dark
+#     augroup colorscheme
+#         autocmd!
+#         autocmd VimEnter * nested colorscheme molokai
+#         autocmd ColorScheme * highlight LineNr ctermbg=233 guibg=#1B1D1E
+#     augroup END
+# '''
 

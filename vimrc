@@ -116,6 +116,9 @@ set noswapfile
 " Don't make an undo file.
 set noundofile
 
+" Save 1000 previous commands.
+set history=1000
+
 " Read Japanese help files.
 set helplang=ja
 
@@ -146,8 +149,8 @@ if has('gui_running')
 endif
 
 function! s:get_buf_byte()
-    let byte = line2byte(line('$') + 1)
-    return byte == -1 ? 0 : byte - 1
+    let l:byte = line2byte(line('$') + 1)
+    return l:byte == -1 ? 0 : byte - 1
 endfunction
 
 
@@ -267,6 +270,9 @@ set matchpairs& matchpairs+=<:>
 set list
 set listchars=tab:>-,extends:>
 
+" Display command in the last line of the screen.
+set showcmd
+
 " Setting of the status line.
 set laststatus=2
 set statusline=%!g:My_status_line()
@@ -342,7 +348,7 @@ endfunction
 
 " Set highlight of two byte spaces.
 function! s:set_tbs_hl()
-    highlight two_byte_space cterm=none ctermbg=darkred gui=none guibg=darkred
+    highlight two_byte_space cterm=none ctermbg=11 gui=none guibg=yellow
 endfunction
 
 if has('syntax')
