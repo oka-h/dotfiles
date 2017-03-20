@@ -94,8 +94,8 @@ else
     command! DeinInstall call s:dein_install()
     augroup nodein_call
         autocmd!
-        autocmd VimEnter * echo 'dein.vim is not installed. '
-                            \ . 'Please install it by :DeinIntall.'
+        autocmd VimEnter * echomsg 'dein.vim is not installed. '
+                               \ . 'Please install it by :DeinIntall.'
     augroup END
 endif
 
@@ -264,7 +264,7 @@ set numberwidth=3
 set scrolloff=4
 
 " Highlight pairs of "<>"
-set matchpairs& matchpairs+=<:>
+" set matchpairs& matchpairs+=<:>
 
 " Display tabs and lines continue beyond the right of the screen.
 set list
@@ -298,16 +298,10 @@ augroup END
 
 function! s:define_highlights()
     " Set the color of front of each line.
-    highlight CursorLineNr ctermfg=red guifg=red
+    highlight CursorLineNr cterm=bold ctermfg=173 gui=bold guifg=#D7875F
 
     " Set the color of the cursor line.
-    highlight CursorLine term=underline cterm=underline gui=underline
-
-    " Set the colors of complementary pop-up.
-    highlight Pmenu    ctermbg=lightgray
-    highlight Pmenu    ctermfg=black
-    highlight PmenuSel ctermbg=3
-    highlight PmenuSel ctermfg=black
+    " highlight CursorLine term=underline cterm=underline gui=underline
 endfunction
 
 
@@ -348,7 +342,7 @@ endfunction
 
 " Set highlight of two byte spaces.
 function! s:set_tbs_hl()
-    highlight two_byte_space cterm=none ctermbg=11 gui=none guibg=yellow
+    highlight two_byte_space cterm=none ctermbg=red gui=none guibg=red
 endfunction
 
 if has('syntax')
@@ -408,7 +402,7 @@ xnoremap # :<C-U>call <SID>visual_star_search()<CR>#<C-R>=@/<CR><CR>
 
 function! s:visual_star_search()
     let l:temp = @s
-    norm! gv"sy
+    normal! gv"sy
     let @/ = '\V' . substitute(substitute(escape(@s, '/\'), '\n$', '', ''),
                              \ '\n', '\\n', 'g')
     let @s = l:temp
@@ -471,7 +465,7 @@ function! s:display_file_info()
         let l:timestamp = strftime(" (%y/%m/%d %H:%M:%S)", l:time)
         let l:file_info = join(insert(split(l:file_info, '"\zs'),
                                     \ l:timestamp, 2), '')
-        echo l:file_info
+        echomsg l:file_info
     endif
 endfunction
 
@@ -479,6 +473,11 @@ endfunction
 " ------------------------------------------------------------------------------
 " Settings for each language
 " ------------------------------------------------------------------------------
+
+" Enable syntax highlight for Java.
+let g:java_highlight_all       = 1
+let g:java_highlight_functions = 'style'
+let g:java_space_error         = 1
 
 " Disable completing "" while editing vim scripts,
 " and '' while editing TOML files.

@@ -40,11 +40,11 @@ repo = 'Shougo/unite.vim'
 depends = 'neomru.vim'
 hook_add = '''
     if !(has('python3') && (has('nvim') || v:version >= 800))
-        nnoremap [unite] <Nop>
-        nmap <Space>u [unite]
-        nnoremap <silent> [unite]f :<C-U>Unite file_rec<CR>
-        nnoremap <silent> [unite]m :<C-U>Unite file_mru<CR>
-        nnoremap <silent> [unite]b :<C-U>UniteWithBufferDir file_rec<CR>
+        nnoremap [Unite] <Nop>
+        nmap <Space>u [Unite]
+        nnoremap <silent> [Unite]f :<C-U>Unite file_rec<CR>
+        nnoremap <silent> [Unite]m :<C-U>Unite file_mru<CR>
+        nnoremap <silent> [Unite]b :<C-U>UniteWithBufferDir file_rec<CR>
     endif
 '''
 
@@ -54,11 +54,11 @@ if = ''' has('python3') && (has('nvim') || v:version >= 800)'''
 depends = 'neomru.vim'
 on_cmd = ['Denite', 'DeniteBufferDir', 'DeniteCursorWord', 'DeniteProjectDir']
 hook_add = '''
-    nnoremap [denite] <Nop>
-    nmap <Space>u [denite]
-    nnoremap <silent> [denite]f :<C-U>Denite file_rec<CR>
-    nnoremap <silent> [denite]m :<C-U>Denite file_mru -mode=normal<CR>
-    nnoremap <silent> [denite]b :<C-U>DeniteBufferDir file_rec<CR>
+    nnoremap [Denite] <Nop>
+    nmap <Space>u [Denite]
+    nnoremap <silent> [Denite]f :<C-U>Denite file_rec<CR>
+    nnoremap <silent> [Denite]m :<C-U>Denite file_mru -mode=normal<CR>
+    nnoremap <silent> [Denite]b :<C-U>DeniteBufferDir file_rec<CR>
 '''
 hook_post_source = '''
     call denite#custom#source('file_rec', 'matchers', ['matcher_regexp'])
@@ -88,7 +88,7 @@ hook_source = '''
 [[plugins]]
 repo = 'Yggdroot/indentLine'
 hook_source = '''
-    let g:indentLine_color_term = 241
+    let g:indentLine_color_term = 236
     let g:indentLine_fileTypeExclude = ['help']
 '''
 
@@ -194,10 +194,10 @@ hook_add = '''
         return join(split(l:removeCR, "\n")[a:head_lines:], "\n")
     endfunction
 
-    nnoremap [ref] <Nop>
-    nmap <Space>r [ref]
-    nnoremap [ref]a :<C-U>Ref webdict alc<Space>
-    nnoremap [ref]w :<C-U>Ref webdict wiki<Space>
+    nnoremap [Ref] <Nop>
+    nmap <Space>r [Ref]
+    nnoremap [Ref]a :<C-U>Ref webdict alc<Space>
+    nnoremap [Ref]w :<C-U>Ref webdict wiki<Space>
 '''
 
 [[plugins]]
@@ -209,14 +209,12 @@ hook_add = '''
     nnoremap <expr> <Space>w expand('%') == '' ? ':W3m ' : ':W3mTab '
 '''
 
-# [[plugins]]
-# repo = 'tomasr/molokai'
-# hook_add = '''
-#     set background=dark
-#     augroup colorscheme
-#         autocmd!
-#         autocmd VimEnter * nested colorscheme molokai
-#         autocmd ColorScheme * highlight LineNr ctermbg=233 guibg=#1B1D1E
-#     augroup END
-# '''
+[[plugins]]
+repo = '0x841/yozakura.vim'
+hook_add = '''
+    augroup colorscheme
+        autocmd!
+        autocmd VimEnter * nested colorscheme yozakura
+    augroup END
+'''
 
