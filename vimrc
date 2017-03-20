@@ -122,6 +122,9 @@ set history=1000
 " Read Japanese help files.
 set helplang=ja
 
+" Don't beep.
+set visualbell t_vb=
+
 " On a gvim, save vim state when vim finishes, and restore it when vim starts.
 " This is available only when g:save_session is not 0.
 if has('gui_running')
