@@ -116,8 +116,8 @@ set noswapfile
 " Don't make an undo file.
 set noundofile
 
-" Save 1000 previous commands.
-set history=1000
+" Save 10000 previous commands.
+set history=10000
 
 " Read Japanese help files.
 set helplang=ja
@@ -476,6 +476,13 @@ endfunction
 " ------------------------------------------------------------------------------
 " Settings for each language
 " ------------------------------------------------------------------------------
+
+" Setting of tab width for shell script.
+augroup shscript
+    autocmd!
+    autocmd FileType *sh set tabstop=2
+    autocmd FileType *sh set shiftwidth=2
+augroup END
 
 " Enable syntax highlight for Java.
 let g:java_highlight_all       = 1
