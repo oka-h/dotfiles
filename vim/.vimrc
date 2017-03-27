@@ -19,7 +19,7 @@ set fileencodings=usc-bom,iso-2022-jp-3,utf-8,euc-jp,cp932
 
 
 " ------------------------------------------------------------------------------
-" dein.vim settings
+" Dein.vim settings
 " ------------------------------------------------------------------------------
 
 " The directory installed plugins.
