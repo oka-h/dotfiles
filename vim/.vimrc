@@ -125,31 +125,29 @@ set helplang=ja
 " Don't beep.
 set visualbell t_vb=
 
-" On a gvim, save vim state when vim finishes, and restore it when vim starts.
+" Save vim state when vim finishes, and restore it when vim starts.
 " This is available only when g:save_session is not 0.
-if has('gui_running')
-    augroup save_and_load_session
-        autocmd!
+augroup save_and_load_session
+    autocmd!
 
-        " Session file location.
-        let s:session_file = expand('$HOME/.vimsession')
+    " Session file location.
+    let s:session_file = expand('~/.vimsession')
 
-        if filereadable(s:session_file)
-            " Restore a previous session file when vim starts with no argument.
-            autocmd VimEnter * nested if @% == '' && s:get_buf_byte() == 0
-                                  \ |     execute 'source' s:session_file
-                                  \ | endif
-        endif
+    if filereadable(s:session_file)
+        " Restore a previous session file when vim starts with no argument.
+        autocmd VimEnter * nested if @% == '' && s:get_buf_byte() == 0
+                              \ |     execute 'source' s:session_file
+                              \ | endif
+    endif
 
-        " Save current session file when vim finishes.
-        let g:save_session = 0
-        autocmd VimLeave * if g:save_session == 0
-                       \ |     call delete(s:session_file)
-                       \ | else
-                       \ |     execute 'mksession!' s:session_file
-                       \ | endif
-    augroup END
-endif
+    " Save current session file when vim finishes.
+    let g:save_session = 0
+    autocmd VimLeave * if g:save_session == 0
+                   \ |     call delete(s:session_file)
+                   \ | else
+                   \ |     execute 'mksession!' s:session_file
+                   \ | endif
+augroup END
 
 function! s:get_buf_byte()
     let l:byte = line2byte(line('$') + 1)
