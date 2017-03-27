@@ -33,7 +33,7 @@ else
     let g:dein_dir = expand('~/.vim/bundles')
 endif
 
-" dein.vim location.
+" Dein.vim location.
 let s:dein_repo_dir = g:dein_dir . expand('/repos/github.com/Shougo/dein.vim')
 
 
@@ -94,7 +94,7 @@ else
     command! DeinInstall call s:dein_install()
     augroup nodein_call
         autocmd!
-        autocmd VimEnter * echomsg 'dein.vim is not installed. '
+        autocmd VimEnter * echomsg 'Dein.vim is not installed. '
                                \ . 'Please install it by :DeinIntall.'
     augroup END
 endif
