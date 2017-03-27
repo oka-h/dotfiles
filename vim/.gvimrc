@@ -9,7 +9,9 @@ set guioptions-=m
 set guioptions-=T
 
 " Setting of the colorscheme.
-colorscheme torte
+if !exists('g:colors_name')
+    colorscheme torte
+endif
 
 " Show the cursor line.
 " set cursorline

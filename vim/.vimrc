@@ -266,9 +266,6 @@ set numberwidth=3
 " Set the minimal number of screen lines to keep above and below the cursor.
 set scrolloff=4
 
-" Highlight pairs of "<>"
-" set matchpairs& matchpairs+=<:>
-
 " Display tabs and lines continue beyond the right of the screen.
 set list
 set listchars=tab:>-,extends:>
@@ -306,39 +303,6 @@ function! s:define_highlights()
     " Set the color of the cursor line.
     " highlight CursorLine term=underline cterm=underline gui=underline
 endfunction
-
-
-" In insert mode, change the color of the status line.
-" let g:hl_insert = 'highlight StatusLine ctermfg=white ctermbg=red cterm=none '
-"                                      \ . 'guifg=white   guibg=red   gui=none'
-" 
-" if has('syntax')
-"     augroup insert_hook
-"         autocmd!
-"         autocmd InsertEnter * call s:status_line('Enter')
-"         autocmd InsertLeave * call s:status_line('Leave')
-"     augroup END
-" endif
-" 
-" let s:sl_hl_cmd = ''
-" function! s:status_line(mode)
-"     if a:mode == 'Enter'
-"         silent! let s:sl_hl_cmd = 'highlight ' . s:get_highlight('StatusLine')
-"         silent exec g:hl_insert
-"     else
-"         highlight clear StatusLine
-"         silent exec s:sl_hl_cmd
-"     endif
-" endfunction
-" 
-" function! s:get_highlight(hi)
-"     redir => hl
-"     exec 'highlight ' . a:hi
-"     redir END
-"     let hl = substitute(hl, '[\r\n]', '', 'g')
-"     let hl = substitute(hl, 'xxx', '', '')
-"     return hl
-" endfunction
 
 
 " Highlight two-byte spaces.
