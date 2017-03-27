@@ -95,7 +95,6 @@ hook_source = '''
 [[plugins]]
 repo = 'haya14busa/incsearch.vim'
 on_map = ['<plug>(incsearch-']
-on_cmd = ['IncSearchMap', 'IncSearchNoreMap']
 hook_add = '''
     let g:incsearch#auto_nohlsearch = 1
     map / <plug>(incsearch-forward)
