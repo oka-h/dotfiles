@@ -1,5 +1,5 @@
 # ------------------------------------------------------------------------------
-# ~/.zshrc
+# ${ZDOTDIR}/.zshrc
 # ------------------------------------------------------------------------------
 
 # Load shell functions.
@@ -77,6 +77,6 @@ alias lal="ls -al"
 alias lla="ls -al"
 
 
-# Load a local vimrc file if there is it.
+# Load a local zshrc file if there is it.
 [ -f ~/.zshrc_local ] && source ~/.zshrc_local
 
