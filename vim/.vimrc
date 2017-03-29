@@ -198,18 +198,16 @@ inoremap ""    ""
 inoremap '     ''<LEFT>
 inoremap ''    ''
 
-" In insert mode, assign movement to <C-H>, <C-J>, <C-K> and <C-L>.
-inoremap <C-H> <LEFT>
-inoremap <C-J> <DOWN>
-inoremap <C-K> <UP>
-inoremap <C-L> <RIGHT>
+" In insert mode, assign movement to <C-B> and <C-F>.
+inoremap <C-B> <LEFT>
+inoremap <C-F> <RIGHT>
 
 " In command line mode, assign complementing history to <C-P> and <C-N>.
 cnoremap <C-P> <UP>
 cnoremap <C-N> <DOWN>
 
 " Assign <Home> and <End> to "<Space>h" and "<Space>l".
-" This uses "g^", "^" and 0 or "g$" and "$" for different purposes
+" This uses "g^", "^" and "0" or "g$" and "$" for different purposes
 " in accordance situations.
 " TODO: Make this to be able to use in visual mode.
 nnoremap <silent> <Space>h :<C-U>call <SID>go_to_head()<CR>
@@ -307,7 +305,7 @@ endfunction
 
 " Highlight two-byte spaces.
 
-" Set highlight of two byte spaces.
+" Set the color of two byte spaces.
 function! s:set_tbs_hl()
     highlight two_byte_space cterm=none ctermbg=red gui=none guibg=red
 endfunction
@@ -315,11 +313,10 @@ endfunction
 if has('syntax')
     augroup two_byte_space
         autocmd!
-        " Remove next line if you set two_byte_space in colorscheme.
-        autocmd ColorScheme * call s:set_tbs_hl()
-        " Associate the highlight with two byte spaces.
+        " Associate the color with two byte spaces.
         autocmd VimEnter,WinEnter * match two_byte_space /　/
         autocmd VimEnter,WinEnter * match two_byte_space '\%u3000'
+        autocmd ColorScheme       * call s:set_tbs_hl()
     augroup END
     call s:set_tbs_hl()
 endif
@@ -441,17 +438,17 @@ endfunction
 " Settings for each language
 " ------------------------------------------------------------------------------
 
-" Setting of tab width for shell script.
-augroup shellscript
-    autocmd!
-    autocmd FileType *sh set tabstop=2
-    autocmd FileType *sh set shiftwidth=2
-augroup END
-
 " Enable syntax highlight for Java.
 let g:java_highlight_all       = 1
 let g:java_highlight_functions = 'style'
 let g:java_space_error         = 1
+
+" Setting of tab width for shell script.
+augroup shellscript
+    autocmd!
+    autocmd FileType *sh setlocal tabstop=2
+    autocmd FileType *sh setlocal shiftwidth=2
+augroup END
 
 " Disable completing "" while editing vim scripts,
 " and '' while editing TOML files.
