@@ -442,7 +442,7 @@ endfunction
 " ------------------------------------------------------------------------------
 
 " Setting of tab width for shell script.
-augroup shscript
+augroup shellscript
     autocmd!
     autocmd FileType *sh set tabstop=2
     autocmd FileType *sh set shiftwidth=2
@@ -468,7 +468,7 @@ augroup END
 " ------------------------------------------------------------------------------
 
 " Load a local vimrc file if there is it.
-let s:vimrc_local = expand('$HOME/.vimrc_local')
+let s:vimrc_local = expand('~/.vimrc_local')
 if filereadable(s:vimrc_local)
     execute 'source' s:vimrc_local
 endif
