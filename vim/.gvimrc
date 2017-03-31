@@ -4,11 +4,14 @@
 " ~/.config/nvim/ginit.vim
 " ------------------------------------------------------------------------------
 
-" Don't show the menu bar.
+" Don't display a menu bar.
 set guioptions-=m
 
-" Don't show the tool bar.
+" Don't display a tool bar.
 set guioptions-=T
+
+" Display a non-GUI tab pages.
+set guioptions-=e
 
 " Setting of the colorscheme.
 if !exists('g:colors_name')

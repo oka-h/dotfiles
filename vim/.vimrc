@@ -284,6 +284,51 @@ function! g:My_status_line()
 endfunction
 
 
+" Setting of the tab line.
+set tabline=%!g:My_tab_line()
+
+function! g:My_tab_line()
+    let l:tabline = ''
+
+    for l:i in range(1, tabpagenr('$'))
+        let l:buflist = tabpagebuflist(l:i)
+        let l:bufid = l:buflist[tabpagewinnr(l:i) - 1]
+
+        let l:tabstart = '%' . l:i . 'T%#'
+                    \ . (l:i == tabpagenr() ? 'TabLineSel' : 'TabLine') . '#'
+
+        let l:tabnum = '(' . l:i . ') '
+
+        let l:filename = pathshorten(fnamemodify(bufname(l:bufid), ':t'))
+        if l:filename == ''
+            let l:filename = '[NoName]'
+        endif
+        let l:filename .= ' '
+
+        let l:bufnum = len(l:buflist)
+        if l:bufnum <= 1
+            let l:bufnum = ''
+        endif
+        let l:modified = getbufvar(l:bufid, '&modified') ? '+' : ''
+        let l:addinfo = ''
+        if l:bufnum != '' || l:modified != ''
+            let l:addinfo = '[' . l:bufnum . l:modified .'] '
+        endif
+
+        let l:tabfinish = '%T'
+
+        let l:tabline .= l:tabstart
+                     \ . l:tabnum
+                     \ . l:filename
+                     \ . l:addinfo
+                     \ . l:tabfinish
+    endfor
+
+    let l:tabline .= '%#TabLineFill#%T%=%#TabLine#'
+    return l:tabline
+endfunction
+
+
 " ------------------------------------------------------------------------------
 " Color settings
 " ------------------------------------------------------------------------------

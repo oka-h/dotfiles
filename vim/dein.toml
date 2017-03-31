@@ -69,14 +69,14 @@ hook_post_source = '''
 repo = 'Shougo/neomru.vim'
 on_source = ['unite.vim', 'denite.nvim']
 
-[[plugins]]
-repo = 'ctrlpvim/ctrlp.vim'
-hook_add = '''
-    let g:ctrlp_clear_cache_on_exit = 0
-    let g:ctrlp_junp_to_buffer      = 2
-    let g:ctrlp_dotfiles            = 1
-    let g:ctrlp_highlight_match     = [1, 'IncSearch']
-'''
+# [[plugins]]
+# repo = 'ctrlpvim/ctrlp.vim'
+# hook_add = '''
+#     let g:ctrlp_clear_cache_on_exit = 0
+#     let g:ctrlp_junp_to_buffer      = 2
+#     let g:ctrlp_dotfiles            = 1
+#     let g:ctrlp_highlight_match     = [1, 'IncSearch']
+# '''
 
 [[plugins]]
 repo = 'thinca/vim-singleton'
