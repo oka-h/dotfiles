@@ -309,7 +309,13 @@ function! g:My_tab_line()
         if l:bufnum <= 1
             let l:bufnum = ''
         endif
-        let l:modified = getbufvar(l:bufid, '&modified') ? '+' : ''
+        let l:modified = ''
+        for l:buftemp in l:buflist
+            if getbufvar(l:buftemp, '&modified')
+                let l:modified = '+'
+                break
+            endif
+        endfor
         let l:addinfo = ''
         if l:bufnum != '' || l:modified != ''
             let l:addinfo = '[' . l:bufnum . l:modified .'] '
