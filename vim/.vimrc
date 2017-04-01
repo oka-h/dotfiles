@@ -125,7 +125,7 @@ set history=10000
 set helplang=ja
 
 " Don't beep.
-set visualbell t_vb=
+set belloff=all
 
 " Save vim state when vim finishes, and restore it when vim starts.
 " This is available only when g:save_session is not 0.
