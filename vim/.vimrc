@@ -301,7 +301,7 @@ function! g:My_tab_line()
 
         let l:filename = pathshorten(fnamemodify(bufname(l:bufid), ':t'))
         if l:filename == ''
-            let l:filename = '[NoName]'
+            let l:filename = '[No Name]'
         endif
         let l:filename .= ' '
 
@@ -330,7 +330,8 @@ function! g:My_tab_line()
                      \ . l:tabfinish
     endfor
 
-    let l:tabline .= '%#TabLineFill#%T%=%#TabLine#'
+    let l:tabline .= '%#TabLineFill#%T%='
+    let l:tabline .= '%<[' . fnamemodify(getcwd(), ':~') . ']'
     return l:tabline
 endfunction
 
