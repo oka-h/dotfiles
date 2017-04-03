@@ -459,6 +459,11 @@ set whichwrap=h,l,<,>,[,]
 set wildmenu
 set wildmode=longest:full,full
 
+" Make replacements easier to recognize.
+if has('nvim')
+    set inccommand=split
+endif
+
 " Ignore Japanese when check spelling
 set spelllang& spelllang+=cjk
 
