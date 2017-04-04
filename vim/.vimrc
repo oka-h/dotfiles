@@ -125,7 +125,11 @@ set history=10000
 set helplang=ja
 
 " Don't beep.
-set belloff=all
+if has('nvim') || v:version >= 705 || (v:version == 704 && has('patch793'))
+    set belloff=all
+else
+    set visualbell t_vb=
+endif
 
 " Save vim state when vim finishes, and restore it when vim starts.
 " This is available only when g:save_session is not 0.
