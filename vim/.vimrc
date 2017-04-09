@@ -1,7 +1,7 @@
 " ------------------------------------------------------------------------------
 " ~/.vimrc
 "
-" ~/.config/nvim/init.vim
+" $XDG_CONFIG_HOME/nvim/init.vim
 " ------------------------------------------------------------------------------
 
 " ------------------------------------------------------------------------------
@@ -25,19 +25,19 @@ set fileencodings=usc-bom,iso-2022-jp-3,utf-8,euc-jp,cp932
 " ------------------------------------------------------------------------------
 
 " The directory installed plugins.
-if has('win32') || has('win64')
-    if has('nvim')
-        let g:dein_dir = expand('$HOME\AppData\Local\nvim\bundles')
+if empty($XDG_CACHE_HOME)
+    if (has('win32') || has('win64')) && has('nvim')
+        let g:dein_dir = expand('$HOME\AppData\Local\nvim')
     else
-        let g:dein_dir = expand('$HOME\vimfiles\bundles')
+        let g:dein_dir = expand('~/.cache')
     endif
 else
-    let g:dein_dir = expand('~/.vim/bundles')
+    let g:dein_dir = $XDG_CACHE_HOME
 endif
-
+let g:dein_dir .= expand('/dein')
+ 
 " Dein.vim location.
 let s:dein_repo_dir = g:dein_dir . expand('/repos/github.com/Shougo/dein.vim')
-
 
 " Install dein.vim.
 function! s:dein_install()
@@ -60,9 +60,9 @@ function! s:dein_load()
 
     if dein#load_state(g:dein_dir)
         " TOML files written plugins.
-        let g:vim_settings = expand('~/dotfiles/vim')
-        let s:toml         = g:vim_settings . expand('/dein.toml')
-        let s:local_toml   = expand('~/.dein_local.toml')
+        let s:toml_dir   = expand('~/dotfiles/vim')
+        let s:toml       = s:toml_dir . expand('/dein.toml')
+        let s:local_toml = expand('~/.dein_local.toml')
 
         call dein#begin(g:dein_dir, expand('<sfile>'))
 
@@ -71,7 +71,7 @@ function! s:dein_load()
 
         " Load and cache a local TOML file if there is it.
         if filereadable(s:local_toml)
-            call dein#load_toml(s:local_toml)
+            " call dein#load_toml(s:local_toml)
         endif
 
         " Finish settings.
@@ -100,7 +100,6 @@ else
                                \ . 'Please install it by :DeinIntall.'
     augroup END
 endif
-
 
 " ------------------------------------------------------------------------------
 " General settings
@@ -266,7 +265,7 @@ set numberwidth=3
 " set cursorline
 
 " Set the minimal number of screen lines to keep above and below the cursor.
-set scrolloff=4
+set scrolloff=3
 
 " Display tabs and lines continue beyond the right of the screen.
 set list
