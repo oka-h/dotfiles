@@ -71,7 +71,7 @@ function! s:dein_load()
 
         " Load and cache a local TOML file if there is it.
         if filereadable(s:local_toml)
-            " call dein#load_toml(s:local_toml)
+            call dein#load_toml(s:local_toml)
         endif
 
         " Finish settings.
