@@ -418,7 +418,7 @@ augroup END
 
 " In visual mode, search the selected string by "*" or "#".
 xnoremap * :<C-U>call <SID>visual_star_search()<CR>/<C-R>=@/<CR><CR>
-xnoremap # :<C-U>call <SID>visual_star_search()<CR>#<C-R>=@/<CR><CR>
+xnoremap # :<C-U>call <SID>visual_star_search()<CR>?<C-R>=@/<CR><CR>
 
 function! s:visual_star_search()
     let l:temp = @s
