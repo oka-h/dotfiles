@@ -124,7 +124,7 @@ set history=10000
 set helplang=ja
 
 " Don't beep.
-if has('nvim') || v:version >= 705 || (v:version == 704 && has('patch793'))
+if has('nvim') || v:version + has('patch793') >= 705
     set belloff=all
 else
     set visualbell t_vb=
