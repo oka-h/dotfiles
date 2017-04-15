@@ -51,6 +51,9 @@ alias ll="ls -l"
 alias lal="ls -al"
 alias lla="ls -al"
 
+alias javac='javac -J-Dfile.encoding=UTF-8'
+alias java='java -Dfile.encoding=UTF-8'
+
 
 # Load a local bashrc file if there is it.
 [ -f ~/.bashrc_local ] && source ~/.bashrc_local
