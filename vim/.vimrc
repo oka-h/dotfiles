@@ -274,6 +274,9 @@ set listchars=tab:>-,extends:>
 " Display command in the last line of the screen.
 set showcmd
 
+" Don't redraw while executing macros, registers and other commands.
+set lazyredraw
+
 " Setting of the status line.
 set laststatus=2
 set statusline=%!g:My_status_line()
