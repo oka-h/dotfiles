@@ -283,10 +283,10 @@ set statusline=%!g:My_status_line()
 
 function! g:My_status_line()
     return ' %F%m%r%h%w%= '
-       \ . '%{&fileformat!=''''?&fileformat.'' | '':''''}'
-       \ . '%{&fileencoding!=''''?&fileencoding.'' | '':''''}'
-       \ . '%{&filetype!=''''?&filetype.'' | '':''''}'
-       \ . '%3v:%' . (float2nr(log10(line('$')))+1) . 'l / %L '
+       \ . '%{&fileformat!=''''?''| ''.&fileformat.'' '':''''}'
+       \ . '%{&fileencoding!=''''?''| ''.&fileencoding.'' '':''''}'
+       \ . '%{&filetype!=''''?''| ''.&filetype.'' '':''''}'
+       \ . '| %3v:%' . (float2nr(log10(line('$')))+1) . 'l / %L '
 endfunction
 
 
