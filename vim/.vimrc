@@ -42,8 +42,8 @@ let s:dein_repo_dir = g:dein_dir . expand('/repos/github.com/Shougo/dein.vim')
 " Install dein.vim.
 function! s:dein_install()
     execute '!git clone https://github.com/Shougo/dein.vim' s:dein_repo_dir
-    " Check dein.vim,
-    " then load plugins and delete the command to install dein.vim.
+    " Check dein.vim, then load plugins and delete the command to install
+    " dein.vim.
     if isdirectory(s:dein_repo_dir)
         call s:dein_load()
         delcommand DeinInstall
@@ -96,8 +96,8 @@ else
     command! DeinInstall call s:dein_install()
     augroup nodein_call
         autocmd!
-        autocmd VimEnter * echomsg 'Dein.vim is not installed. '
-                               \ . 'Please install it by :DeinIntall.'
+        autocmd VimEnter * echomsg 'Dein.vim is not installed. Please install '
+                               \ . 'it by :DeinIntall.'
     augroup END
 endif
 
@@ -210,8 +210,8 @@ cnoremap <C-P> <UP>
 cnoremap <C-N> <DOWN>
 
 " Assign <Home> and <End> to "<Space>h" and "<Space>l".
-" This uses "g^", "^" and "0" or "g$" and "$" for different purposes
-" in accordance situations.
+" This uses "g^", "^" and "0" or "g$" and "$" for different purposes in
+" accordance situations.
 " TODO: Make this to be able to use in visual mode.
 nnoremap <silent> <Space>h :<C-U>call <SID>go_to_head()<CR>
 vnoremap          <Space>h ^
@@ -243,8 +243,8 @@ function! s:go_to_foot()
 endfunction
 
 
-" In a terminal emulator,
-" change from terminal mode to normal mode by <ESC><ESC>.
+" In a terminal emulator, change from terminal mode to normal mode by
+" <ESC><ESC>.
 if has('nvim')
     tnoremap <ESC><ESC> <C-\><C-N>
 endif
@@ -513,13 +513,20 @@ augroup shellscript
     autocmd FileType *sh setlocal shiftwidth=2
 augroup END
 
-" Disable completing "" while editing vim scripts,
-" and '' while editing TOML files.
 augroup vimscript
+    " Disable completing "" while editing vim script, and '' while editing TOML
+    " file.
     autocmd!
     autocmd FileType           vim    inoremap <buffer> " "
     autocmd BufRead,BufNewFile *.toml inoremap <buffer> " "
     autocmd BufRead,BufNewFile *.toml inoremap <buffer> ' '
+
+    " Call help about the word under the cursor while editing a file related to
+    " vim script.
+    autocmd FileType           vim,help
+                                 \ nnoremap <buffer> K :<C-U>help <C-R><C-W><CR>
+    autocmd BufRead,BufNewFile *.toml
+                                 \ nnoremap <buffer> K :<C-U>help <C-R><C-W><CR>
 augroup END
 
 
