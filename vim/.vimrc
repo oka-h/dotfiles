@@ -17,7 +17,7 @@ if has('vim_starting') && &encoding !=# 'utf-8'
     endif
 endif
 
-set fileencodings=usc-bom,iso-2022-jp-3,utf-8,euc-jp,cp932
+set fileencodings=usc-bom,utf-8,iso-2022-jp-3,euc-jp,cp932
 
 
 " ------------------------------------------------------------------------------
