@@ -173,6 +173,9 @@ hook_add = '''
 [[plugins]]
 repo = 'Shougo/deoplete.nvim'
 if = "has('nvim') && has('python3')"
+hook_add = '''
+    let g:deoplete#enable_at_startup = 1
+'''
 
 [[plugins]]
 repo = 'artur-shaik/vim-javacomplete2'
