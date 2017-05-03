@@ -406,7 +406,7 @@ set incsearch
 set wrapscan
 
 " Highlight the search word.
-augroup hl_search
+augroup hlsearch
     autocmd!
     autocmd VimEnter * set hlsearch
 augroup END
@@ -419,15 +419,16 @@ augroup localized_search
 augroup END
 
 " In visual mode, search the selected string by "*" or "#".
-xnoremap * :<C-U>call <SID>visual_star_search()<CR>/<C-R>=@/<CR><CR>
-xnoremap # :<C-U>call <SID>visual_star_search()<CR>?<C-R>=@/<CR><CR>
+xnoremap * :<C-U>call <SID>visual_star_search('/')<CR>
+xnoremap # :<C-U>call <SID>visual_star_search('?')<CR>
 
-function! s:visual_star_search()
+function! s:visual_star_search(key)
     let l:temp = @s
     normal! gv"sy
     let @/ = '\V' . substitute(substitute(escape(@s, '/\'), '\n$', '', ''),
                              \ '\n', '\\n', 'g')
     let @s = l:temp
+    call feedkeys(a:key . "\<Up>\<CR>")
 endfunction
 
 
@@ -517,6 +518,7 @@ augroup vimscript
     " Disable completing "" while editing vim script, and '' while editing TOML
     " file.
     autocmd!
+    autocmd BufRead,BufNewFile *.toml set filetype=conf
     autocmd FileType           vim    inoremap <buffer> " "
     autocmd BufRead,BufNewFile *.toml inoremap <buffer> " "
     autocmd BufRead,BufNewFile *.toml inoremap <buffer> ' '
