@@ -21,18 +21,19 @@ hook_add = '''
 
 [[plugins]]
 repo = 'Shougo/vimproc.vim'
-hook_post_update = '''
-    if dein#util#_is_windows()
-        let s:cmd = 'tools\\update-dll-mingw'
-    elseif dein#util#_is_cygwin()
-        let s:cmd = 'make -f make_cygwin.mak'
-    elseif executable('gmake')
-        let s:cmd = 'gmake'
-    else
-        let s:cmd = 'make'
-    endif
-    let g:dein#plugin.build = s:cmd
-'''
+build = 'make'
+# hook_post_update = '''
+#     if dein#util#_is_windows()
+#         let s:cmd = 'tools\\update-dll-mingw'
+#     elseif dein#util#_is_cygwin()
+#         let s:cmd = 'make -f make_cygwin.mak'
+#     elseif executable('gmake')
+#         let s:cmd = 'gmake'
+#     else
+#         let s:cmd = 'make'
+#     endif
+#     let g:dein#plugin.build = s:cmd
+# '''
 
 [[plugins]]
 repo = 'Shougo/unite.vim'
@@ -70,6 +71,7 @@ on_source = ['unite.vim', 'denite.nvim']
 [[plugins]]
 repo = 'Shougo/neocomplete.vim'
 if = "!(has('nvim') && has('python3')) && has('lua') && (v:version + has('patch885') >= 704 || has('nvim'))"
+on_i = 1
 hook_add = '''
     " Disable AutoComplPop.
     let g:acp_enableAtStartup = 0
@@ -163,6 +165,7 @@ hook_add = '''
 [[plugins]]
 repo = 'Shougo/deoplete.nvim'
 if = "has('nvim') && has('python3')"
+on_i = 1
 hook_add = '''
     let g:deoplete#enable_at_startup = 1
 '''
@@ -170,6 +173,7 @@ hook_add = '''
 [[plugins]]
 repo = 'Shougo/neosnippet'
 if = "has('nvim') || v:version >= 704"
+on_source = ['neocomplete.vim', 'deoplete.nvim']
 hook_add = '''
     " Plugin key-mappings.
     " Note: It must be "imap" and "smap".  It uses <Plug> mappings.
@@ -196,13 +200,14 @@ hook_add = '''
 [[plugins]]
 repo = 'Shougo/neosnippet-snippets'
 if = "has('nvim') || v:version >= 704"
+on_source = 'neosnippet'
 hook_add = '''
     let g:neosnippet#snippets_directory = g:dein_dir
         \ . expand('/repos/github.com/Shougo/neosnippet-snippets/snippets/')
 '''
 
 [[plugins]]
-repo    = 'thinca/vim-quickrun'
+repo = 'thinca/vim-quickrun'
 depends = 'vimproc.vim'
 hook_add = '''
     nnoremap <silent> <Space>q :<C-U>call <SID>my_quickrun()<CR>
@@ -216,14 +221,25 @@ hook_add = '''
         let &splitbelow = l:tempbelow
         let &splitright = l:tempright
     endfunction
+
+    if has('win32unix')
+        if !exists('g:quickrun_config')
+            let g:quickrun_config = {}
+        endif
+
+        let g:quickrun_config['java'] = {
+        \   'exec': ['javac -J-Dfile.encoding=UTF-8 %o `cygpath -wp %s`',
+        \            '%c -Dfile.encoding=UTF-8 `cygpath -wp %s:t:r` %a']
+        \}
+    endif
 '''
  
 [[plugins]]
-repo    = 'osyo-manga/shabadou.vim'
+repo = 'osyo-manga/shabadou.vim'
 depends = 'vim-quickrun'
 
 [[plugins]]
-repo    = 'osyo-manga/vim-watchdogs'
+repo = 'osyo-manga/vim-watchdogs'
 depends = ['vimproc.vim', 'vim-quickrun', 'shabadou']
 hook_add = '''
     " Check syntax after save the file.
@@ -231,37 +247,41 @@ hook_add = '''
 
     nnoremap <Space>w :<C-U>WatchdogsRun<CR>
 
-    let g:quickrun_config = {
-    \   'watchdogs_checker/_': {
-    \       'hook/close_quickfix/enable_exit': 1,
-    \   },
-    \
-    \   'java/watchdogs_checker': {
-    \       'type': 'watchdogs_checker/javac'
-    \   },
-    \   'watchdogs_checker/javac': {
-    \       'command': 'javac',
-    \       'exec': '%c %o %S',
-    \       'errorformat': '%A%f:%l: %m,%-Z%p^,%+C%.%#,%-G%.%#',
-    \   },
-    \
-    \   'watchdogs_checker/pyflakes3': {
-    \       'command': executable('pyflakes3') ? 'pyflakes3' :
-    \                  executable('python3')   ? 'python3'   :
-    \                  executable('pyflakes')  ? 'pyflakes'  :
-    \                                            'python'    ,
-    \       'cmdopt': executable('pyflakes3') ? ''            :
-    \                 executable('python3')   ? '-m pyflakes' :
-    \                 executable('pyflakes')  ? ''            :
-    \                                           '-m pyflakes' ,
-    \       'exec': '%c %o %s:p',
-    \       'errorformat': '%f:%l:%m'
-    \   }
+    if !exists('g:quickrun_config')
+        let g:quickrun_config = {}
+    endif
+
+    let g:quickrun_config['watchdogs_checker/_'] = {
+    \   'hook/close_quickfix/enable_exit': 1
+    \}
+
+    let g:quickrun_config['java/watchdogs_checker'] = {
+    \   'type': 'watchdogs_checker/javac'
+    \}
+
+    let g:quickrun_config['watchdogs_checker/javac'] = {
+    \   'command': 'javac',
+    \   'exec': '%c %o %S',
+    \   'errorformat': '%A%f:%l: %m,%-Z%p^,%+C%.%#,%-G%.%#'
+    \}
+
+    let g:quickrun_config['watchdogs_checker/pyflakes3'] = {
+    \   'command': executable('pyflakes3') ? 'pyflakes3' :
+    \              executable('python3')   ? 'python3'   :
+    \              executable('pyflakes')  ? 'pyflakes'  :
+    \                                        'python'    ,
+    \   'cmdopt': executable('pyflakes3') ? ''            :
+    \             executable('python3')   ? '-m pyflakes' :
+    \             executable('pyflakes')  ? ''            :
+    \                                       '-m pyflakes' ,
+    \   'exec': '%c %o %s:p',
+    \   'errorformat': '%f:%l:%m'
     \}
 '''
  
 [[plugins]]
 repo = 'cohama/vim-hier'
+on_source = 'vim-watchdogs'
 
 [[plugins]]
 repo = '0x841/yozakura.vim'
@@ -359,6 +379,7 @@ hook_source = '''
 
 [[plugins]]
 repo = 'artur-shaik/vim-javacomplete2'
+if =  "(has('nvim') || v:version >= 704) && has('python') && !has('win32unix')"
 on_ft = 'java'
 hook_add = '''
     augroup javacomplete2
