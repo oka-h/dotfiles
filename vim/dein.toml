@@ -210,6 +210,13 @@ hook_add = '''
 repo = 'thinca/vim-quickrun'
 depends = 'vimproc.vim'
 hook_add = '''
+    let g:quickrun_no_default_key_mappings = 1
+
+    augroup quickrun
+        autocmd!
+        autocmd BufRead,BufNewFile * let b:quickrun_args = ''
+    augroup END
+
     nnoremap <silent> <Space>q :<C-U>call <SID>my_quickrun()<CR>
 
     function! s:my_quickrun()
@@ -217,7 +224,7 @@ hook_add = '''
         let l:tempright = &splitright
         set splitbelow
         set splitright
-        QuickRun
+        call quickrun#run('-args ' . b:quickrun_args)
         let &splitbelow = l:tempbelow
         let &splitright = l:tempright
     endfunction
@@ -281,7 +288,9 @@ hook_add = '''
  
 [[plugins]]
 repo = 'cohama/vim-hier'
-on_source = 'vim-watchdogs'
+
+[[plugins]]
+repo = 'dannyob/quickfixstatus'
 
 [[plugins]]
 repo = '0x841/yozakura.vim'
