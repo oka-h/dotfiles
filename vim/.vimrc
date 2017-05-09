@@ -40,19 +40,19 @@ let g:dein_dir .= expand('/dein')
 let s:dein_repo_dir = g:dein_dir . expand('/repos/github.com/Shougo/dein.vim')
 
 " Install dein.vim.
-function! s:dein_install()
+function! s:install_dein()
     execute '!git clone https://github.com/Shougo/dein.vim' s:dein_repo_dir
     " Check dein.vim, then load plugins and delete the command to install
     " dein.vim.
     if isdirectory(s:dein_repo_dir)
-        call s:dein_load()
+        call s:load_dein()
         delcommand DeinInstall
     endif
 endfunction
 
 
 " Load plugins.
-function! s:dein_load()
+function! s:load_dein()
     " Check runtime path.
     if &runtimepath !~# expand('/dein.vim')
         execute 'set runtimepath^=' . s:dein_repo_dir
@@ -90,10 +90,10 @@ endfunction
 
 if isdirectory(s:dein_repo_dir)
     " Load plugins if dein.vim is installed.
-    call s:dein_load()
+    call s:load_dein()
 else
     " Else, make the command to install it.
-    command! DeinInstall call s:dein_install()
+    command! DeinInstall call s:install_dein()
     augroup nodein_call
         autocmd!
         autocmd VimEnter * echomsg 'Dein.vim is not installed. Please install '
@@ -122,6 +122,9 @@ set history=10000
 
 " Read Japanese help files.
 set helplang=ja
+
+" Use twice the width of ambiguous east asian width class characters.
+set ambiwidth=double
 
 " Don't beep.
 if has('nvim') || v:version + has('patch793') >= 705
@@ -346,8 +349,11 @@ endfunction
 " Color settings
 " ------------------------------------------------------------------------------
 
+" Set number of colors.
+set t_Co=256
+
 " Setting of highlights.
-augroup sethighlights
+augroup highlights
     autocmd!
     autocmd ColorScheme * call s:define_highlights()
 augroup END
@@ -525,10 +531,9 @@ augroup vimscript
 
     " Call help about the word under the cursor while editing a file related to
     " vim script.
-    autocmd FileType           vim,help
-                                 \ nnoremap <buffer> K :<C-U>help <C-R><C-W><CR>
+    autocmd FileType vim,help nnoremap <buffer> K :<C-U>help <C-R><C-W><CR>
     autocmd BufRead,BufNewFile *.toml
-                                 \ nnoremap <buffer> K :<C-U>help <C-R><C-W><CR>
+                            \ nnoremap <buffer> K :<C-U>help <C-R><C-W><CR>
 augroup END
 
 
