@@ -70,7 +70,7 @@ on_source = ['unite.vim', 'denite.nvim']
 
 [[plugins]]
 repo = 'Shougo/neocomplete.vim'
-if = "!(has('nvim') && has('python3')) && has('lua') && (v:version + has('patch885') >= 704 || has('nvim'))"
+if = "!(has('nvim') && has('python3')) && (v:version + has('patch885') >= 704 || has('nvim') && has('lua'))"
 on_i = 1
 hook_add = '''
     " Disable AutoComplPop.
@@ -87,9 +87,9 @@ hook_add = '''
 
     " Define dictionary.
     let g:neocomplete#sources#dictionary#dictionaries = {
-        \ 'default' : '',
+        \ 'default'  : '',
         \ 'vimshell' : $HOME.'/.vimshell_hist',
-        \ 'scheme' : $HOME.'/.gosh_completions'
+        \ 'scheme'   : $HOME.'/.gosh_completions'
             \ }
 
     " Define keyword.
@@ -200,11 +200,15 @@ hook_add = '''
 [[plugins]]
 repo = 'Shougo/neosnippet-snippets'
 if = "has('nvim') || v:version >= 704"
-on_source = 'neosnippet'
+on_ft = 'snippet'
 hook_add = '''
     let g:neosnippet#snippets_directory = g:dein_dir
         \ . expand('/repos/github.com/Shougo/neosnippet-snippets/snippets/')
 '''
+
+[[plugins]]
+repo = 'ujihisa/neco-look'
+if = "executable('look')"
 
 [[plugins]]
 repo = 'thinca/vim-quickrun'
