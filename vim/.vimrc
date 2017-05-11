@@ -257,9 +257,6 @@ endif
 " Display settings
 " ------------------------------------------------------------------------------
 
-" Display current file name.
-set title
-
 " Display relative line numbers.
 set relativenumber
 set numberwidth=3
