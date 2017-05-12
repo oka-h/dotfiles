@@ -505,32 +505,35 @@ endfunction
 " Settings for each language
 " ------------------------------------------------------------------------------
 
-" Enable syntax highlight for Java.
+" Java
+" Enable syntax highlight.
 let g:java_highlight_all       = 1
 let g:java_highlight_functions = 'style'
 let g:java_space_error         = 1
 
-" Setting of tab width for shell script.
+" shell script
+" Setting of tab width.
 augroup shellscript
     autocmd!
     autocmd FileType *sh setlocal tabstop=2
     autocmd FileType *sh setlocal shiftwidth=2
 augroup END
 
+" vim script
 augroup vimscript
-    " Disable completing "" while editing vim script, and '' while editing TOML
-    " file.
+    " Disable completing "" and ''.
     autocmd!
-    autocmd BufRead,BufNewFile *.toml set filetype=conf
     autocmd FileType           vim    inoremap <buffer> " "
     autocmd BufRead,BufNewFile *.toml inoremap <buffer> " "
     autocmd BufRead,BufNewFile *.toml inoremap <buffer> ' '
 
-    " Call help about the word under the cursor while editing a file related to
-    " vim script.
+    " Call help about the word under the cursor.
     autocmd FileType vim,help nnoremap <buffer> K :<C-U>help <C-R><C-W><CR>
     autocmd BufRead,BufNewFile *.toml
                             \ nnoremap <buffer> K :<C-U>help <C-R><C-W><CR>
+
+    " Setting of filetype for toml file.
+    autocmd BufRead,BufNewFile *.toml set filetype=conf
 augroup END
 
 

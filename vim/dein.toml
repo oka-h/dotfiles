@@ -168,6 +168,7 @@ if = "has('nvim') && has('python3')"
 on_i = 1
 hook_add = '''
     let g:deoplete#enable_at_startup = 1
+    let g:deoplete#enable_refresh_always = 1
 '''
 
 [[plugins]]
