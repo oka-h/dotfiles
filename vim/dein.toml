@@ -36,6 +36,9 @@ build = 'make'
 # '''
 
 [[plugins]]
+repo = 'tyru/open-browser.vim'
+
+[[plugins]]
 repo = 'Shougo/unite.vim'
 if = "!(has('python3') && (has('nvim') || v:version >= 800))"
 depends = 'neomru.vim'
@@ -201,7 +204,8 @@ hook_add = '''
 [[plugins]]
 repo = 'Shougo/neosnippet-snippets'
 if = "has('nvim') || v:version >= 704"
-on_i = 1
+on_source = 'neosnippet'
+# on_i = 1
 hook_add = '''
     let g:neosnippet#snippets_directory = g:dein_dir
         \ . expand('/repos/github.com/Shougo/neosnippet-snippets/snippets/')
@@ -234,16 +238,20 @@ hook_add = '''
         let &splitright = l:tempright
     endfunction
 
-    if has('win32unix')
-        if !exists('g:quickrun_config')
-            let g:quickrun_config = {}
-        endif
+    if !exists('g:quickrun_config')
+        let g:quickrun_config = {}
+    endif
 
+    if has('win32unix')
         let g:quickrun_config['java'] = {
         \   'exec': ['javac -J-Dfile.encoding=UTF-8 %o `cygpath -wp %s`',
         \            '%c -Dfile.encoding=UTF-8 `cygpath -wp %s:t:r` %a']
         \}
     endif
+
+    let g:quickrun_config['markdown'] = {
+    \   'outputter' : 'browser'
+    \}
 '''
  
 [[plugins]]
