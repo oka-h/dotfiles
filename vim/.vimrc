@@ -519,6 +519,12 @@ augroup shellscript
     autocmd FileType *sh setlocal shiftwidth=2
 augroup END
 
+" Tex
+augroup texfile
+    autocmd!
+    autocmd FileType *tex setlocal formatprg=pandoc\ --from=markdown\ --to=latex
+augroup END
+
 " vim script
 augroup vimscript
     " Disable completing "" and ''.
