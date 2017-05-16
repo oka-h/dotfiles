@@ -261,9 +261,6 @@ endif
 set relativenumber
 set numberwidth=3
  
-" Display the cursor line.
-" set cursorline
-
 " Set the minimal number of screen lines to keep above and below the cursor.
 set scrolloff=3
 
@@ -499,6 +496,18 @@ function! s:display_file_info()
         echomsg l:file_info
     endif
 endfunction
+
+
+" Make a command to set number and set cursorline.
+command! DisplayMode if &cursorline
+                 \ |     set nocursorline
+                 \ |     set nonumber
+                 \ |     set relativenumber
+                 \ | else
+                 \ |     set cursorline
+                 \ |     set number
+                 \ |     set norelativenumber
+                 \ | endif
 
 
 " ------------------------------------------------------------------------------
