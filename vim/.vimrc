@@ -511,17 +511,32 @@ let g:java_highlight_all       = 1
 let g:java_highlight_functions = 'style'
 let g:java_space_error         = 1
 
+" markdown
+augroup markdown
+    autocmd!
+    " Disable completing ''.
+    autocmd FileType text inoremap <buffer> ' '
+augroup END
+
 " shell script
-" Setting of tab width.
 augroup shellscript
     autocmd!
+    " Setting of tab width.
     autocmd FileType *sh setlocal tabstop=2
     autocmd FileType *sh setlocal shiftwidth=2
+augroup END
+
+" text
+augroup textfile
+    autocmd!
+    " Disable completing ''.
+    autocmd FileType text inoremap <buffer> ' '
 augroup END
 
 " Tex
 augroup texfile
     autocmd!
+    " Transform markdown to tex.
     autocmd FileType *tex setlocal formatprg=pandoc\ --from=markdown\ --to=latex
 augroup END
 
