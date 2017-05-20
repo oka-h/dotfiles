@@ -458,6 +458,12 @@ set tabstop=4
 
 " Disable automatic line break.
 set textwidth=0
+if has('win32unix')
+    augroup textwidth_cygwin
+        autocmd!
+        autocmd FileType vim set textwidth=0
+    augroup END
+endif
 
 " Enable movement over lines.
 set whichwrap=h,l,<,>,[,]
