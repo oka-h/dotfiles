@@ -459,7 +459,7 @@ set tabstop=4
 " Disable automatic line break.
 set textwidth=0
 if has('win32unix')
-    augroup textwidth_cygwin
+    augroup textwidth_cygwin_vimscript
         autocmd!
         autocmd FileType vim set textwidth=0
     augroup END
