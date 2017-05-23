@@ -530,7 +530,7 @@ let g:java_space_error         = 1
 augroup markdown
     autocmd!
     " Disable completing ''.
-    autocmd FileType text inoremap <buffer> ' '
+    autocmd FileType markdown inoremap <buffer> ' '
 augroup END
 
 " shell script
