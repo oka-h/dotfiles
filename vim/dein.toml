@@ -73,7 +73,7 @@ on_source = ['unite.vim', 'denite.nvim']
 
 [[plugins]]
 repo = 'Shougo/neocomplete.vim'
-if = "!(has('nvim') && has('python3')) && (v:version + has('patch885') >= 704 || has('nvim') && has('lua'))"
+if = "!(has('nvim') && has('python3')) && (v:version + has('patch885') >= 704 || has('nvim')) && has('lua')"
 on_i = 1
 hook_add = '''
     " Disable AutoComplPop.
