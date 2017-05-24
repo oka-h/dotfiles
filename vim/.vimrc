@@ -505,15 +505,35 @@ endfunction
 
 
 " Make a command to set number and set cursorline.
-command! DisplayMode if &cursorline
-                 \ |     set nocursorline
-                 \ |     set nonumber
-                 \ |     set relativenumber
-                 \ | else
-                 \ |     set cursorline
-                 \ |     set number
-                 \ |     set norelativenumber
-                 \ | endif
+command! DisplayMode call s:switch_display_mode()
+
+function! s:switch_display_mode()
+    let l:cur_tab = tabpagenr()
+    let l:cur_win = winnr()
+
+    if &cursorline
+        setglobal nocursorline
+        setglobal nonumber
+        setglobal relativenumber
+        tabdo windo setlocal nocursorline
+        tabdo windo if &number || &relativenumber
+                \ |      setlocal nonumber
+                \ |      setlocal relativenumber
+                \ | endif
+    else
+        setglobal cursorline
+        setglobal number
+        setglobal norelativenumber
+        tabdo windo setlocal cursorline
+        tabdo windo if &number || &relativenumber
+                \ |      setlocal number
+                \ |      setlocal norelativenumber
+                \ | endif
+    endif
+
+    execute 'tabnext ' . l:cur_tab
+    execute 'normal! ' . l:cur_win . "\<C-W>w"
+endfunction
 
 
 " ------------------------------------------------------------------------------
