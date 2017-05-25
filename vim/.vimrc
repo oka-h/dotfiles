@@ -516,18 +516,18 @@ function! s:switch_display_mode()
         setglobal nonumber
         setglobal relativenumber
         tabdo windo setlocal nocursorline
-        tabdo windo if &number || &relativenumber
-                \ |      setlocal nonumber
-                \ |      setlocal relativenumber
+                \ | if &number || &relativenumber
+                \ |     setlocal nonumber
+                \ |     setlocal relativenumber
                 \ | endif
     else
         setglobal cursorline
         setglobal number
         setglobal norelativenumber
         tabdo windo setlocal cursorline
-        tabdo windo if &number || &relativenumber
-                \ |      setlocal number
-                \ |      setlocal norelativenumber
+                \ | if &number || &relativenumber
+                \ |     setlocal number
+                \ |     setlocal norelativenumber
                 \ | endif
     endif
 
