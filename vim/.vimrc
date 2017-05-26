@@ -279,7 +279,10 @@ set laststatus=2
 set statusline=%!g:My_status_line()
 
 function! g:My_status_line()
-    return ' %F%m%r%h%w%= '
+    let l:pwd = getcwd()
+    return ' [' . (l:pwd == $HOME ? '~' : '') . '/'
+       \ . fnamemodify(l:pwd, ':~:t') . '] '
+       \ . '%<%F%m%r%h%w%= '
        \ . '%{&fileformat!=''''?''| ''.&fileformat.'' '':''''}'
        \ . '%{&fileencoding!=''''?''| ''.&fileencoding.'' '':''''}'
        \ . '%{&filetype!=''''?''| ''.&filetype.'' '':''''}'
@@ -333,8 +336,7 @@ function! g:My_tab_line()
                      \ . l:tabfinish
     endfor
 
-    let l:tabline .= '%#TabLineFill#%T%='
-    let l:tabline .= '%<[' . fnamemodify(getcwd(), ':~') . ']'
+    let l:tabline .= '%#TabLineFill#%T%=%<'
     return l:tabline
 endfunction
 
@@ -491,16 +493,12 @@ augroup END
 nnoremap <silent> <C-G> :<C-U>call <SID>display_file_info()<CR>
 
 function! s:display_file_info()
+    let l:info = ' ' . expand('%:p:~')
     let l:time = getftime(expand('%'))
-    if l:time < 0
-        normal! 
-    else
-        let l:file_info = substitute(execute('normal! '), '\n', '', 'g')
-        let l:timestamp = strftime(" (%y/%m/%d %H:%M:%S)", l:time)
-        let l:file_info = join(insert(split(l:file_info, '"\zs'),
-                                    \ l:timestamp, 2), '')
-        echomsg l:file_info
+    if l:time >= 0
+        let l:info .= strftime(" (%y/%m/%d %H:%M:%S)", l:time)
     endif
+    echomsg l:info
 endfunction
 
 
