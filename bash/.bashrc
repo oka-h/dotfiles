@@ -2,6 +2,9 @@
 # ~/.bashrc
 # ------------------------------------------------------------------------------
 
+# Load /etc/bashrc
+[ -f /etc/bashrc ] && source /etc/bashrc
+
 # Don't beep.
 set bell-style none
 

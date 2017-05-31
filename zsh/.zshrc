@@ -2,6 +2,9 @@
 # ${ZDOTDIR}/.zshrc
 # ------------------------------------------------------------------------------
 
+# Load /etc/zshrc
+[ -f /etc/zshrc ] && source /etc/zshrc
+
 # Load shell functions.
 autoload -U compinit colors promptinit
 compinit
