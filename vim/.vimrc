@@ -163,6 +163,11 @@ function! s:get_buf_byte()
 endfunction
 
 
+" Set the number of scrollback buffer lines of terminal emulator.
+if has('nvim')
+    let g:terminal_scrollback_buffer_size = 100000
+endif
+
 " ------------------------------------------------------------------------------
 " Key map settings
 " ------------------------------------------------------------------------------

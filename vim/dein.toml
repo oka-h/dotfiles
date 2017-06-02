@@ -329,7 +329,8 @@ hook_add = '''
     map # <plug>(incsearch-nohl-#)
     map n <plug>(incsearch-nohl-n)
     map N <plug>(incsearch-nohl-N)
-    noremap g/ /
+    noremap <Space>/ /
+    noremap <Space>* *
 '''
 
 # [[plugins]]
