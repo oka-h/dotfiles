@@ -314,8 +314,9 @@ hook_source = '''
 [[plugins]]
 repo = 'Yggdroot/indentLine'
 hook_source = '''
-    let g:indentLine_color_term = 236
     let g:indentLine_fileTypeExclude = ['help', 'quickrun', 'text']
+    let g:indentLine_color_term = 236
+    let g:indentLine_char = '|'
 '''
 
 [[plugins]]
