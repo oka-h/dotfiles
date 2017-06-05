@@ -312,7 +312,7 @@ hook_source = '''
 '''
 
 [[plugins]]
-repo = '0x841/pore-tab.vim'
+repo = '0x841/stare-tab.vim'
 
 [[plugins]]
 repo = 'Yggdroot/indentLine'
