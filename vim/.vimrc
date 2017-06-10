@@ -393,10 +393,10 @@ xnoremap # :<C-U>call <SID>visual_star_search('?')<CR>
 function! s:visual_star_search(key)
     let l:temp = @s
     normal! gv"sy
-    let @/ = '\V' . substitute(substitute(escape(@s, '/\'), '\n$', '', ''),
-                             \ '\n', '\\n', 'g')
+    let l:search = @s
     let @s = l:temp
-    call feedkeys(a:key . "\<Up>\<CR>")
+    call feedkeys(a:key . '\V' . substitute(substitute(escape(@s, '/\'),
+                                \ '\n$', '', ''), '\n', '\\n', 'g') . "\<CR>")
 endfunction
 
 
