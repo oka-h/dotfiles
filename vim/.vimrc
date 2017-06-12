@@ -545,6 +545,8 @@ augroup END
 " Tex
 augroup texfile
     autocmd!
+    " Display text normally.
+    autocmd FileType *tex setlocal conceallevel=0
     " Transform markdown to tex.
     autocmd FileType *tex setlocal formatprg=pandoc\ --from=markdown\ --to=latex
 augroup END
