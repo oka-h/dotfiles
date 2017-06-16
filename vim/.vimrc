@@ -489,19 +489,23 @@ function! s:switch_display_mode()
         setglobal nocursorline
         setglobal nonumber
         setglobal relativenumber
-        tabdo windo setlocal nocursorline
-                \ | if &number || &relativenumber
-                \ |     setlocal nonumber
-                \ |     setlocal relativenumber
+        tabdo windo if expand('%') !~ '^term://'
+                \ |     setlocal nocursorline
+                \ |     if &number || &relativenumber
+                \ |         setlocal nonumber
+                \ |         setlocal relativenumber
+                \ |     endif
                 \ | endif
     else
         setglobal cursorline
         setglobal number
         setglobal norelativenumber
-        tabdo windo setlocal cursorline
-                \ | if &number || &relativenumber
-                \ |     setlocal number
-                \ |     setlocal norelativenumber
+        tabdo windo if expand('%') !~ '^term://'
+                \ |     setlocal cursorline
+                \ |     if &number || &relativenumber
+                \ |         setlocal number
+                \ |         setlocal norelativenumber
+                \ |     endif
                 \ | endif
     endif
 
