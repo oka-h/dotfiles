@@ -593,7 +593,7 @@ augroup END
 
 " Load a local vimrc file if there is it.
 if filereadable(s:vimrc_local)
-    let g:is_at_start = exists('v:false') ? v:false: 0
+    let g:is_at_start = exists('v:false') ? v:false : 0
     execute 'source' s:vimrc_local
     unlet g:is_at_start
 endif
