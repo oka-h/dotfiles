@@ -20,6 +20,17 @@ endif
 set fileencodings=usc-bom,utf-8,iso-2022-jp-3,euc-jp,cp932
 
 
+" List of plugins ignored.
+let g:ignore_plugins = []
+
+" Load a local vimrc file if there is it.
+let s:vimrc_local = expand('~/.vimrc_local')
+if filereadable(s:vimrc_local)
+    let g:is_at_start = exists('v:true') ? v:true : 1
+    execute 'source' s:vimrc_local
+endif
+
+
 " ------------------------------------------------------------------------------
 " Dein.vim settings
 " ------------------------------------------------------------------------------
@@ -85,6 +96,9 @@ function! s:load_dein()
     if dein#check_install()
         call dein#install()
     endif
+
+    " Remove list of plugins ignored.
+    unlet g:ignore_plugins
 endfunction
 
 
@@ -578,8 +592,9 @@ augroup END
 " ------------------------------------------------------------------------------
 
 " Load a local vimrc file if there is it.
-let s:vimrc_local = expand('~/.vimrc_local')
 if filereadable(s:vimrc_local)
+    let g:is_at_start = exists('v:false') ? v:false: 0
     execute 'source' s:vimrc_local
+    unlet g:is_at_start
 endif
 
