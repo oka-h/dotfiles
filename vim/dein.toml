@@ -411,7 +411,7 @@ hook_source = '''
 
 [[plugins]]
 repo = 'artur-shaik/vim-javacomplete2'
-if =  "index(g:ignore_plugins, 'vim-javacomplete2') < 0 && (has('nvim') || v:version >= 704) && has('python') && !has('win32unix')"
+if = "(has('nvim') || v:version >= 704) && has('python') && !has('win32unix')"
 on_ft = 'java'
 hook_add = '''
     augroup javacomplete2

@@ -21,7 +21,7 @@ set fileencodings=usc-bom,utf-8,iso-2022-jp-3,euc-jp,cp932
 
 
 " List of plugins ignored.
-let g:ignore_plugins = []
+let g:disable_plugins = []
 
 " Load a local vimrc file if there is it.
 let s:vimrc_local = expand('~/.vimrc_local')
@@ -97,8 +97,9 @@ function! s:load_dein()
         call dein#install()
     endif
 
-    " Remove list of plugins ignored.
-    unlet g:ignore_plugins
+    " Disable plugins listed.
+    call dein#disable(g:disable_plugins)
+    unlet g:disable_plugins
 endfunction
 
 
