@@ -20,7 +20,7 @@ endif
 set fileencodings=usc-bom,utf-8,iso-2022-jp-3,euc-jp,cp932
 
 
-" List of plugins ignored.
+" List of disable plugins.
 let g:disable_plugins = []
 
 " Load a local vimrc file if there is it.
