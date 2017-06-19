@@ -25,6 +25,7 @@ $user $cdir
 $mark "
 
 PROMPT2="$multi_line $mark "
+SPROMPT="%F{green}%r is correct? [n,y,a,e]%f%B:%b "
 
 
 # Display completion list with colors.
@@ -32,6 +33,9 @@ zstyle ':completion:*' list-colors ''
 
 # Pack lists.
 setopt list_packed
+
+# Correct command automatically.
+setopt correct
 
 # Save 10000 previous commands.
 HISTFILE=~/.zsh_history
