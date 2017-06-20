@@ -202,6 +202,36 @@ noremap ; :
 noremap : ;
 nnoremap q; q:
 
+" Use "+ register.
+noremap <Space>y "+y
+noremap <Space>p "+p
+noremap <Space>P "+P
+
+" Delete without use register.
+noremap <Space>d "_d
+
+" Go to optional tab page.
+nnoremap <silent> <Space>1 :<C-U>call <SID>go_to_tab(1)<CR>
+nnoremap <silent> <Space>2 :<C-U>call <SID>go_to_tab(2)<CR>
+nnoremap <silent> <Space>3 :<C-U>call <SID>go_to_tab(3)<CR>
+nnoremap <silent> <Space>4 :<C-U>call <SID>go_to_tab(4)<CR>
+nnoremap <silent> <Space>5 :<C-U>call <SID>go_to_tab(5)<CR>
+nnoremap <silent> <Space>6 :<C-U>call <SID>go_to_tab(6)<CR>
+nnoremap <silent> <Space>7 :<C-U>call <SID>go_to_tab(7)<CR>
+nnoremap <silent> <Space>8 :<C-U>call <SID>go_to_tab(8)<CR>
+nnoremap <silent> <Space>9 :<C-U>call <SID>go_to_tab(9)<CR>
+nnoremap <silent> <Space>0 :<C-U>call <SID>go_to_tab(10)<CR>
+
+function! s:go_to_tab(num)
+    let l:tabnum = a:num
+    let l:lasttab = tabpagenr('$')
+    if l:tabnum > l:lasttab
+        let l:tabnum = l:lasttab
+    endif
+    execute 'tabnext ' . l:tabnum
+endfunction
+
+
 " Solve the problem that Delete key does not work.
 if has('unix') && !has('gui_running')
     noremap!  
@@ -263,28 +293,6 @@ function! s:go_to_foot()
     if l:bef_col == l:aft_col
         normal! $
     endif
-endfunction
-
-
-" Go to optional tab page.
-nnoremap <silent> <Space>1 :<C-U>call <SID>go_to_tab(1)<CR>
-nnoremap <silent> <Space>2 :<C-U>call <SID>go_to_tab(2)<CR>
-nnoremap <silent> <Space>3 :<C-U>call <SID>go_to_tab(3)<CR>
-nnoremap <silent> <Space>4 :<C-U>call <SID>go_to_tab(4)<CR>
-nnoremap <silent> <Space>5 :<C-U>call <SID>go_to_tab(5)<CR>
-nnoremap <silent> <Space>6 :<C-U>call <SID>go_to_tab(6)<CR>
-nnoremap <silent> <Space>7 :<C-U>call <SID>go_to_tab(7)<CR>
-nnoremap <silent> <Space>8 :<C-U>call <SID>go_to_tab(8)<CR>
-nnoremap <silent> <Space>9 :<C-U>call <SID>go_to_tab(9)<CR>
-nnoremap <silent> <Space>0 :<C-U>call <SID>go_to_tab(10)<CR>
-
-function! s:go_to_tab(num)
-    let l:tabnum = a:num
-    let l:lasttab = tabpagenr('$')
-    if l:tabnum > l:lasttab
-        let l:tabnum = l:lasttab
-    endif
-    execute 'tabnext ' . l:tabnum
 endfunction
 
 
