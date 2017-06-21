@@ -420,3 +420,7 @@ hook_add = '''
     augroup END
 '''
 
+[[plugins]]
+repo = 'eagletmt/onlinejudge-vim'
+if = "executable('curl')"
+
