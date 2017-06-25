@@ -366,7 +366,7 @@ endfunction
 
 " Set the color of two byte spaces.
 function! s:set_tbs_hl()
-    highlight two_byte_space cterm=none ctermbg=red gui=none guibg=red
+    highlight two_byte_space cterm=underline ctermfg=red gui=underline guifg=red
 endfunction
 
 if has('syntax')
