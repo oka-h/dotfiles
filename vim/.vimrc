@@ -132,7 +132,7 @@ set ambiwidth=double
 
 " Dirctory for backup/swap file.
 let s:temp_dir = s:xdg_cache_home . expand('/vim')
-if !exists(s:temp_dir)
+if !isdirectory(s:temp_dir)
     call mkdir(s:temp_dir, 'p')
 endif
 
