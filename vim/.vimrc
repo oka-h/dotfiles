@@ -30,23 +30,18 @@ if filereadable(s:vimrc_local)
     execute 'source' s:vimrc_local
 endif
 
+" XDG CACHE HOME.
+let s:xdg_cache_home = empty($XDG_CACHE_HOME) ? expand('~/.cache')
+                                            \ : $XDG_CACHE_HOME
+
 
 " ------------------------------------------------------------------------------
 " Dein.vim settings
 " ------------------------------------------------------------------------------
 
 " The directory installed plugins.
-if empty($XDG_CACHE_HOME)
-    if (has('win32') || has('win64')) && has('nvim')
-        let g:dein_dir = expand('$HOME\AppData\Local\nvim')
-    else
-        let g:dein_dir = expand('~/.cache')
-    endif
-else
-    let g:dein_dir = $XDG_CACHE_HOME
-endif
-let g:dein_dir .= expand('/dein')
- 
+let g:dein_dir = s:xdg_cache_home . expand('/dein')
+
 " Dein.vim location.
 let s:dein_repo_dir = g:dein_dir . expand('/repos/github.com/Shougo/dein.vim')
 
@@ -92,7 +87,7 @@ function! s:load_dein()
 
     call dein#call_hook('source')
 
-    " Install plugins that are not yet installed, if any. 
+    " Install plugins that are not yet installed, if any.
     if dein#check_install()
         call dein#install()
     endif
@@ -123,12 +118,6 @@ endif
 " Reload the modified file automatically.
 set autoread
 
-" Don't make a backup file.
-set nobackup
-
-" Don't make a swap file.
-set noswapfile
-
 " Don't make an undo file.
 set noundofile
 
@@ -140,6 +129,20 @@ set helplang=ja
 
 " Use twice the width of ambiguous east asian width class characters.
 set ambiwidth=double
+
+" Dirctory for backup/swap file.
+let s:temp_dir = s:xdg_cache_home . expand('/vim')
+if !exists(s:temp_dir)
+    call mkdir(s:temp_dir, 'p')
+endif
+
+" Make backup file.
+set backup
+execute 'set backupdir=' . s:temp_dir
+
+" Make swap file.
+set swapfile
+execute 'set directory=' . s:temp_dir
 
 " Don't beep.
 if has('nvim') || v:version + has('patch793') >= 705
@@ -310,7 +313,7 @@ endif
 " Display relative line numbers.
 set relativenumber
 set numberwidth=3
- 
+
 " Set the minimal number of screen lines to keep above and below the cursor.
 set scrolloff=3
 
