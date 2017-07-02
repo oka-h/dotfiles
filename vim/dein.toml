@@ -387,10 +387,8 @@ hook_add = '''
         return join(split(l:removeCR, "\n")[a:head_lines:], "\n")
     endfunction
 
-    nnoremap [Ref] <Nop>
-    nmap <Space>r [Ref]
-    nnoremap [Ref]a :<C-U>Ref webdict alc<Space>
-    nnoremap [Ref]w :<C-U>Ref webdict wiki<Space>
+    nnoremap <Space>r :<C-U>Ref webdict alc<Space>
+    nnoremap <Space>r<Space> :<C-U>Ref webdict alc <C-R><C-W><CR>
 '''
 
 [[plugins]]

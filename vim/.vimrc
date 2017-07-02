@@ -210,8 +210,19 @@ noremap <Space>y "+y
 noremap <Space>p "+p
 noremap <Space>P "+P
 
+" Jump to hiragana or katakana.
+noremap <Space>f f<C-k>
+noremap <Space>F F<C-k>
+noremap <Space>t t<C-k>
+noremap <Space>T T<C-k>
+
 " Delete without use register.
 noremap <Space>d "_d
+
+" Solve the problem that Delete key does not work.
+if has('unix') && !has('gui_running')
+    noremap!  
+endif
 
 " Go to optional tab page.
 nnoremap <silent> <Space>1 :<C-U>call <SID>go_to_tab(1)<CR>
@@ -234,11 +245,6 @@ function! s:go_to_tab(num)
     execute 'tabnext ' . l:tabnum
 endfunction
 
-
-" Solve the problem that Delete key does not work.
-if has('unix') && !has('gui_running')
-    noremap!  
-endif
 
 " Release searching highlight by <ESC><ESC>.
 nnoremap <ESC><ESC> :<C-U>nohlsearch<CR>
@@ -265,18 +271,19 @@ inoremap <C-F> <RIGHT>
 cnoremap <C-P> <UP>
 cnoremap <C-N> <DOWN>
 
-" Assign <Home> and <End> to "<Space>h" and "<Space>l".
-" This uses "g^", "^" and "0" or "g$" and "$" for different purposes in
-" accordance situations.
-" TODO: Make this to be able to use in visual mode.
-nnoremap <silent> <Space>h :<C-U>call <SID>go_to_head()<CR>
-vnoremap          <Space>h ^
+" Assign <Home> and <End> to "<Space>h" and "<Space>l". This uses "g^", "^" and
+" "0" or "g$" and "$" for different purposes in accordance situations.
+nnoremap <silent> <Space>h :<C-U>call <SID>go_to_head('n')<CR>
+vnoremap <silent> <Space>h :<C-U>call <SID>go_to_head('v')<CR>
 onoremap          <Space>h ^
-nnoremap <silent> <Space>l :<C-U>call <SID>go_to_foot()<CR>
-vnoremap          <Space>l $
+nnoremap <silent> <Space>l :<C-U>call <SID>go_to_foot('n')<CR>
+vnoremap <silent> <Space>l :<C-U>call <SID>go_to_foot('v')<CR>
 onoremap          <Space>l $
 
-function! s:go_to_head()
+function! s:go_to_head(mode)
+    if a:mode == 'v'
+        normal! gv
+    endif
     let l:bef_col = col('.')
     normal! g^
     let l:aft_col = col('.')
@@ -289,7 +296,10 @@ function! s:go_to_head()
     endif
 endfunction
 
-function! s:go_to_foot()
+function! s:go_to_foot(mode)
+    if a:mode == 'v'
+        normal! gv
+    endif
     let l:bef_col = col('.')
     normal! g$
     let l:aft_col = col('.')
@@ -476,6 +486,10 @@ set whichwrap=h,l,<,>,[,]
 set wildmenu
 set wildmode=longest:full,full
 
+" Add full-size brackets.
+set matchpairs+=（:）,「:」,【:】,『:』,［:］,〈:〉,《:》,〔:〕,｛:｝,«:»,‹:›,
+               \〘:〙,〚:〛,“:”,‘:’,❝:❞,❛:❜,〖:〗
+
 " Make replacements easier to recognize.
 if has('nvim')
     set inccommand=split
@@ -484,9 +498,11 @@ endif
 " Ignore Japanese when check spelling
 set spelllang& spelllang+=cjk
 
-" Disable completing comment.
-augroup auto_comment_off
+" Setting of format options.
+augroup format_options
     autocmd!
+    autocmd BufEnter * setlocal formatoptions+=M
+    autocmd BufEnter * setlocal formatoptions+=j
     autocmd BufEnter * setlocal formatoptions-=r
     autocmd BufEnter * setlocal formatoptions-=o
 augroup END
