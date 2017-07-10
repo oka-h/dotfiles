@@ -355,6 +355,13 @@ hook_add = '''
 # '''
 
 [[plugins]]
+repo = 'koron/codic-vim'
+on_cmd = 'Codic'
+hook_add = '''
+    noremap <Space>c :<C-U>Codic<Space>
+'''
+
+[[plugins]]
 repo = 'thinca/vim-ref'
 if = "executable('w3m') || executable('lynx')"
 on_cmd = 'Ref'
