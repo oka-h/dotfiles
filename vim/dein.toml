@@ -355,6 +355,13 @@ hook_add = '''
 # '''
 
 [[plugins]]
+repo = 'fuenor/jpmoveword.vim'
+hook_add = '''
+    let g:jpmoveword_enable_WBE = 1
+    let g:jpmoveword_separator = '，．、。（）'
+'''
+
+[[plugins]]
 repo = 'koron/codic-vim'
 on_cmd = 'Codic'
 hook_add = '''
