@@ -486,9 +486,8 @@ set whichwrap=h,l,<,>,[,]
 set wildmenu
 set wildmode=longest:full,full
 
-" Add full-size brackets.
-set matchpairs+=（:）,「:」,【:】,『:』,［:］,〈:〉,《:》,〔:〕,｛:｝,«:»,‹:›,
-               \〘:〙,〚:〛,“:”,‘:’,❝:❞,❛:❜,〖:〗
+" Add full-size bracket.
+set matchpairs+=（:）
 
 " Make replacements easier to recognize.
 if has('nvim')
