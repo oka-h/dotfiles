@@ -505,9 +505,10 @@ augroup vimscript
     autocmd BufRead,BufNewFile *.toml inoremap <buffer> " "
     autocmd BufRead,BufNewFile *.toml inoremap <buffer> ' '
 
-    autocmd FileType vim,help nnoremap <buffer> K :<C-U>help <C-R><C-W><CR>
-    autocmd BufRead,BufNewFile *.toml
-                            \ nnoremap <buffer> K :<C-U>help <C-R><C-W><CR>
+    autocmd FileType vim,help nnoremap <buffer> <silent> K :<C-U>help
+                                                                \ <C-R><C-W><CR>
+    autocmd BufRead,BufNewFile *.toml nnoremap <buffer> <silent> K :<C-U>help
+                                                                \ <C-R><C-W><CR>
 
     autocmd BufRead,BufNewFile *.toml set filetype=conf
 augroup END
