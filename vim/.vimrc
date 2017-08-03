@@ -161,21 +161,30 @@ endif
 noremap <BS>    <Nop>
 noremap <Space> <Nop>
 
+noremap ; :
+noremap : ;
+nnoremap q; q:
+
 noremap j gj
 noremap gj j
 noremap k gk
 noremap gk k
 
-noremap ; :
-noremap : ;
-nnoremap q; q:
+noremap Y y$
 
 noremap <Space>y "+y
+noremap <Space>Y "+y$
 noremap <Space>p "+p
 noremap <Space>P "+P
 
+noremap <Space>c "_c
+noremap <Space>C "_C
 noremap <Space>d "_d
 noremap <Space>D "_D
+noremap <Space>s "_s
+noremap <Space>S "_S
+noremap <Space>x "_x
+noremap <Space>X "_X
 
 noremap <Space>f f<C-k>
 noremap <Space>F F<C-k>
@@ -197,12 +206,12 @@ nnoremap <silent> <Space>6 :<C-U>call <SID>go_to_tab(6)<CR>
 nnoremap <silent> <Space>7 :<C-U>call <SID>go_to_tab(7)<CR>
 nnoremap <silent> <Space>8 :<C-U>call <SID>go_to_tab(8)<CR>
 nnoremap <silent> <Space>9 :<C-U>call <SID>go_to_tab(9)<CR>
-nnoremap <silent> <Space>0 :<C-U>call <SID>go_to_tab(10)<CR>
+nnoremap <silent> <Space>0 :<C-U>call <SID>go_to_tab(0)<CR>
 
 function! s:go_to_tab(num)
     let l:tabnum = a:num
     let l:lasttab = tabpagenr('$')
-    if l:tabnum > l:lasttab
+    if l:tabnum > l:lasttab || l:tabnum == 0
         let l:tabnum = l:lasttab
     endif
     execute 'tabnext ' . l:tabnum
