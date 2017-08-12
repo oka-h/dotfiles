@@ -480,6 +480,11 @@ let g:java_highlight_all       = 1
 let g:java_highlight_functions = 'style'
 let g:java_space_error         = 1
 
+augroup jay
+    autocmd!
+    autocmd BufRead,BufNewFile *.jay set filetype=java
+augroup END
+
 " Markdown
 augroup markdown
     autocmd!
