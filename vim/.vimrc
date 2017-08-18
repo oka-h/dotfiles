@@ -21,10 +21,9 @@ set fileencodings=usc-bom,utf-8,iso-2022-jp-3,euc-jp,cp932
 
 let g:disable_plugins = []
 
-let s:vimrc_local = expand('~/.vimrc_local')
-if filereadable(s:vimrc_local)
-    let g:is_at_start = exists('v:true') ? v:true : 1
-    execute 'source' s:vimrc_local
+let s:vimrc_local_pre = expand('~/.vimrc_local_pre')
+if filereadable(s:vimrc_local_pre)
+    execute 'source' s:vimrc_local_pre
 endif
 
 let s:xdg_cache_home = empty($XDG_CACHE_HOME) ? expand('~/.cache')
@@ -533,9 +532,8 @@ augroup END
 " Local settings
 " ------------------------------------------------------------------------------
 
-if filereadable(s:vimrc_local)
-    let g:is_at_start = exists('v:false') ? v:false : 0
-    execute 'source' s:vimrc_local
-    unlet g:is_at_start
+let s:vimrc_local_post = expand('~/.vimrc_local')
+if filereadable(s:vimrc_local_post)
+    execute 'source' s:vimrc_local_post
 endif
 
