@@ -243,9 +243,10 @@ hook_add = '''
     endif
 
     if has('win32unix')
+        let s:root = substitute(substitute(system('cygpath -w /'), '\\', '/', 'g'), '\n', '', 'g')
         let g:quickrun_config['java'] = {
-        \   'exec': ['javac -J-Dfile.encoding=UTF-8 %o `cygpath -wp %s`',
-        \            '%c -Dfile.encoding=UTF-8 `cygpath -wp %s:t:r` %a']
+        \   'exec': ['javac -J-Dfile.encoding=UTF-8 %o ' . s:root . '%s',
+        \            '%c -Dfile.encoding=UTF-8 -cp ' . s:root . '%s:h %s:t:r %a']
         \}
     endif
 
