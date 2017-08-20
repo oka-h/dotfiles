@@ -9,31 +9,19 @@ repo = 'Shougo/dein.vim'
 repo = 'vim-jp/vimdoc-ja'
 on_ft = 'help'
 hook_post_update = '''
-    execute 'helptags '
-        \ . g:dein_dir . expand('/repos/github.com/vim-jp/vimdoc-ja/doc')
+    let s:doc_dir = g:dein_dir . expand('/repos/github.com/vim-jp/vimdoc-ja/doc')
+    execute 'helptags ' . s:doc_dir
 '''
 hook_add = '''
     if &runtimepath !~# expand('/vimdoc-ja')
-        execute 'set runtimepath+='
-            \ . g:dein_dir . expand('/repos/github.com/vim-jp/vimdoc-ja')
+        let s:vimdoc_dir = g:dein_dir . expand('/repos/github.com/vim-jp/vimdoc-ja')
+        execute 'set runtimepath+=' . s:vimdoc_dir
     endif
 '''
 
 [[plugins]]
 repo = 'Shougo/vimproc.vim'
 build = 'make'
-# hook_post_update = '''
-#     if dein#util#_is_windows()
-#         let s:cmd = 'tools\\update-dll-mingw'
-#     elseif dein#util#_is_cygwin()
-#         let s:cmd = 'make -f make_cygwin.mak'
-#     elseif executable('gmake')
-#         let s:cmd = 'gmake'
-#     else
-#         let s:cmd = 'make'
-#     endif
-#     let g:dein#plugin.build = s:cmd
-# '''
 
 [[plugins]]
 repo = 'tyru/open-browser.vim'
@@ -192,8 +180,8 @@ hook_add = '''
     " \ pumvisible() ? "\<C-n>" :
     " \ neosnippet#expandable_or_jumpable() ?
     " \    "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
-    smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-    \ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+    smap <expr><TAB> neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)"
+                                                      \  : "\<TAB>"
 
     " For conceal markers.
     if has('conceal')
@@ -205,10 +193,8 @@ hook_add = '''
 repo = 'Shougo/neosnippet-snippets'
 if = "has('nvim') || v:version >= 704"
 on_source = 'neosnippet'
-# on_i = 1
 hook_add = '''
-    let g:neosnippet#snippets_directory = g:dein_dir
-        \ . expand('/repos/github.com/Shougo/neosnippet-snippets/snippets/')
+    let g:neosnippet#snippets_directory = g:dein_dir . expand('/repos/github.com/Shougo/neosnippet-snippets/snippets/')
 '''
 
 [[plugins]]
@@ -243,10 +229,14 @@ hook_add = '''
     endif
 
     if has('win32unix')
-        let s:root = substitute(substitute(system('cygpath -w /'), '\\', '/', 'g'), '\n', '', 'g')
+        let s:root = system('cygpath -w /')
+        let s:root = shellescape(s:root)
+        let s:root = substitute(s:root, '\n', '', 'g')
+
+        let s:javac_cmd = 'javac -J-Dfile.encoding=UTF-8 %o ' . s:root . '%s'
+        let s:java_cmd  = '%c -Dfile.encoding=UTF-8 -cp ' . s:root . '%s:h %s:t:r %a'
         let g:quickrun_config['java'] = {
-        \   'exec': ['javac -J-Dfile.encoding=UTF-8 %o ' . s:root . '%s',
-        \            '%c -Dfile.encoding=UTF-8 -cp ' . s:root . '%s:h %s:t:r %a']
+        \   'exec': [s:javac_cmd, s:java_cmd]
         \}
     endif
 
@@ -343,18 +333,6 @@ hook_add = '''
     noremap <Space>* *
 '''
 
-# [[plugins]]
-# repo = 'easymotion/vim-easymotion'
-# on_map = ['<plug>(easymotion-']
-# hook_add = '''
-#     let g:EasyMotion_do_mapping       = 0
-#     let g:EasyMotion_enter_jump_first = 1
-#     let g:EasyMotion_smartcase        = 1
-#     " let g:EasyMotion_use_migemo       = 1
-# 
-#     nmap <Space>f <plug>(easymotion-s2)
-# '''
-
 [[plugins]]
 repo = 'fuenor/jpmoveword.vim'
 hook_add = '''
@@ -374,10 +352,9 @@ repo = 'thinca/vim-ref'
 if = "executable('w3m') || executable('lynx')"
 on_cmd = 'Ref'
 hook_add = '''
-    let g:ref_source_webdict_cmd =
-    \   executable('w3m')  ? 'w3m -dump %s' :
-    \   executable('lynx') ? 'lynx -dump -nonumbers %s' :
-    \                        ''
+    let g:ref_source_webdict_cmd = executable('w3m')  ? 'w3m -dump %s' :
+                                 \ executable('lynx') ? 'lynx -dump -nonumbers %s' :
+                                 \                      ''
 
     let g:ref_source_webdict_sites = {
     \   'alc' : {
@@ -391,29 +368,22 @@ hook_add = '''
     let g:ref_source_webdict_sites.default = 'alc'
 
     function! g:ref_source_webdict_sites.alc.filter(output)
-        return s:remove_lines(a:output, 24)
+        return s:remove_wasted_lines(a:output, 24)
     endfunction
+
     function! g:ref_source_webdict_sites.wiki.filter(output)
-        return s:remove_lines(a:output, 2)
+        return s:remove_wasted_lines(a:output, 2)
     endfunction
-    function! s:remove_lines(output, head_lines)
-        let l:removeCR = a:output
-        let l:removeCR = substitute(l:removeCR, '\n\{3,}',   '\n\n',     'g')
-        return join(split(l:removeCR, "\n")[a:head_lines:], "\n")
+
+    function! s:remove_wasted_lines(text, head_lines)
+        let l:str = substitute(a:text, '\n\{3,}', '\n\n', 'g')
+        let l:str =  join(split(l:str, "\n")[a:head_lines:], "\n")
+        return l:str
     endfunction
 
     nnoremap <Space>r :<C-U>Ref webdict alc<Space>
     nnoremap <Space>r<Space> :<C-U>Ref webdict alc <C-R><C-W><CR>
 '''
-
-# [[plugins]]
-# repo = 'yuratomo/w3m.vim'
-# if = "executable('w3m')"
-# on_cmd = ['W3m',      'W3mHistory', 'W3mHistoryClear', 'W3mLocal',
-#           'W3mSplit', 'W3mTab',     'W3mVSplit']
-# hook_add = '''
-#     nnoremap <expr> <Space>b expand('%') == '' ? ':W3m ' : ':W3mTab '
-# '''
 
 [[plugins]]
 repo = 'thinca/vim-singleton'

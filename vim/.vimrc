@@ -87,8 +87,7 @@ else
     command! DeinInstall call s:install_dein()
     augroup nodein_call
         autocmd!
-        autocmd VimEnter * echomsg 'Dein.vim is not installed. Please install '
-                               \ . 'it by :DeinIntall.'
+        autocmd VimEnter * echomsg 'Dein.vim is not installed. Please install it by :DeinIntall.'
     augroup END
 endif
 
@@ -131,14 +130,13 @@ augroup save_and_load_session
         " Restore a previous session file when vim starts with no argument.
         autocmd VimEnter * nested if @% == '' && s:get_buf_byte() == 0
                               \ |     execute 'source' s:session_file
+                              \ |     call delete(s:session_file)
                               \ | endif
     endif
 
     " Save current session file when vim finishes.
     let g:save_session = 0
-    autocmd VimLeave * if g:save_session == 0
-                   \ |     call delete(s:session_file)
-                   \ | else
+    autocmd VimLeave * if g:save_session != 0
                    \ |     execute 'mksession!' s:session_file
                    \ | endif
 augroup END
@@ -240,14 +238,14 @@ cnoremap <C-N> <DOWN>
 
 " Assign <Home> and <End> to "<Space>h" and "<Space>l". This uses "g^", "^" and
 " "0" or "g$" and "$" for different purposes in accordance situations.
-nnoremap <silent> <Space>h :<C-U>call <SID>go_to_head('n')<CR>
-vnoremap <silent> <Space>h :<C-U>call <SID>go_to_head('v')<CR>
+nnoremap <silent> <Space>h :<C-U>call <SID>go_to_line_head('n')<CR>
+vnoremap <silent> <Space>h :<C-U>call <SID>go_to_line_head('v')<CR>
 onoremap          <Space>h ^
-nnoremap <silent> <Space>l :<C-U>call <SID>go_to_foot('n')<CR>
-vnoremap <silent> <Space>l :<C-U>call <SID>go_to_foot('v')<CR>
+nnoremap <silent> <Space>l :<C-U>call <SID>go_to_line_end('n')<CR>
+vnoremap <silent> <Space>l :<C-U>call <SID>go_to_line_end('v')<CR>
 onoremap          <Space>l $
 
-function! s:go_to_head(mode)
+function! s:go_to_line_head(mode)
     if a:mode == 'v'
         normal! gv
     endif
@@ -263,7 +261,7 @@ function! s:go_to_head(mode)
     endif
 endfunction
 
-function! s:go_to_foot(mode)
+function! s:go_to_line_end(mode)
     if a:mode == 'v'
         normal! gv
     endif
@@ -297,14 +295,22 @@ set laststatus=2
 set statusline=%!g:My_status_line()
 
 function! g:My_status_line()
-    let l:pwd = getcwd()
-    return ' [' . (l:pwd == $HOME ? '~' : '') . '/'
-       \ . fnamemodify(l:pwd, ':~:t') . '] '
-       \ . '%<%F%m%r%h%w%= '
-       \ . '%{&fileformat!=''''?''| ''.&fileformat.'' '':''''}'
-       \ . '%{&fileencoding!=''''?''| ''.&fileencoding.'' '':''''}'
-       \ . '%{&filetype!=''''?''| ''.&filetype.'' '':''''}'
-       \ . '| %3v:%' . (float2nr(log10(line('$')))+1) . 'l / %L '
+    let l:pwd  = ' ['
+    let l:pwd .= (getcwd() == $HOME) ? '~/'
+                                   \ : '/' . fnamemodify(getcwd(), ':~:t')
+    let l:pwd .= '] '
+    let l:file = '%<%F%m%r%h%w%= '
+
+    let l:format   = (&fileformat   != '') ? '| ' . &fileformat   . ' ' : ''
+    let l:encoding = (&fileencoding != '') ? '| ' . &fileencoding . ' ' : ''
+    let l:filetype = (&filetype     != '') ? '| ' . &filetype     . ' ' : ''
+
+    let l:col = '| %3v'
+    let l:line_digit = (float2nr(log10(line('$')))+1)
+    let l:line = ':%' . l:line_digit . 'l '
+    let l:max_line = '/ %L '
+
+    return l:pwd . l:file . l:format . l:encoding . l:filetype . l:col . l:line . l:max_line
 endfunction
 
 
@@ -316,8 +322,7 @@ set t_Co=256
 
 augroup highlights
     autocmd!
-    autocmd ColorScheme * highlight CursorLineNr cterm=bold ctermfg=173
-                                                 \ gui=bold   guifg=#D7875F
+    autocmd ColorScheme * highlight CursorLineNr cterm=bold ctermfg=173 gui=bold   guifg=#D7875F
 augroup END
 
 " Highlight two-byte spaces.
@@ -370,12 +375,16 @@ xnoremap * :<C-U>call <SID>visual_star_search('/')<CR>
 xnoremap # :<C-U>call <SID>visual_star_search('?')<CR>
 
 function! s:visual_star_search(key)
-    let l:temp = @s
+    let l:temp = @k
     normal! gv"sy
-    let l:search = @s
+    let l:keyword = @k
     let @s = l:temp
-    call feedkeys(a:key . '\V' . substitute(substitute(escape(l:search, '/\'),
-                                \ '\n$', '', ''), '\n', '\\n', 'g') . "\<CR>")
+
+    let l:keyword = escape(l:keyword, '/\')
+    let l:keyword = substitute(l:keyword, '\n$', '', '')
+    let l:keyword = substitute(l:keyword, '\n', '\\n', 'g')
+    let l:keyword = '\V' . l:keyword
+    call feedkeys(a:key . l:keyword . "\<CR>")
 endfunction
 
 
@@ -416,16 +425,22 @@ augroup format_options
     autocmd BufEnter * setlocal formatoptions-=o
 augroup END
 
-" Display the last modification of the current file by <C-G>.
+" Display latest update time of the current file by <C-G>.
 nnoremap <C-G> :<C-U>call <SID>display_file_info()<CR>
 
 function! s:display_file_info()
-    let l:info = ' ' . expand('%:p:~')
-    let l:time = getftime(expand('%'))
-    if l:time >= 0
-        let l:info .= strftime(" (%y/%m/%d %H:%M:%S)", l:time)
+    let l:filename =  expand('%:p:~')
+    if l:filename == ''
+        let l:filename = '[No Name]'
     endif
-    echomsg l:info
+
+    let l:update_time = getftime(expand('%'))
+    if l:update_time >= 0
+        let l:update_time = strftime(" (%y/%m/%d %H:%M:%S)", l:update_time)
+        echomsg ' ' . l:filename . l:update_time
+    else
+        echomsg ' ' . l:filename
+    endif
 endfunction
 
 
@@ -436,11 +451,12 @@ function! s:switch_display_mode()
     let l:cur_tab = tabpagenr()
     let l:cur_win = winnr()
 
+    let l:terminal = '^term://'
     if &cursorline
         setglobal nocursorline
         setglobal nonumber
         setglobal relativenumber
-        tabdo windo if expand('%') !~ '^term://'
+        tabdo windo if expand('%') !~ l:terminal
                 \ |     setlocal nocursorline
                 \ |     if &number || &relativenumber
                 \ |         setlocal nonumber
@@ -451,7 +467,7 @@ function! s:switch_display_mode()
         setglobal cursorline
         setglobal number
         setglobal norelativenumber
-        tabdo windo if expand('%') !~ '^term://'
+        tabdo windo if expand('%') !~ l:terminal
                 \ |     setlocal cursorline
                 \ |     if &number || &relativenumber
                 \ |         setlocal number
@@ -513,10 +529,8 @@ augroup vimscript
     autocmd BufRead,BufNewFile *.toml inoremap <buffer> " "
     autocmd BufRead,BufNewFile *.toml inoremap <buffer> ' '
 
-    autocmd FileType vim,help nnoremap <buffer> <silent> K :<C-U>help
-                                                                \ <C-R><C-W><CR>
-    autocmd BufRead,BufNewFile *.toml nnoremap <buffer> <silent> K :<C-U>help
-                                                                \ <C-R><C-W><CR>
+    autocmd FileType vim,help nnoremap <buffer> <silent> K :<C-U>help <C-R><C-W><CR>
+    autocmd BufRead,BufNewFile *.toml nnoremap <buffer> <silent> K :<C-U>help <C-R><C-W><CR>
 
     autocmd BufRead,BufNewFile *.toml set filetype=conf
 augroup END
