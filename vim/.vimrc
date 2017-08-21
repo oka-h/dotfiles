@@ -167,10 +167,7 @@ noremap gj j
 noremap k gk
 noremap gk k
 
-noremap Y y$
-
 noremap <Space>y "+y
-noremap <Space>Y "+y$
 noremap <Space>p "+p
 noremap <Space>P "+P
 
@@ -183,10 +180,10 @@ noremap <Space>S "_S
 noremap <Space>x "_x
 noremap <Space>X "_X
 
-noremap <Space>f f<C-k>
-noremap <Space>F F<C-k>
-noremap <Space>t t<C-k>
-noremap <Space>T T<C-k>
+noremap <Space>f f<C-K>
+noremap <Space>F F<C-K>
+noremap <Space>t t<C-K>
+noremap <Space>T T<C-K>
 
 " Solve the problem that Delete key does not work.
 if has('unix') && !has('gui_running')
@@ -215,26 +212,27 @@ function! s:go_to_tab(num)
 endfunction
 
 
-nnoremap <ESC><ESC> :<C-U>nohlsearch<CR>
+nnoremap <Esc><Esc> :<C-U>nohlsearch<CR>
 
-inoremap {     {}<LEFT>
-inoremap {<CR> {<CR>}<ESC>O
+inoremap <C-B> <Left>
+inoremap <C-F> <Right>
+inoremap <C-L> <Del>
+
+inoremap {     {}<Left>
+inoremap {<CR> {<CR>}<Esc>O
 inoremap {}    {}
 inoremap {{{   {{{
-inoremap (     ()<LEFT>
+inoremap (     ()<Left>
 inoremap ()    ()
-inoremap [     []<LEFT>
+inoremap [     []<Left>
 inoremap []    []
-inoremap "     ""<LEFT>
+inoremap "     ""<Left>
 inoremap ""    ""
-inoremap '     ''<LEFT>
+inoremap '     ''<Left>
 inoremap ''    ''
 
-inoremap <C-B> <LEFT>
-inoremap <C-F> <RIGHT>
-
-cnoremap <C-P> <UP>
-cnoremap <C-N> <DOWN>
+cnoremap <C-P> <Up>
+cnoremap <C-N> <Down>
 
 " Assign <Home> and <End> to "<Space>h" and "<Space>l". This uses "g^", "^" and
 " "0" or "g$" and "$" for different purposes in accordance situations.
@@ -275,7 +273,7 @@ endfunction
 
 
 if has('nvim')
-    tnoremap <ESC><ESC> <C-\><C-N>
+    tnoremap <Esc><Esc> <C-\><C-N>
 endif
 
 

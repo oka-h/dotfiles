@@ -31,11 +31,9 @@ repo = 'Shougo/unite.vim'
 if = "!(has('python3') && (has('nvim') || v:version >= 800))"
 depends = 'neomru.vim'
 hook_add = '''
-    nnoremap [Unite] <Nop>
-    nmap <Space>u [Unite]
-    nnoremap <silent> [Unite]f :<C-U>Unite file_rec<CR>
-    nnoremap <silent> [Unite]m :<C-U>Unite file_mru<CR>
-    nnoremap <silent> [Unite]b :<C-U>UniteWithBufferDir file_rec<CR>
+    nnoremap <silent> <C-H> :<C-U>Unite file_rec<CR>
+    nnoremap <silent> <C-J> :<C-U>Unite file_mru<CR>
+    nnoremap <silent> <C-K> :<C-U>UniteWithBufferDir file_rec<CR>
 '''
 
 [[plugins]]
@@ -44,11 +42,9 @@ if = "has('python3') && (has('nvim') || v:version >= 800)"
 depends = 'neomru.vim'
 on_cmd = ['Denite', 'DeniteBufferDir', 'DeniteCursorWord', 'DeniteProjectDir']
 hook_add = '''
-    nnoremap [Denite] <Nop>
-    nmap <Space>u [Denite]
-    nnoremap <silent> [Denite]f :<C-U>Denite file_rec<CR>
-    nnoremap <silent> [Denite]m :<C-U>Denite file_mru -mode=normal<CR>
-    nnoremap <silent> [Denite]b :<C-U>DeniteBufferDir file_rec<CR>
+    nnoremap <silent> <C-H> :<C-U>Denite file_rec<CR>
+    nnoremap <silent> <C-J> :<C-U>Denite file_mru -mode=normal<CR>
+    nnoremap <silent> <C-K> :<C-U>DeniteBufferDir file_rec<CR>
 '''
 hook_post_source = '''
     call denite#custom#source('file_rec', 'matchers', ['matcher_regexp'])
