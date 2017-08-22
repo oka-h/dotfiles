@@ -42,9 +42,9 @@ if = "has('python3') && (has('nvim') || v:version >= 800)"
 depends = 'neomru.vim'
 on_cmd = ['Denite', 'DeniteBufferDir', 'DeniteCursorWord', 'DeniteProjectDir']
 hook_add = '''
-    nnoremap <silent> <C-H> :<C-U>Denite file_rec<CR>
+    nnoremap <silent> <C-H> :<C-U>Denite file_rec -mode=normal<CR>
     nnoremap <silent> <C-J> :<C-U>Denite file_mru -mode=normal<CR>
-    nnoremap <silent> <C-K> :<C-U>DeniteBufferDir file_rec<CR>
+    nnoremap <silent> <C-K> :<C-U>DeniteBufferDir file_rec -mode=normal<CR>
 '''
 hook_post_source = '''
     call denite#custom#source('file_rec', 'matchers', ['matcher_regexp'])
@@ -398,8 +398,4 @@ hook_add = '''
         autocmd FileType java setlocal omnifunc=javacomplete#Complete
     augroup END
 '''
-
-# [[plugins]]
-# repo = 'eagletmt/onlinejudge-vim'
-# if = "executable('curl')"
 
