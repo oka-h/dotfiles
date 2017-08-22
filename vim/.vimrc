@@ -324,7 +324,6 @@ augroup highlights
 augroup END
 
 " Highlight two-byte spaces.
-
 function! s:set_tbs_hl()
     highlight two_byte_space cterm=underline ctermfg=red gui=underline guifg=red
 endfunction
@@ -374,9 +373,9 @@ xnoremap # :<C-U>call <SID>visual_star_search('?')<CR>
 
 function! s:visual_star_search(key)
     let l:temp = @k
-    normal! gv"sy
+    normal! gv"ky
     let l:keyword = @k
-    let @s = l:temp
+    let @k = l:temp
 
     let l:keyword = escape(l:keyword, '/\')
     let l:keyword = substitute(l:keyword, '\n$', '', '')
