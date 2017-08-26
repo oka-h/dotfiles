@@ -318,9 +318,9 @@ endfunction
 
 set t_Co=256
 
-augroup highlights
+augroup cursor_line_nr
     autocmd!
-    autocmd ColorScheme * highlight CursorLineNr cterm=bold ctermfg=173 gui=bold   guifg=#D7875F
+    autocmd ColorScheme * highlight CursorLineNr cterm=bold ctermfg=173 gui=bold guifg=#D7875F
 augroup END
 
 " Highlight two-byte spaces.
@@ -331,9 +331,9 @@ endfunction
 if has('syntax')
     augroup two_byte_space
         autocmd!
+        autocmd ColorScheme       * call s:set_tbs_hl()
         autocmd VimEnter,WinEnter * match two_byte_space /　/
         autocmd VimEnter,WinEnter * match two_byte_space '\%u3000'
-        autocmd ColorScheme       * call s:set_tbs_hl()
     augroup END
     call s:set_tbs_hl()
 endif
