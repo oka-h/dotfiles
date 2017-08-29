@@ -55,13 +55,16 @@ function! s:load_dein()
     endif
 
     if dein#load_state(g:dein_dir)
-        let s:toml_dir   = expand('~/dotfiles/vim')
-        let s:toml       = s:toml_dir . expand('/dein.toml')
-        let s:local_toml = expand('~/.dein_local.toml')
+        let l:vimrc_path = expand('<sfile>:p')
+        let l:vimrc_path = resolve(l:vimrc_path)
+        let l:toml_dir   = fnamemodify(l:toml_dir, ':h')
+        let l:toml       = l:toml_dir . expand('/dein.toml')
 
-        call dein#begin(g:dein_dir, expand('<sfile>'))
+        let l:local_toml = expand('~/.dein_local.toml')
 
+        call dein#begin(g:dein_dir)
         call dein#load_toml(s:toml)
+
         if filereadable(s:local_toml)
             call dein#load_toml(s:local_toml)
         endif
@@ -417,10 +420,14 @@ endif
 augroup format_options
     autocmd!
     autocmd BufEnter * setlocal formatoptions+=M
-    autocmd BufEnter * setlocal formatoptions+=j
-    autocmd BufEnter * setlocal formatoptions-=r
-    autocmd BufEnter * setlocal formatoptions-=o
+                              \ formatoptions+=j
+                              \ formatoptions-=r
+                              \ formatoptions-=o
 augroup END
+
+if has('nvim')
+    set inccommand=split
+endif
 
 " Display latest update time of the current file by <C-G>.
 nnoremap <C-G> :<C-U>call <SID>display_file_info()<CR>
@@ -478,9 +485,33 @@ function! s:switch_display_mode()
 endfunction
 
 
-if has('nvim')
-    set inccommand=split
+" If Repository that is contained vimrc has been updated, tell about it.
+if has('job')
+    let s:vimrc_git_dir = expand('<sfile>:p')
+    let s:vimrc_git_dir = resolve(s:vimrc_git_dir)
+    let s:vimrc_git_dir = fnamemodify(s:vimrc_git_dir, ':h:h')
+
+    let s:local_repos_id = system('git -C ' . s:vimrc_git_dir . ' log -1 origin | grep commit')
+    let s:local_repos_id = split(s:local_repos_id)[1]
+
+    let s:command = 'git -C ' . s:vimrc_git_dir . ' ls-remote origin HEAD | grep HEAD'
+    let s:job_option = {
+    \   'out_cb' : 'Check_vimrc_repos_updated'
+    \}
+    call job_start(s:command, s:job_option)
 endif
+
+function! g:Check_vimrc_repos_updated(channel, git_msg)
+    let l:remote_repos_id = split(a:git_msg)[0]
+    if l:remote_repos_id != s:local_repos_id
+        let l:msg = 'Repository of "' . fnamemodify(s:vimrc_git_dir, ':~') . '" has been updated.'
+        if v:vim_did_enter
+            echomsg l:msg
+        else
+            autocmd vimrc_repos_updated VimEnter * echomsg l:msg
+        endif
+    endif
+endfunction
 
 
 " ------------------------------------------------------------------------------
