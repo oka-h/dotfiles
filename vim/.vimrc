@@ -363,8 +363,8 @@ augroup END
 " Save the last search word and hlsearch for each buffers.
 augroup localized_search
     autocmd!
-    autocmd WinLeave * let b:vimrc_pattern = @/
-    autocmd WinEnter * let @/ = get(b:, 'vimrc_pattern', @/)
+    autocmd WinLeave * let b:last_pattern = @/
+    autocmd WinEnter * let @/ = get(b:, 'last_pattern', @/)
 augroup END
 
 " In visual mode, search the selected string by "*" or "#".
