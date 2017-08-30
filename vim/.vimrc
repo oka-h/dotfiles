@@ -293,6 +293,10 @@ set showcmd
 set lazyredraw
 set laststatus=2
 
+if has('linebreak')
+    set breakindent
+endif
+
 set statusline=%!g:My_status_line()
 
 function! g:My_status_line()
