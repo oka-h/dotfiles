@@ -9,14 +9,8 @@ repo = 'Shougo/dein.vim'
 repo = 'vim-jp/vimdoc-ja'
 on_ft = 'help'
 hook_post_update = '''
-    let s:doc_dir = g:dein_dir . expand('/repos/github.com/vim-jp/vimdoc-ja/doc')
+    let s:doc_dir = g:plugins_dir . expand('/repos/github.com/vim-jp/vimdoc-ja/doc')
     execute 'helptags ' . s:doc_dir
-'''
-hook_add = '''
-    if &runtimepath !~# expand('/vimdoc-ja')
-        let s:vimdoc_dir = g:dein_dir . expand('/repos/github.com/vim-jp/vimdoc-ja')
-        execute 'set runtimepath+=' . s:vimdoc_dir
-    endif
 '''
 
 [[plugins]]
@@ -190,7 +184,7 @@ repo = 'Shougo/neosnippet-snippets'
 if = "has('nvim') || v:version >= 704"
 on_source = 'neosnippet'
 hook_add = '''
-    let g:neosnippet#snippets_directory = g:dein_dir . expand('/repos/github.com/Shougo/neosnippet-snippets/snippets/')
+    let g:neosnippet#snippets_directory = g:plugins_dir . expand('/repos/github.com/Shougo/neosnippet-snippets/snippets/')
 '''
 
 [[plugins]]

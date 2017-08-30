@@ -19,9 +19,12 @@ endif
 set fileencodings=usc-bom,utf-8,iso-2022-jp-3,euc-jp,cp932
 
 
+let s:vimrc = resolve(expand('<sfile>:p'))
+let s:vimrc_local_pre  = expand('~/.vimrc_local_pre')
+let s:vimrc_local_post = expand('~/.vimrc_local')
+
 let g:disable_plugins = []
 
-let s:vimrc_local_pre = expand('~/.vimrc_local_pre')
 if filereadable(s:vimrc_local_pre)
     execute 'source' s:vimrc_local_pre
 endif
@@ -35,38 +38,36 @@ let s:xdg_cache_home = empty($XDG_CACHE_HOME) ? expand('~/.cache')
 " ------------------------------------------------------------------------------
 
 " The directory installed plugins.
-let g:dein_dir = s:xdg_cache_home . expand('/dein')
+let g:plugins_dir = s:xdg_cache_home . expand('/dein')
 
 " Dein.vim location.
-let s:dein_repo_dir = g:dein_dir . expand('/repos/github.com/Shougo/dein.vim')
+let s:dein_dir = g:plugins_dir . expand('/repos/github.com/Shougo/dein.vim')
+
+" dein.toml location.
+let s:toml = fnamemodify(s:vimrc, ':h') . expand('/dein.toml')
 
 function! s:install_dein()
-    execute '!git clone https://github.com/Shougo/dein.vim' s:dein_repo_dir
-    if isdirectory(s:dein_repo_dir)
+    execute '!git clone https://github.com/Shougo/dein.vim' s:dein_dir
+    if isdirectory(s:dein_dir)
         call s:load_dein()
         delcommand DeinInstall
     endif
 endfunction
 
-
 function! s:load_dein()
-    if &runtimepath !~# expand('/dein.vim')
-        execute 'set runtimepath^=' . s:dein_repo_dir
+    if &runtimepath !~# s:dein_dir
+        execute 'set runtimepath^=' . s:dein_dir
     endif
 
-    if dein#load_state(g:dein_dir)
-        let l:vimrc_path = expand('<sfile>:p')
-        let l:vimrc_path = resolve(l:vimrc_path)
-        let l:toml_dir   = fnamemodify(l:toml_dir, ':h')
-        let l:toml       = l:toml_dir . expand('/dein.toml')
-
+    if dein#load_state(g:plugins_dir)
+        let l:vimrcs = [s:vimrc, s:vimrc_local_pre, s:vimrc_local_post]
         let l:local_toml = expand('~/.dein_local.toml')
 
-        call dein#begin(g:dein_dir)
+        call dein#begin(g:plugins_dir, l:vimrcs)
         call dein#load_toml(s:toml)
 
-        if filereadable(s:local_toml)
-            call dein#load_toml(s:local_toml)
+        if filereadable(l:local_toml)
+            call dein#load_toml(l:local_toml)
         endif
 
         call dein#end()
@@ -83,8 +84,7 @@ function! s:load_dein()
     unlet g:disable_plugins
 endfunction
 
-
-if isdirectory(s:dein_repo_dir)
+if isdirectory(s:dein_dir)
     call s:load_dein()
 else
     command! DeinInstall call s:install_dein()
@@ -574,7 +574,6 @@ augroup END
 " Local settings
 " ------------------------------------------------------------------------------
 
-let s:vimrc_local_post = expand('~/.vimrc_local')
 if filereadable(s:vimrc_local_post)
     execute 'source' s:vimrc_local_post
 endif
