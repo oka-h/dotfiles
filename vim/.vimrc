@@ -288,7 +288,7 @@ set relativenumber
 set numberwidth=3
 set scrolloff=3
 set list
-set listchars=tab:>-,extends:>
+set listchars=tab:\ \ ,extends:>
 set showcmd
 set lazyredraw
 set laststatus=2
