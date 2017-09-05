@@ -190,7 +190,8 @@ noremap <Space>T T<C-K>
 
 " Solve the problem that Delete key does not work.
 if has('unix') && !has('gui_running')
-    noremap!  
+    inoremap  
+    cnoremap  
 endif
 
 " Go to optional tab page.
