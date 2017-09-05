@@ -46,7 +46,7 @@ let s:dein_dir = g:plugins_dir . expand('/repos/github.com/Shougo/dein.vim')
 " dein.toml location.
 let s:toml = fnamemodify(s:vimrc, ':h') . expand('/dein.toml')
 
-function! s:install_dein()
+function! s:install_dein() abort
     execute '!git clone https://github.com/Shougo/dein.vim' s:dein_dir
     if isdirectory(s:dein_dir)
         call s:load_dein()
@@ -54,7 +54,7 @@ function! s:install_dein()
     endif
 endfunction
 
-function! s:load_dein()
+function! s:load_dein() abort
     if &runtimepath !~# s:dein_dir
         execute 'set runtimepath^=' . s:dein_dir
     endif
@@ -144,7 +144,7 @@ augroup save_and_load_session
                    \ | endif
 augroup END
 
-function! s:get_buf_byte()
+function! s:get_buf_byte() abort
     let l:byte = line2byte(line('$') + 1)
     return l:byte == -1 ? 0 : byte - 1
 endfunction
@@ -206,7 +206,7 @@ nnoremap <silent> <Space>8 :<C-U>call <SID>go_to_tab(8)<CR>
 nnoremap <silent> <Space>9 :<C-U>call <SID>go_to_tab(9)<CR>
 nnoremap <silent> <Space>0 :<C-U>call <SID>go_to_tab(0)<CR>
 
-function! s:go_to_tab(num)
+function! s:go_to_tab(num) abort
     let l:tabnum = a:num
     let l:lasttab = tabpagenr('$')
     if l:tabnum > l:lasttab || l:tabnum == 0
@@ -247,7 +247,7 @@ nnoremap <silent> <Space>l :<C-U>call <SID>go_to_line_end('n')<CR>
 vnoremap <silent> <Space>l :<C-U>call <SID>go_to_line_end('v')<CR>
 onoremap          <Space>l $
 
-function! s:go_to_line_head(mode)
+function! s:go_to_line_head(mode) abort
     if a:mode == 'v'
         normal! gv
     endif
@@ -263,7 +263,7 @@ function! s:go_to_line_head(mode)
     endif
 endfunction
 
-function! s:go_to_line_end(mode)
+function! s:go_to_line_end(mode) abort
     if a:mode == 'v'
         normal! gv
     endif
@@ -300,7 +300,7 @@ endif
 
 set statusline=%!g:My_status_line()
 
-function! g:My_status_line()
+function! g:My_status_line() abort
     let l:pwd  = ' ['
     let l:pwd .= (getcwd() == $HOME) ? '~/'
                                    \ : '/' . fnamemodify(getcwd(), ':~:t')
@@ -332,7 +332,7 @@ augroup cursor_line_nr
 augroup END
 
 " Highlight two-byte spaces.
-function! s:set_tbs_hl()
+function! s:set_tbs_hl() abort
     highlight two_byte_space cterm=underline ctermfg=red gui=underline guifg=red
 endfunction
 
@@ -379,7 +379,7 @@ augroup END
 xnoremap * :<C-U>call <SID>visual_star_search('/')<CR>
 xnoremap # :<C-U>call <SID>visual_star_search('?')<CR>
 
-function! s:visual_star_search(key)
+function! s:visual_star_search(key) abort
     let l:temp = @k
     normal! gv"ky
     let l:keyword = @k
@@ -437,7 +437,7 @@ endif
 " Display latest update time of the current file by <C-G>.
 nnoremap <C-G> :<C-U>call <SID>display_file_info()<CR>
 
-function! s:display_file_info()
+function! s:display_file_info() abort
     let l:filename =  expand('%:p:~')
     if l:filename == ''
         let l:filename = '[No Name]'
@@ -456,7 +456,7 @@ endfunction
 " ":DisplayMode" switches "set number" and "set cursorline" respectively.
 command! DisplayMode call s:switch_display_mode()
 
-function! s:switch_display_mode()
+function! s:switch_display_mode() abort
     let l:cur_tab = tabpagenr()
     let l:cur_win = winnr()
 
@@ -506,7 +506,7 @@ if has('job')
     call job_start(s:command, s:job_option)
 endif
 
-function! g:Check_vimrc_repos_updated(channel, git_msg)
+function! g:Check_vimrc_repos_updated(channel, git_msg) abort
     let l:remote_repos_id = split(a:git_msg)[0]
     if l:remote_repos_id != s:local_repos_id
         let l:msg = 'Repository of "' . fnamemodify(s:vimrc_git_dir, ':~') . '" has been updated.'
@@ -517,6 +517,22 @@ function! g:Check_vimrc_repos_updated(channel, git_msg)
         endif
     endif
 endfunction
+
+
+" Write by sudo.
+if executable('sudo')
+    command! -nargs=? -complete=file_in_path W call s:sudo_write(<f-args>)
+endif
+
+function! s:sudo_write(...) abort
+    if a:0 <= 0
+        let l:file = '%'
+    else
+        let l:file = expand(a:1)
+    endif
+    execute 'write !sudo tee' l:file '> /dev/null'
+endfunction
+
 
 
 " ------------------------------------------------------------------------------
