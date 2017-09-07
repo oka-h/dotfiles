@@ -380,10 +380,10 @@ xnoremap * :<C-U>call <SID>visual_star_search('/')<CR>
 xnoremap # :<C-U>call <SID>visual_star_search('?')<CR>
 
 function! s:visual_star_search(key) abort
-    let l:temp = @k
-    normal! gv"ky
-    let l:keyword = @k
-    let @k = l:temp
+    let l:temp = @@
+    normal! gvy
+    let l:keyword = @@
+    let @@ = l:temp
 
     let l:keyword = escape(l:keyword, '/\')
     let l:keyword = substitute(l:keyword, '\n$', '', '')
