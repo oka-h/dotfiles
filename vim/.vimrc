@@ -547,7 +547,7 @@ let g:java_space_error         = 1
 " Markdown
 augroup markdown
     autocmd!
-    autocmd FileType markdown inoremap <buffer> ' '
+    autocmd FileType markdown inoremap <buffer> <nowait> ' '
 augroup END
 
 " shell script
@@ -560,7 +560,7 @@ augroup END
 " plain text
 augroup textfile
     autocmd!
-    autocmd FileType text inoremap <buffer> ' '
+    autocmd FileType text inoremap <buffer> <nowait> ' '
 augroup END
 
 " Tex
@@ -574,9 +574,9 @@ augroup END
 " Vim script
 augroup vimscript
     autocmd!
-    autocmd FileType           vim    inoremap <buffer> " "
-    autocmd BufRead,BufNewFile *.toml inoremap <buffer> " "
-    autocmd BufRead,BufNewFile *.toml inoremap <buffer> ' '
+    autocmd FileType           vim    inoremap <buffer> <nowait> " "
+    autocmd BufRead,BufNewFile *.toml inoremap <buffer> <nowait> " "
+    autocmd BufRead,BufNewFile *.toml inoremap <buffer> <nowait> ' '
 
     autocmd FileType vim,help nnoremap <buffer> <silent> K :<C-U>help <C-R><C-W><CR>
     autocmd BufRead,BufNewFile *.toml nnoremap <buffer> <silent> K :<C-U>help <C-R><C-W><CR>
