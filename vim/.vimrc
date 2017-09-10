@@ -380,10 +380,11 @@ xnoremap * :<C-U>call <SID>visual_star_search('/')<CR>
 xnoremap # :<C-U>call <SID>visual_star_search('?')<CR>
 
 function! s:visual_star_search(key) abort
-    let l:temp = @@
+    let l:reg_str  = getreg('"', 1, 1)
+    let l:reg_type = getregtype('"')
     normal! gvy
-    let l:keyword = @@
-    let @@ = l:temp
+    let l:keyword = getreg('"')
+    call setreg('"', l:reg_str, l:reg_type)
 
     let l:keyword = escape(l:keyword, '/\')
     let l:keyword = substitute(l:keyword, '\n$', '', '')
