@@ -151,7 +151,11 @@ endfunction
 
 
 if has('nvim')
-    let g:terminal_scrollback_buffer_size = 100000
+    if exists('+scrollback')
+        set scrollback=-1
+    else
+        let g:terminal_scrollback_buffer_size = 100000
+    endif
 endif
 
 " ------------------------------------------------------------------------------
