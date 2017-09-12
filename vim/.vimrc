@@ -498,6 +498,18 @@ endfunction
 
 
 " If Repository that is contained vimrc has been updated, tell about it.
+function! g:Check_vimrc_repos_updated(channel, git_msg) abort
+    let l:remote_repos_id = split(a:git_msg)[0]
+    if l:remote_repos_id != s:local_repos_id
+        let l:msg = 'Repository of "' . fnamemodify(s:vimrc_git_dir, ':~') . '" has been updated.'
+        if v:vim_did_enter
+            echomsg l:msg
+        else
+            autocmd vimrc_repos_updated VimEnter * echomsg l:msg
+        endif
+    endif
+endfunction
+
 if has('job')
     let s:vimrc_git_dir = expand('<sfile>:p')
     let s:vimrc_git_dir = resolve(s:vimrc_git_dir)
@@ -513,18 +525,6 @@ if has('job')
     call job_start(s:command, s:job_option)
 endif
 
-function! g:Check_vimrc_repos_updated(channel, git_msg) abort
-    let l:remote_repos_id = split(a:git_msg)[0]
-    if l:remote_repos_id != s:local_repos_id
-        let l:msg = 'Repository of "' . fnamemodify(s:vimrc_git_dir, ':~') . '" has been updated.'
-        if v:vim_did_enter
-            echomsg l:msg
-        else
-            autocmd vimrc_repos_updated VimEnter * echomsg l:msg
-        endif
-    endif
-endfunction
-
 
 " Write by sudo.
 if executable('sudo')
@@ -539,7 +539,6 @@ function! s:sudo_write(...) abort
     endif
     execute 'write !sudo tee' l:file '> /dev/null'
 endfunction
-
 
 
 " ------------------------------------------------------------------------------
