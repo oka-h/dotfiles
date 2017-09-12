@@ -76,6 +76,7 @@ alias lal="ls -al"
 alias lla="ls -al"
 
 
-# Load a local zshrc file if there is it.
+# Load a local rc file if there is it.
+[ -f ~/.shellrc_local ] && source ~/.shellrc_local
 [ -f ~/.zshrc_local ] && source ~/.zshrc_local
 
