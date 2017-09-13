@@ -332,10 +332,6 @@ repo = 'thinca/vim-ref'
 if = "executable('w3m') || executable('lynx')"
 on_cmd = 'Ref'
 hook_add = '''
-    let g:ref_source_webdict_cmd = executable('w3m')  ? 'w3m -dump %s' :
-                                 \ executable('lynx') ? 'lynx -dump -nonumbers %s' :
-                                 \                      ''
-
     let g:ref_source_webdict_sites = {
     \   'alc' : {
     \       'url' : 'http://eow.alc.co.jp/search?q=%s'
