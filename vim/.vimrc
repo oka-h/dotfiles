@@ -415,6 +415,8 @@ set tabstop=4
 " Other settings
 " ------------------------------------------------------------------------------
 
+set splitbelow
+set splitright
 set whichwrap=h,l,<,>,[,]
 set wildmenu
 set wildmode=longest:full,full
@@ -528,7 +530,7 @@ endif
 
 " Write by sudo.
 if executable('sudo')
-    command! -nargs=? -complete=file_in_path W call s:sudo_write(<f-args>)
+    command! -nargs=? -complete=file_in_path W call <SID>sudo_write(<f-args>)
 endif
 
 function! s:sudo_write(...) abort
@@ -538,6 +540,29 @@ function! s:sudo_write(...) abort
         let l:file = expand(a:1)
     endif
     execute 'write !sudo tee' l:file '> /dev/null'
+endfunction
+
+
+" View Ex command output on file.
+command! -nargs=+ -complete=command -bang Redir call <SID>redir_output(<q-bang>, <f-args>)
+
+function! s:redir_output(bang, ...) abort
+    let l:temp_file_name = tempname()
+
+    execute 'redir >' l:temp_file_name
+    silent execute join(a:000)
+    redir END
+
+    if a:bang == ''
+        if &lines * 3 > &columns * 2
+            let l:ex_cmd = 'split'
+        else
+            let l:ex_cmd = 'vsplit'
+        endif
+    else
+        let l:ex_cmd = 'tabedit'
+    endif
+    execute l:ex_cmd l:temp_file_name
 endfunction
 
 
