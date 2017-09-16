@@ -118,7 +118,7 @@ set swapfile
 execute 'set directory=' . s:temp_dir
 
 " Don't beep.
-if has('nvim') || v:version + has('patch793') >= 705
+if exists('+belloff')
     set belloff=all
 else
     set visualbell t_vb=
@@ -151,12 +151,10 @@ function! s:get_buf_byte() abort
 endfunction
 
 
-if has('nvim')
-    if exists('+scrollback')
-        set scrollback=-1
-    else
-        let g:terminal_scrollback_buffer_size = 100000
-    endif
+if exists('+scrollback')
+    set scrollback=-1
+elseif exists(':terminal') == 2
+    let g:terminal_scrollback_buffer_size = 100000
 endif
 
 
@@ -291,7 +289,7 @@ function! s:go_to_line_end(mode) abort
 endfunction
 
 
-if has('nvim')
+if exists(':tnoremap') == 2
     tnoremap <Esc><Esc> <C-\><C-N>
 endif
 
@@ -445,7 +443,7 @@ augroup format_options
                               \ formatoptions-=o
 augroup END
 
-if has('nvim')
+if exists('+inccommand')
     set inccommand=split
 endif
 
