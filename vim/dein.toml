@@ -300,7 +300,9 @@ hook_add = '''
     map n <plug>(incsearch-nohl-n)
     map N <plug>(incsearch-nohl-N)
     noremap <Space>/ /
+    noremap <Space>? ?
     noremap <Space>* *
+    noremap <Space># #
 '''
 
 [[plugins]]

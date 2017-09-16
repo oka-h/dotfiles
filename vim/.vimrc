@@ -218,15 +218,18 @@ function! s:go_to_tab(num) abort
     if l:tabnum > l:lasttab || l:tabnum == 0
         let l:tabnum = l:lasttab
     endif
-    execute 'tabnext ' . l:tabnum
+    execute 'tabnext' l:tabnum
 endfunction
 
+
+noremap <C-W>aq         :<C-U>tabclose<CR>
+noremap <C-W><C-A>q     :<C-U>tabclose<CR>
+noremap <C-W><C-A><C-Q> :<C-U>tabclose<CR>
 
 nnoremap <Esc><Esc> :<C-U>nohlsearch<CR>
 
 inoremap <C-B> <Left>
 inoremap <C-F> <Right>
-inoremap <C-L> <Del>
 
 inoremap {     {}<Left>
 inoremap {<CR> {<CR>}<Esc>O
@@ -243,6 +246,12 @@ inoremap ''    ''
 
 cnoremap <C-P> <Up>
 cnoremap <C-N> <Down>
+
+inoremap <C-L> <Del>
+cnoremap <C-L> <Del>
+
+inoremap <C-S> <C-G>u<C-R>"
+cnoremap <C-S> <C-R>"
 
 " Assign <Home> and <End> to "<Space>h" and "<Space>l". This uses "g^", "^" and
 " "0" or "g$" and "$" for different purposes in accordance situations.
@@ -494,8 +503,8 @@ function! s:switch_display_mode() abort
                 \ | endif
     endif
 
-    execute 'tabnext ' . l:cur_tab
-    execute 'normal! ' . l:cur_win . "\<C-W>w"
+    execute 'tabnext' l:cur_tab
+    execute 'normal!' l:cur_win . "\<C-W>w"
 endfunction
 
 
