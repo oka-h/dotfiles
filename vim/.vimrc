@@ -316,15 +316,12 @@ endif
 set statusline=%!g:My_status_line()
 
 function! g:My_status_line() abort
-    let l:pwd  = ' ['
-    let l:pwd .= (getcwd() == $HOME) ? '~/'
-                                   \ : '/' . fnamemodify(getcwd(), ':~:t')
-    let l:pwd .= '] '
+    let l:pwd  = ' [%{(getcwd()==$HOME)?''~/'':''/''.fnamemodify(getcwd(),'':~:t'')}] '
     let l:file = '%<%F%m%r%h%w%= '
 
-    let l:format   = (&fileformat   != '') ? '| ' . &fileformat   . ' ' : ''
-    let l:encoding = (&fileencoding != '') ? '| ' . &fileencoding . ' ' : ''
-    let l:filetype = (&filetype     != '') ? '| ' . &filetype     . ' ' : ''
+    let l:format   = '%{&fileformat==''''?'''':''| ''.&fileformat.'' ''}'
+    let l:encoding = '%{&fileencoding==''''?'''':''| ''.&fileencoding.'' ''}'
+    let l:filetype = '%{&filetype==''''?'''':''| ''.&filetype.'' ''}'
 
     let l:col = '| %3v'
     let l:line_digit = (float2nr(log10(line('$')))+1)
