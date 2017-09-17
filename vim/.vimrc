@@ -560,7 +560,8 @@ function! s:redir_output(bang, ...) abort
     redir END
 
     if a:bang == ''
-        if &lines * 5 > &columns * 2
+        let l:win_id = win_getid()
+        if winheight(l:win_id) * 5 >= winwidth(l:win_id) * 2
             let l:ex_cmd = 'split'
         else
             let l:ex_cmd = 'vsplit'
