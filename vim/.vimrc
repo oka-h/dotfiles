@@ -560,7 +560,7 @@ function! s:redir_output(bang, ...) abort
     redir END
 
     if a:bang == ''
-        if &lines * 3 > &columns * 2
+        if &lines * 5 > &columns * 2
             let l:ex_cmd = 'split'
         else
             let l:ex_cmd = 'vsplit'
