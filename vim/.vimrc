@@ -347,7 +347,7 @@ endfunction
 if has('syntax')
     augroup two_byte_space
         autocmd!
-        autocmd ColorScheme       * call s:set_tbs_hl()
+        autocmd ColorScheme * call <SID>set_tbs_hl()
         autocmd VimEnter,WinEnter * match two_byte_space /　/
         autocmd VimEnter,WinEnter * match two_byte_space '\%u3000'
     augroup END
