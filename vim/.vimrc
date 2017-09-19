@@ -220,9 +220,6 @@ function! s:go_to_tab(num) abort
 endfunction
 
 
-nnoremap <C-W>aq         :<C-U>tabclose<CR>
-nnoremap <C-W><C-A>q     :<C-U>tabclose<CR>
-nnoremap <C-W><C-A><C-Q> :<C-U>tabclose<CR>
 nnoremap <C-W>t     <C-W>T
 nnoremap <C-W><C-T> <C-W>T
 
