@@ -222,6 +222,7 @@ endfunction
 
 nnoremap <C-W>t     <C-W>T
 nnoremap <C-W><C-T> <C-W>T
+nnoremap <C-W>T     <C-W>t
 
 nnoremap <Esc><Esc> :<C-U>nohlsearch<CR>
 
