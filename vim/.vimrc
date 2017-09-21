@@ -248,8 +248,8 @@ cnoremap <C-N> <Down>
 inoremap <C-L> <Del>
 cnoremap <C-L> <Del>
 
-inoremap <C-S> <C-G>u<C-R>"
-cnoremap <C-S> <C-R>"
+inoremap <C-G> <C-G>u<C-R>"
+cnoremap <C-G> <C-R>"
 
 " Assign <Home> and <End> to "<Space>h" and "<Space>l". This uses "g^", "^" and
 " "0" or "g$" and "$" for different purposes in accordance situations.
