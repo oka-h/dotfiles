@@ -189,14 +189,17 @@ noremap <Space>X "_X
 
 noremap <Space>f f<C-K>
 noremap <Space>F F<C-K>
-noremap <Space>t t<C-K>
-noremap <Space>T T<C-K>
 
-" Solve the problem that Delete key does not work.
-if has('unix') && !has('gui_running')
-    inoremap  
-    cnoremap  
-endif
+nmap <Space>t [terminal]
+nnoremap [terminal]t :<C-U>tabedit                   | terminal<CR>
+nnoremap [terminal]j :<C-U>         rightbelow split | terminal<CR>
+nnoremap [terminal]k :<C-U>         leftabove  split | terminal<CR>
+nnoremap [terminal]h :<C-U>vertical leftabove  split | terminal<CR>
+nnoremap [terminal]l :<C-U>vertical rightbelow split | terminal<CR>
+nnoremap [terminal]J :<C-U>         botright   split | terminal<CR>
+nnoremap [terminal]K :<C-U>         topleft    split | terminal<CR>
+nnoremap [terminal]H :<C-U>vertical topleft    split | terminal<CR>
+nnoremap [terminal]L :<C-U>vertical botright   split | terminal<CR>
 
 " Go to optional tab page.
 nnoremap <silent> <Space>1 :<C-U>call <SID>go_to_tab(1)<CR>
@@ -288,6 +291,12 @@ function! s:go_to_line_end(mode) abort
     endif
 endfunction
 
+
+" Solve the problem that Delete key does not work.
+if has('unix') && !has('gui_running')
+    inoremap  
+    cnoremap  
+endif
 
 if exists(':tnoremap') == 2
     tnoremap <Esc><Esc> <C-\><C-N>
