@@ -190,16 +190,18 @@ noremap <Space>X "_X
 noremap <Space>f f<C-K>
 noremap <Space>F F<C-K>
 
-nmap <Space>t [terminal]
-nnoremap [terminal]t :<C-U>tabedit                   | terminal<CR>
-nnoremap [terminal]j :<C-U>         rightbelow split | terminal<CR>
-nnoremap [terminal]k :<C-U>         leftabove  split | terminal<CR>
-nnoremap [terminal]h :<C-U>vertical leftabove  split | terminal<CR>
-nnoremap [terminal]l :<C-U>vertical rightbelow split | terminal<CR>
-nnoremap [terminal]J :<C-U>         botright   split | terminal<CR>
-nnoremap [terminal]K :<C-U>         topleft    split | terminal<CR>
-nnoremap [terminal]H :<C-U>vertical topleft    split | terminal<CR>
-nnoremap [terminal]L :<C-U>vertical botright   split | terminal<CR>
+if exists(':terminal') == 2
+    nmap <Space>t [terminal]
+    nnoremap [terminal]t :<C-U>tabedit                   | terminal<CR>
+    nnoremap [terminal]j :<C-U>         rightbelow split | terminal<CR>
+    nnoremap [terminal]k :<C-U>         leftabove  split | terminal<CR>
+    nnoremap [terminal]h :<C-U>vertical leftabove  split | terminal<CR>
+    nnoremap [terminal]l :<C-U>vertical rightbelow split | terminal<CR>
+    nnoremap [terminal]J :<C-U>         botright   split | terminal<CR>
+    nnoremap [terminal]K :<C-U>         topleft    split | terminal<CR>
+    nnoremap [terminal]H :<C-U>vertical topleft    split | terminal<CR>
+    nnoremap [terminal]L :<C-U>vertical botright   split | terminal<CR>
+endif
 
 " Go to optional tab page.
 nnoremap <silent> <Space>1 :<C-U>call <SID>go_to_tab(1)<CR>
