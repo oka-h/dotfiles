@@ -1,6 +1,7 @@
 #! /bin/bash
 
-sh ~/dotfiles/bash/link.sh
-sh ~/dotfiles/zsh/link.sh
-sh ~/dotfiles/vim/link.sh
-
+for file in `dirname $0`/*; do
+  if [ -f $file/link.sh ]; then
+    $file/link.sh
+  fi
+done
