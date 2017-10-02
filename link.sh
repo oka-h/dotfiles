@@ -5,3 +5,4 @@ for file in `dirname $0`/*; do
     $file/link.sh
   fi
 done
+
