@@ -2,5 +2,5 @@
 # ~/.zshenv
 # ------------------------------------------------------------------------------
 
-export ZDOTDIR=~/dotfiles/zsh/
+export ZDOTDIR=$(dirname $(readlink ~/.zshenv))
 
