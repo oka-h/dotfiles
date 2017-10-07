@@ -46,6 +46,10 @@ let s:dein_dir = g:plugins_dir . expand('/repos/github.com/Shougo/dein.vim')
 " dein.toml location.
 let s:toml = fnamemodify(s:vimrc, ':h') . expand('/dein.toml')
 
+if !isdirectory(g:plugins_dir . expand('/repos/github.com/vim-ja/vimdoc-ja'))
+    let g:dein#install_process_timeout = 300
+endif
+
 function! s:install_dein() abort
     execute '!git clone https://github.com/Shougo/dein.vim' s:dein_dir
     if isdirectory(s:dein_dir)
