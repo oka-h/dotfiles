@@ -519,38 +519,49 @@ endfunction
 
 
 " If Repository that is contained vimrc has been updated, tell about it.
-function! g:Check_vimrc_repos_updated(...) abort
-    if type(a:2) == type([])
-        let l:git_msg = a:2[0]
-    else
-        let l:git_msg = a:2
-    endif
-
-    let l:remote_repos_id = split(l:git_msg)[0]
-    if l:remote_repos_id != s:local_repos_id
-        let l:msg = 'Repository of "' . fnamemodify(s:vimrc_git_dir, ':~') . '" has been updated.'
-        if v:vim_did_enter
-            echomsg l:msg
-        else
-            autocmd vimrc_repos_updated VimEnter * echomsg l:msg
-        endif
-    endif
-endfunction
-
 if exists('*jobstart') || exists('*job_start')
     let s:vimrc_git_dir = expand('<sfile>:p')
     let s:vimrc_git_dir = resolve(s:vimrc_git_dir)
     let s:vimrc_git_dir = fnamemodify(s:vimrc_git_dir, ':h:h')
 
-    let s:local_repos_id = system('git -C ' . s:vimrc_git_dir . ' log -1 origin | grep commit')
-    let s:local_repos_id = split(s:local_repos_id)[1]
+    function! g:Compare_repos_hash(...) abort
+        if type(a:2) == type([])
+            let l:git_msg = a:2[0]
+        else
+            let l:git_msg = a:2
+        endif
 
-    let s:command = 'git -C ' . s:vimrc_git_dir . ' ls-remote origin HEAD | grep HEAD'
-    if exists('*jobstart')
-        call jobstart(s:command, {'on_stdout' : 'Check_vimrc_repos_updated'})
-    else
-        call job_start(s:command, {'out_cb' : 'Check_vimrc_repos_updated'})
+        let l:remote_repos_hash = split(l:git_msg)[0]
+        if l:remote_repos_hash != s:local_repos_hash
+            let l:msg = 'Repository of "' . fnamemodify(s:vimrc_git_dir, ':~') . '" has been updated.'
+            if v:vim_did_enter
+                echomsg l:msg
+            else
+                autocmd vimrc_repos_updated VimEnter * echomsg l:msg
+            endif
+        elseif s:check_after_vim_entered
+            echomsg 'Repository of "' . fnamemodify(s:vimrc_git_dir, ':~') . '" is already up-to-date.'
+        endif
+    endfunction
+
+    function! s:check_vimrc_repos_updated() abort
+        let s:check_after_vim_entered = v:vim_did_enter
+
+        let s:local_repos_hash = system('git -C ' . s:vimrc_git_dir . ' log -1 origin | grep commit')
+        let s:local_repos_hash = split(s:local_repos_hash)[1]
+
+        let l:command = 'git -C ' . s:vimrc_git_dir . ' ls-remote origin HEAD | grep HEAD'
+        if exists('*jobstart')
+            call jobstart(l:command, {'on_stdout' : 'Compare_repos_hash'})
+        else
+            call job_start(l:command, {'out_cb' : 'Compare_repos_hash'})
+        endif
+    endfunction
+
+    if !v:vim_did_enter
+        call s:check_vimrc_repos_updated()
     endif
+    command! CheckVimrcReposUpdated call s:check_vimrc_repos_updated()
 endif
 
 
