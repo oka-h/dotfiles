@@ -519,8 +519,14 @@ endfunction
 
 
 " If Repository that is contained vimrc has been updated, tell about it.
-function! g:Check_vimrc_repos_updated(channel, git_msg) abort
-    let l:remote_repos_id = split(a:git_msg)[0]
+function! g:Check_vimrc_repos_updated(...) abort
+    if type(a:2) == type([])
+        let l:git_msg = a:2[0]
+    else
+        let l:git_msg = a:2
+    endif
+
+    let l:remote_repos_id = split(l:git_msg)[0]
     if l:remote_repos_id != s:local_repos_id
         let l:msg = 'Repository of "' . fnamemodify(s:vimrc_git_dir, ':~') . '" has been updated.'
         if v:vim_did_enter
@@ -531,7 +537,7 @@ function! g:Check_vimrc_repos_updated(channel, git_msg) abort
     endif
 endfunction
 
-if has('job')
+if exists('*jobstart') || exists('*job_start')
     let s:vimrc_git_dir = expand('<sfile>:p')
     let s:vimrc_git_dir = resolve(s:vimrc_git_dir)
     let s:vimrc_git_dir = fnamemodify(s:vimrc_git_dir, ':h:h')
@@ -540,10 +546,11 @@ if has('job')
     let s:local_repos_id = split(s:local_repos_id)[1]
 
     let s:command = 'git -C ' . s:vimrc_git_dir . ' ls-remote origin HEAD | grep HEAD'
-    let s:job_option = {
-    \   'out_cb' : 'Check_vimrc_repos_updated'
-    \}
-    call job_start(s:command, s:job_option)
+    if exists('*jobstart')
+        call jobstart(s:command, {'on_stdout' : 'Check_vimrc_repos_updated'})
+    else
+        call job_start(s:command, {'out_cb' : 'Check_vimrc_repos_updated'})
+    endif
 endif
 
 
