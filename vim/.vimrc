@@ -23,14 +23,20 @@ let s:vimrc = resolve(expand('<sfile>:p'))
 let s:vimrc_local_pre  = expand('~/.vimrc_local_pre')
 let s:vimrc_local_post = expand('~/.vimrc_local')
 
+let s:xdg_cache_home = empty($XDG_CACHE_HOME) ? expand('~/.cache')
+                                            \ : $XDG_CACHE_HOME
+
+let g:is_filetype_enable_of = {
+\   'java'       : 1,
+\   'markdown'   : 0,
+\   'processing' : 0
+\}
+
 let g:disable_plugins = []
 
 if filereadable(s:vimrc_local_pre)
     execute 'source' s:vimrc_local_pre
 endif
-
-let s:xdg_cache_home = empty($XDG_CACHE_HOME) ? expand('~/.cache')
-                                            \ : $XDG_CACHE_HOME
 
 
 " ------------------------------------------------------------------------------

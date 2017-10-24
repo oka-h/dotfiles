@@ -200,7 +200,7 @@ hook_add = '''
 
         let s:javac_cmd = 'javac -J-Dfile.encoding=UTF-8 %o ' . s:root . '%s'
         let s:java_cmd  = '%c -Dfile.encoding=UTF-8 -cp ' . s:root . '%s:h %s:t:r %a'
-        let g:quickrun_config['java'] = {
+        let g:quickrun_config.java = {
         \   'exec': [s:javac_cmd, s:java_cmd]
         \}
     endif
@@ -210,7 +210,7 @@ hook_add = '''
     \   'runner/vimproc/updatetime' : 60
     \}
 
-    let g:quickrun_config['markdown'] = {
+    let g:quickrun_config.markdown = {
     \   'outputter' : 'browser'
     \}
 '''
@@ -372,12 +372,45 @@ hook_source = '''
 
 [[plugins]]
 repo = 'artur-shaik/vim-javacomplete2'
-if = "(has('nvim') || v:version >= 704) && has('python') && !has('win32unix')"
+if = "g:is_filetype_enable_of.java && (has('nvim') || v:version >= 704) && has('python') && !has('win32unix')"
 on_ft = 'java'
 hook_add = '''
     augroup javacomplete2
         autocmd!
         autocmd FileType java setlocal omnifunc=javacomplete#Complete
+    augroup END
+'''
+
+[[plugins]]
+repo = 'sophacles/vim-processing'
+if = "g:is_filetype_enable_of.processing && executable('processing-java')"
+on_ft = 'processing'
+hook_add = '''
+    if !exists('g:quickrun_config')
+        let g:quickrun_config = {}
+    endif
+
+    let g:quickrun_config.processing = {
+    \   'command' : 'processing-java',
+    \   'exec'    : '%c --sketch=%s:h --output=%s:h/output --force --run'
+    \}
+'''
+
+[[plugins]]
+repo = 'tyru/open-browser.vim'
+if = "g:is_filetype_enable_of.markdown"
+
+[[plugins]]
+repo = 'kannokanno/previm'
+depends = 'open-browser.vim'
+if = "g:is_filetype_enable_of.markdown"
+on_ft = 'markdown'
+hook_post_source = '''
+    augroup Previm
+        autocmd!
+        autocmd FileType *{mkd,markdown,rst,textile}* delcommand PrevimOpen
+          \ | command! -buffer -nargs=0 PrevimOpen
+          \   call openbrowser#open(fnamemodify('~/.vim/bundles/repos/github.com/kannokanno/previm/preview/index.html', ':p'))
     augroup END
 '''
 
