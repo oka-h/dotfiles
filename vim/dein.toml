@@ -397,10 +397,6 @@ hook_add = '''
 '''
 
 [[plugins]]
-repo = 'tyru/open-browser.vim'
-if = "g:is_filetype_enable_of.markdown"
-
-[[plugins]]
 repo = 'kannokanno/previm'
 depends = 'open-browser.vim'
 if = "g:is_filetype_enable_of.markdown"
