@@ -656,10 +656,10 @@ augroup vimscript
     autocmd BufRead,BufNewFile *.toml inoremap <buffer> <nowait> " "
     autocmd BufRead,BufNewFile *.toml inoremap <buffer> '''<CR>  '''<CR>'''<Esc>O<Tab>
 
-    autocmd FileType vim              inoremap <buffer> [<CR> [<CR>\]<ESC>O\<Tab>
-    autocmd BufRead,BufNewFile *.toml inoremap <buffer> [<CR> [<CR>\]<ESC>O\<Tab>
-    autocmd FileType vim              inoremap <buffer> {<CR> {<CR><C-D>\}<ESC>O\<Tab>
-    autocmd BufRead,BufNewFile *.toml inoremap <buffer> {<CR> {<CR><C-D>\}<ESC>O\<Tab>
+    autocmd FileType vim              inoremap <buffer> [<CR> [<CR>\]<Esc>O\<Tab>
+    autocmd BufRead,BufNewFile *.toml inoremap <buffer> [<CR> [<CR>\]<Esc>O\<Tab>
+    autocmd FileType vim              inoremap <buffer> {<CR> {<CR><C-D>\}<Esc>O\<Tab>
+    autocmd BufRead,BufNewFile *.toml inoremap <buffer> {<CR> {<CR><C-D>\}<Esc>O\<Tab>
 
     autocmd FileType vim,help         nnoremap <buffer> <silent> K :<C-U>help <C-R><C-W><CR>
     autocmd BufRead,BufNewFile *.toml nnoremap <buffer> <silent> K :<C-U>help <C-R><C-W><CR>
