@@ -339,13 +339,11 @@ function! g:My_status_line() abort
     let l:filetype = '%{&filetype==''''?'''':''| ''.&filetype.'' ''}'
 
     let l:col = '| %3v'
-    let l:line_digit = (float2nr(log10(line('$')))+1)
-    let l:line = ':%' . l:line_digit . 'l '
+    let l:line = ':%{printf(''%''.len(line(''$'')).''d'',line(''.''))} '
     let l:max_line = '/ %L '
 
     return l:pwd . l:file . l:format . l:encoding . l:filetype . l:col . l:line . l:max_line
 endfunction
-
 
 " ------------------------------------------------------------------------------
 " Color settings
