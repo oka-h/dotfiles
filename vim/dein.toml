@@ -283,15 +283,15 @@ hook_source = '''
 
 [[plugins]]
 repo = 'haya14busa/incsearch.vim'
-on_map = ['<plug>(incsearch-']
+on_map = ['<Plug>(incsearch-']
 hook_add = '''
     let g:incsearch#auto_nohlsearch = 1
-    map / <plug>(incsearch-forward)
-    map ? <plug>(incsearch-backward)
-    map * <plug>(incsearch-nohl-*)
-    map # <plug>(incsearch-nohl-#)
-    map n <plug>(incsearch-nohl-n)
-    map N <plug>(incsearch-nohl-N)
+    map / <Plug>(incsearch-forward)
+    map ? <Plug>(incsearch-backward)
+    map * <Plug>(incsearch-nohl-*)
+    map # <Plug>(incsearch-nohl-#)
+    map n <Plug>(incsearch-nohl-n)
+    map N <Plug>(incsearch-nohl-N)
     noremap <Space>/ /
     noremap <Space>? ?
     noremap <Space>* *
