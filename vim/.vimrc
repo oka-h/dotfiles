@@ -200,6 +200,7 @@ noremap <Space>F F<C-K>
 
 if exists(':terminal') == 2
     nmap <Space>t [terminal]
+    nnoremap [terminal]<Space> :<C-U>terminal<CR>
     nnoremap [terminal]t :<C-U>tabedit                   | terminal<CR>
     nnoremap [terminal]j :<C-U>         rightbelow split | terminal<CR>
     nnoremap [terminal]k :<C-U>         leftabove  split | terminal<CR>
