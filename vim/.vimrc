@@ -339,9 +339,9 @@ function! g:My_status_line() abort
 
     let l:col = '| %3v'
     let l:line = ':%{printf(''%''.len(line(''$'')).''d'',line(''.''))} '
-    let l:max_line = '/ %L '
+    let l:lastline = '/ %L '
 
-    return l:pwd . l:file . l:format . l:encoding . l:filetype . l:col . l:line . l:max_line
+    return l:pwd . l:file . l:format . l:encoding . l:filetype . l:col . l:line . l:lastline
 endfunction
 
 " ------------------------------------------------------------------------------
