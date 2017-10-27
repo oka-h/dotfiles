@@ -654,7 +654,7 @@ augroup vimscript
 
     autocmd FileType vim              inoremap <buffer> <nowait> " "
     autocmd BufRead,BufNewFile *.toml inoremap <buffer> <nowait> " "
-    autocmd BufRead,BufNewFile *.toml inoremap <buffer> <nowait> ''' '''
+    autocmd BufRead,BufNewFile *.toml inoremap <buffer> '''<CR>  '''<CR>'''<Esc>O<Tab>
 
     autocmd FileType vim              inoremap <buffer> [<CR> [<CR>\]<ESC>O\<Tab>
     autocmd BufRead,BufNewFile *.toml inoremap <buffer> [<CR> [<CR>\]<ESC>O\<Tab>
