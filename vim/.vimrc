@@ -401,21 +401,25 @@ augroup localized_search
 augroup END
 
 " In visual mode, search the selected string by "*" or "#".
-xnoremap * :<C-U>call <SID>visual_star_search('/')<CR>
-xnoremap # :<C-U>call <SID>visual_star_search('?')<CR>
+vnoremap <silent> * :<C-U>call <SID>visual_star_search('/')<CR>
+vnoremap <silent> # :<C-U>call <SID>visual_star_search('?')<CR>
 
 function! s:visual_star_search(key) abort
-    let l:reg_str  = getreg('"', 1, 1)
-    let l:reg_type = getregtype('"')
-    normal! gvy
-    let l:keyword = getreg('"')
-    call setreg('"', l:reg_str, l:reg_type)
+    let l:count = v:count1
 
-    let l:keyword = escape(l:keyword, '/\')
-    let l:keyword = substitute(l:keyword, '\n$', '', '')
-    let l:keyword = substitute(l:keyword, '\n', '\\n', 'g')
-    let l:keyword = '\V' . l:keyword
-    call feedkeys(a:key . l:keyword . "\<CR>")
+    let l:register = '"'
+    let l:save_reg_str  = getreg(l:register, 1, 1)
+    let l:save_reg_type = getregtype(l:register)
+    execute 'normal! gv"' . l:register . 'y'
+    let l:search_word = getreg(l:register)
+    call setreg(l:register, l:save_reg_str, l:save_reg_type)
+
+    let l:search_word = escape(l:search_word, '\' . a:key)
+    let l:search_word = substitute(l:search_word, '\n$', '', '')
+    let l:search_word = substitute(l:search_word, '\n', '\\n', 'g')
+    let l:search_word = '\V' . l:search_word
+
+    call feedkeys(l:count . a:key . l:search_word . "\<CR>")
 endfunction
 
 
