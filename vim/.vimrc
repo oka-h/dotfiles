@@ -432,7 +432,7 @@ set expandtab
 set shiftwidth=4
 set tabstop=4
 
-if has('linebreak')
+if exists('+breakindent')
     set breakindent
 endif
 
