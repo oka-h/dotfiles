@@ -446,8 +446,11 @@ set splitright
 set whichwrap=h,l,<,>,[,]
 set wildmenu
 set wildmode=longest:full,full
-set matchpairs+=（:）
 set spelllang& spelllang+=cjk
+
+if (v:version + has('patch769') >= 704) || has('nvim')
+    set matchpairs+=（:）
+endif
 
 set textwidth=0
 if has('win32unix')

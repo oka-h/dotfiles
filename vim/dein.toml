@@ -22,7 +22,7 @@ repo = 'tyru/open-browser.vim'
 
 [[plugins]]
 repo = 'Shougo/unite.vim'
-if = "!(has('python3') && (has('nvim') || v:version >= 800))"
+if = "!(has('python3') && (v:version >= 800 || has('nvim')))"
 depends = 'neomru.vim'
 hook_add = '''
     nnoremap <silent> <Space>n :<C-U>Unite file_rec<CR>
@@ -32,7 +32,7 @@ hook_add = '''
 
 [[plugins]]
 repo = 'Shougo/denite.nvim'
-if = "has('python3') && (has('nvim') || v:version >= 800)"
+if = "has('python3') && (v:version >= 800 || has('nvim'))"
 depends = 'neomru.vim'
 on_cmd = ['Denite', 'DeniteBufferDir', 'DeniteCursorWord', 'DeniteProjectDir']
 hook_add = '''
@@ -154,7 +154,7 @@ hook_add = '''
 
 [[plugins]]
 repo = 'Shougo/neosnippet'
-if = "has('nvim') || v:version >= 704"
+if = "v:version >= 704 || has('nvim')"
 on_i = 1
 hook_add = '''
     " Plugin key-mappings.
@@ -171,7 +171,7 @@ hook_add = '''
 
 [[plugins]]
 repo = 'Shougo/neosnippet-snippets'
-if = "has('nvim') || v:version >= 704"
+if = "v:version >= 704 || has('nvim')"
 on_source = 'neosnippet'
 hook_add = '''
     let g:neosnippet#snippets_directory = g:plugins_dir . expand('/repos/github.com/Shougo/neosnippet-snippets/snippets/')
@@ -372,7 +372,7 @@ hook_source = '''
 
 [[plugins]]
 repo = 'artur-shaik/vim-javacomplete2'
-if = "g:is_filetype_enable_of.java && (has('nvim') || v:version >= 704) && has('python') && !has('win32unix')"
+if = "g:is_filetype_enable_of.java && (v:version >= 704 || has('nvim')) && has('python') && !has('win32unix')"
 on_ft = 'java'
 hook_add = '''
     augroup javacomplete2
