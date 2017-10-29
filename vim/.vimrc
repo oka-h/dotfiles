@@ -463,9 +463,11 @@ endif
 augroup format_options
     autocmd!
     autocmd BufEnter * setlocal formatoptions+=M
-                              \ formatoptions+=j
                               \ formatoptions-=r
                               \ formatoptions-=o
+    if (v:version + has('patch541') >= 704) || has('nvim')
+        autocmd BufEnter * setlocal formatoptions+=j
+    endif
 augroup END
 
 if exists('+inccommand')
