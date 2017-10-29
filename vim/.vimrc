@@ -94,7 +94,7 @@ endfunction
 
 if isdirectory(s:dein_dir)
     call s:load_dein()
-else
+elseif (v:version >= 704) || has('nvim')
     command! DeinInstall call s:install_dein()
     augroup nodein_call
         autocmd!
