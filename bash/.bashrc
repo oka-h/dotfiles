@@ -49,6 +49,16 @@ alias lla="ls -al"
 alias javac='javac -J-Dfile.encoding=UTF-8'
 alias java='java -Dfile.encoding=UTF-8'
 
+if type nvim > /dev/null 2>&1; then
+  editor=nvim
+elif type vim > /dev/null 2>&1; then
+  editor=vim
+elif type vi > /dev/null 2>&1; then
+  editor=vi
+fi
+
+export EDITOR=$editor
+
 
 [ -f ~/.shellrc_local ] && source ~/.shellrc_local
 [ -f ~/.bashrc_local ] && source ~/.bashrc_local

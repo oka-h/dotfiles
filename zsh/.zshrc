@@ -65,6 +65,16 @@ alias ll="ls -l"
 alias lal="ls -al"
 alias lla="ls -al"
 
+if type nvim > /dev/null 2>&1; then
+  editor=nvim
+elif type vim > /dev/null 2>&1; then
+  editor=vim
+elif type vi > /dev/null 2>&1; then
+  editor=vi
+fi
+
+export EDITOR=$editor
+
 
 [ -f ~/.shellrc_local ] && source ~/.shellrc_local
 [ -f ~/.zshrc_local ] && source ~/.zshrc_local
