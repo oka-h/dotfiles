@@ -2,7 +2,6 @@
 # dotfiles/zsh/.zshrc
 # ------------------------------------------------------------------------------
 
-# Load /etc/zshrc
 [ -f /etc/zshrc ] && source /etc/zshrc
 
 # Load shell functions.
@@ -11,10 +10,8 @@ compinit
 colors
 promptinit
 
-# Don't beep.
 setopt nolistbeep
 
-# Setting of prompt.
 local       user="%F{green}%n@%m%f"
 local       cdir="%F{yellow}%~%f"
 local multi_line="%F{green}%_%f "
@@ -27,24 +24,18 @@ $mark "
 PROMPT2="$multi_line $mark "
 
 
-# Display completion list with colors.
 zstyle ':completion:*' list-colors ''
 
-# Pack lists.
 setopt list_packed
 
-# Save 10000 previous commands.
 HISTFILE=~/.zsh_history
 HISTSIZE=10000
 SAVEHIST=10000
 
-# Ignore duplication command history list.
 setopt hist_ignore_dups
 
-# Share command history data.
 setopt share_history        
 
-# Display up to 100 directory history.
 DIRESTACKSIZE=100
 
 # List recently accessed directory.
@@ -60,7 +51,6 @@ zle -N history-beginning-search-forward-end  history-search-end
 bindkey "" history-beginning-search-backward-end
 bindkey "" history-beginning-search-forward-end
 
-# Setting of aliases.
 case "${OSTYPE}" in
   freebsd*|darwin*)
     alias ls="ls -G -w"
@@ -76,7 +66,6 @@ alias lal="ls -al"
 alias lla="ls -al"
 
 
-# Load a local rc file if there is it.
 [ -f ~/.shellrc_local ] && source ~/.shellrc_local
 [ -f ~/.zshrc_local ] && source ~/.zshrc_local
 
