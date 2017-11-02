@@ -28,6 +28,7 @@ let g:is_filetype_enable_of = {
 \   'java'       : 1,
 \   'markdown'   : 0,
 \   'processing' : 0
+\   'python'     : 0
 \}
 
 let g:disable_plugins = []
