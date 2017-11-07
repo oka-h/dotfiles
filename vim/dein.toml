@@ -326,6 +326,13 @@ hook_add = '''
 '''
 
 [[plugins]]
+repo = 'deton/jasentence.vim'
+hook_add = '''
+    let g:jasentence_endpat = substitute(g:jasentence_endpat, '、', '', '')
+    let g:jasentence_endpat = substitute(g:jasentence_endpat, '，', '', '')
+'''
+
+[[plugins]]
 repo = 'koron/codic-vim'
 on_cmd = 'Codic'
 
