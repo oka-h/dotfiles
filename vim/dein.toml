@@ -366,7 +366,7 @@ hook_add = '''
     endfunction
 
     nnoremap <Space>r :<C-U>Ref webdict alc<Space>
-    nnoremap <Space>r<Space> :<C-U>Ref webdict alc <C-R><C-W><CR>
+    nnoremap <Space>r<Space> :<C-U>call histadd(':', 'Ref webdict alc ' . expand('<cword>'))<CR>:<UP><CR>
 '''
 
 [[plugins]]
