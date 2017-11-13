@@ -645,6 +645,12 @@ augroup textfile
     autocmd FileType text inoremap <buffer> <nowait> ' '
 augroup END
 
+" Python
+augroup python
+    autocmd!
+    autocmd FileType python setlocal textwidth=79
+augroup END
+
 " Tex
 augroup texfile
     autocmd!
