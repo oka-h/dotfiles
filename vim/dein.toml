@@ -245,14 +245,14 @@ hook_add = '''
     \}
 
     let g:quickrun_config['python/watchdogs_checker'] = {
-    \   'type' : 'watchdogs_checker/pyflakes3'
+    \   'type' : 'watchdogs_checker/' . (executable('flake8') ? 'flake8' : 'pyflakes')
     \}
 
     let [s:pyfl_cmd, s:pyfl_opt] = executable('pyflakes3') ? ['pyflakes3', '']
                                \ : executable('python3')   ? ['python3', '-m pyflakes']
                                \ : executable('pyflakes')  ? ['pyflakes', '']
                                                          \ : ['python', '-m pyflakes']
-    let g:quickrun_config['watchdogs_checker/pyflakes3'] = {
+    let g:quickrun_config['watchdogs_checker/pyflakes'] = {
     \   'command'     : s:pyfl_cmd,
     \   'cmdopt'      : s:pyfl_opt,
     \   'exec'        : '%c %o %s:p',
