@@ -391,20 +391,6 @@ hook_add = '''
 '''
 
 [[plugins]]
-repo = 'kannokanno/previm'
-depends = 'open-browser.vim'
-if = "g:is_filetype_enable_of.markdown"
-on_ft = 'markdown'
-hook_post_source = '''
-    augroup Previm
-        autocmd!
-        autocmd FileType *{mkd,markdown,rst,textile}* delcommand PrevimOpen
-          \ | command! -buffer -nargs=0 PrevimOpen
-          \   call openbrowser#open(fnamemodify('~/.vim/bundles/repos/github.com/kannokanno/previm/preview/index.html', ':p'))
-    augroup END
-'''
-
-[[plugins]]
 repo = 'sophacles/vim-processing'
 if = "g:is_filetype_enable_of.processing && executable('processing-java')"
 on_ft = 'processing'
