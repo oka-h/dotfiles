@@ -380,6 +380,18 @@ hook_source = '''
 '''
 
 [[plugins]]
+repo = 'fatih/vim-go'
+if = "g:is_filetype_enable_of.go && executable('go')"
+on_ft = 'go'
+hook_post_source = 'GoInstallBinaries'
+
+[[plugins]]
+repo = 'zchee/deoplete-go'
+depends = 'deoplete'
+if = "g:is_filetype_enable_of.go && has('nvim') && executable('go')"
+on_ft = 'go'
+
+[[plugins]]
 repo = 'artur-shaik/vim-javacomplete2'
 if = "g:is_filetype_enable_of.java && (v:version >= 704 || has('nvim')) && has('python') && !has('win32unix')"
 on_ft = 'java'
