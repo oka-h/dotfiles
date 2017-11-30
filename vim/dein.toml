@@ -387,7 +387,7 @@ hook_post_source = 'GoInstallBinaries'
 
 [[plugins]]
 repo = 'zchee/deoplete-go'
-depends = 'deoplete'
+depends = 'deoplete.nvim'
 if = "g:is_filetype_enable_of.go && has('nvim') && executable('go')"
 on_ft = 'go'
 
