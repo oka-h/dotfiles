@@ -113,6 +113,7 @@ set noundofile
 set history=10000
 set helplang=ja
 set ambiwidth=double
+filetype plugin indent on
 
 " Dirctory for backup/swap file.
 let s:temp_dir = s:xdg_cache_home . expand('/vim')
