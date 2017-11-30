@@ -200,6 +200,27 @@ noremap <Space>X "_X
 noremap <Space>f f<C-K>
 noremap <Space>F F<C-K>
 
+nnoremap <C-W>t     <C-W>T
+nnoremap <C-W><C-T> <C-W>T
+nnoremap <C-W>T     <C-W>t
+
+nnoremap <Esc><Esc> :<C-U>nohlsearch<CR>
+
+" Go to optional tab page.
+for s:i in range(10)
+    execute 'nnoremap <silent> <Space>' . s:i . ' :<C-U>call <SID>go_to_tab(' . s:i . ')<CR>'
+endfor
+
+function! s:go_to_tab(num) abort
+    let l:tabnum = a:num
+    let l:lasttab = tabpagenr('$')
+    if l:tabnum > l:lasttab || l:tabnum == 0
+        let l:tabnum = l:lasttab
+    endif
+    execute 'tabnext' l:tabnum
+endfunction
+
+
 if exists(':terminal') == 2
     nmap <Space>t [terminal]
     nnoremap [terminal]<Space> :<C-U>                        terminal<CR><C-\><C-N>i
@@ -213,34 +234,6 @@ if exists(':terminal') == 2
     nnoremap [terminal]H :<C-U>vertical topleft    split | terminal<CR><C-\><C-N>i
     nnoremap [terminal]L :<C-U>vertical botright   split | terminal<CR><C-\><C-N>i
 endif
-
-" Go to optional tab page.
-nnoremap <silent> <Space>1 :<C-U>call <SID>go_to_tab(1)<CR>
-nnoremap <silent> <Space>2 :<C-U>call <SID>go_to_tab(2)<CR>
-nnoremap <silent> <Space>3 :<C-U>call <SID>go_to_tab(3)<CR>
-nnoremap <silent> <Space>4 :<C-U>call <SID>go_to_tab(4)<CR>
-nnoremap <silent> <Space>5 :<C-U>call <SID>go_to_tab(5)<CR>
-nnoremap <silent> <Space>6 :<C-U>call <SID>go_to_tab(6)<CR>
-nnoremap <silent> <Space>7 :<C-U>call <SID>go_to_tab(7)<CR>
-nnoremap <silent> <Space>8 :<C-U>call <SID>go_to_tab(8)<CR>
-nnoremap <silent> <Space>9 :<C-U>call <SID>go_to_tab(9)<CR>
-nnoremap <silent> <Space>0 :<C-U>call <SID>go_to_tab(0)<CR>
-
-function! s:go_to_tab(num) abort
-    let l:tabnum = a:num
-    let l:lasttab = tabpagenr('$')
-    if l:tabnum > l:lasttab || l:tabnum == 0
-        let l:tabnum = l:lasttab
-    endif
-    execute 'tabnext' l:tabnum
-endfunction
-
-
-nnoremap <C-W>t     <C-W>T
-nnoremap <C-W><C-T> <C-W>T
-nnoremap <C-W>T     <C-W>t
-
-nnoremap <Esc><Esc> :<C-U>nohlsearch<CR>
 
 inoremap <C-B> <Left>
 inoremap <C-F> <Right>
@@ -305,14 +298,14 @@ function! s:go_to_line_end(mode) abort
 endfunction
 
 
+if exists(':tnoremap') == 2
+    tnoremap <Esc><Esc> <C-\><C-N>
+endif
+
 " Solve the problem that Delete key does not work.
 if has('unix') && !has('gui_running')
     inoremap  
     cnoremap  
-endif
-
-if exists(':tnoremap') == 2
-    tnoremap <Esc><Esc> <C-\><C-N>
 endif
 
 
@@ -345,6 +338,7 @@ function! g:My_status_line() abort
 
     return l:pwd . l:file . l:format . l:encoding . l:filetype . l:col . l:line . l:lastline
 endfunction
+
 
 " ------------------------------------------------------------------------------
 " Color settings
@@ -448,11 +442,8 @@ set splitright
 set whichwrap=h,l,<,>,[,]
 set wildmenu
 set wildmode=longest:full,full
-set spelllang& spelllang+=cjk
-
-if (v:version + has('patch769') >= 704) || has('nvim')
-    set matchpairs+=（:）
-endif
+set spelllang&
+set spelllang+=cjk
 
 set textwidth=0
 if has('win32unix')
