@@ -202,16 +202,16 @@ noremap <Space>F F<C-K>
 
 if exists(':terminal') == 2
     nmap <Space>t [terminal]
-    nnoremap [terminal]<Space> :<C-U>terminal<CR>
-    nnoremap [terminal]t :<C-U>tabedit                   | terminal<CR>
-    nnoremap [terminal]j :<C-U>         rightbelow split | terminal<CR>
-    nnoremap [terminal]k :<C-U>         leftabove  split | terminal<CR>
-    nnoremap [terminal]h :<C-U>vertical leftabove  split | terminal<CR>
-    nnoremap [terminal]l :<C-U>vertical rightbelow split | terminal<CR>
-    nnoremap [terminal]J :<C-U>         botright   split | terminal<CR>
-    nnoremap [terminal]K :<C-U>         topleft    split | terminal<CR>
-    nnoremap [terminal]H :<C-U>vertical topleft    split | terminal<CR>
-    nnoremap [terminal]L :<C-U>vertical botright   split | terminal<CR>
+    nnoremap [terminal]<Space> :<C-U>                        terminal<CR><C-\><C-N>i
+    nnoremap [terminal]t :<C-U>tabedit                   | terminal<CR><C-\><C-N>i
+    nnoremap [terminal]j :<C-U>         rightbelow split | terminal<CR><C-\><C-N>i
+    nnoremap [terminal]k :<C-U>         leftabove  split | terminal<CR><C-\><C-N>i
+    nnoremap [terminal]h :<C-U>vertical leftabove  split | terminal<CR><C-\><C-N>i
+    nnoremap [terminal]l :<C-U>vertical rightbelow split | terminal<CR><C-\><C-N>i
+    nnoremap [terminal]J :<C-U>         botright   split | terminal<CR><C-\><C-N>i
+    nnoremap [terminal]K :<C-U>         topleft    split | terminal<CR><C-\><C-N>i
+    nnoremap [terminal]H :<C-U>vertical topleft    split | terminal<CR><C-\><C-N>i
+    nnoremap [terminal]L :<C-U>vertical botright   split | terminal<CR><C-\><C-N>i
 endif
 
 " Go to optional tab page.
@@ -651,6 +651,15 @@ augroup python
     autocmd!
     autocmd FileType python setlocal textwidth=79
 augroup END
+
+" Terminal
+if exists('##TermOpen') && exists('##TermClose')
+    augroup terminal
+        autocmd!
+        autocmd TermOpen  * set norelativenumber
+        autocmd TermClose * set relativenumber
+    augroup END
+endif
 
 " Tex
 augroup texfile
