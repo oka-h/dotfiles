@@ -243,8 +243,10 @@ inoremap {<CR> {<CR>}<Esc>O
 inoremap {}    {}
 inoremap {{{   {{{
 inoremap (     ()<Left>
+inoremap (<CR> (<CR>)<Esc>O
 inoremap ()    ()
 inoremap [     []<Left>
+inoremap [<CR> [<CR>]<Esc>O
 inoremap []    []
 inoremap "     ""<Left>
 inoremap ""    ""
@@ -647,8 +649,8 @@ augroup END
 if exists('##TermOpen') && exists('##TermClose')
     augroup terminal
         autocmd!
-        autocmd TermOpen  * set norelativenumber
-        autocmd TermClose * set relativenumber
+        autocmd TermOpen  * setlocal norelativenumber
+        autocmd TermClose * setlocal relativenumber
     augroup END
 endif
 
