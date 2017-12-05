@@ -383,7 +383,6 @@ hook_source = '''
 repo = 'fatih/vim-go'
 if = "g:is_filetype_enable_of.go && executable('go')"
 on_ft = 'go'
-hook_post_source = 'GoInstallBinaries'
 
 [[plugins]]
 repo = 'zchee/deoplete-go'
