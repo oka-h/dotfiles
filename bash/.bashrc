@@ -6,16 +6,17 @@
 
 set bell-style none
 
-bashrc_user='\[\033[32m\]\u@\H\[\033[0m\]'
-bashrc_cdir='\[\033[33m\]\w\[\033[0m\]'
-bashrc_multi_line='\[\033[32m\]>\[\033[0m\]'
+bashrc_user='\[\033[38;05;173m\]\u@\H'
+bashrc_cdir='\[\033[38;05;242m\]\w'
+bashrc_multi_line='\[\033[38;05;226m\]>'
+bashrc_return_color='\[\033[0m\]'
 bashrc_mark='\$'
 
 PS1="
-$bashrc_user $bashrc_cdir
+$bashrc_user $bashrc_cdir$bashrc_return_color
 $bashrc_mark "
 
-PS2="$bashrc_multi_line $bashrc_mark "
+PS2="$bashrc_multi_line$bashrc_return_color $bashrc_mark "
 
 
 HISTFILE=~/.bash_history

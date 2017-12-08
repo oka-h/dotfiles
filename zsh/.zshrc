@@ -12,10 +12,10 @@ promptinit
 
 setopt nolistbeep
 
-local       user="%F{green}%n@%m%f"
-local       cdir="%F{yellow}%~%f"
-local multi_line="%F{green}%_%f "
-local       mark="%B%#%b"
+local       user="%F{173}%n@%m%f"
+local       cdir="%F{242}%~%f"
+local multi_line="%F{226}%_%f"
+local       mark="%#"
 
 PROMPT="
 $user $cdir
@@ -24,7 +24,17 @@ $mark "
 PROMPT2="$multi_line $mark "
 
 
-zstyle ':completion:*' list-colors ''
+export LS_COLORS="\
+no=38;05;254:\
+fi=38;05;254:\
+di=38;05;75:\
+ln=38;05;86:\
+or=38;05;242:\
+mi=38;05;242:\
+ex=38;05;218:\
+ow=38;05;106"
+
+zstyle ':completion:*' list-colors $LS_COLORS
 
 setopt list_packed
 
