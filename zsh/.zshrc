@@ -6,7 +6,7 @@
 
 # Load shell functions.
 autoload -U compinit colors promptinit
-compinit
+compinit -u
 colors
 promptinit
 
@@ -88,4 +88,3 @@ export EDITOR=$editor
 
 [ -f ~/.shellrc_local ] && source ~/.shellrc_local
 [ -f ~/.zshrc_local ] && source ~/.zshrc_local
-
