@@ -631,6 +631,7 @@ augroup shellscript
     autocmd!
     autocmd FileType *sh setlocal tabstop=2
     autocmd FileType *sh setlocal shiftwidth=2
+    autocmd BufRead,BufNewFile *shellrc* set filetype=sh
 augroup END
 
 " plain text
@@ -694,4 +695,3 @@ augroup END
 if filereadable(s:vimrc_local_post)
     execute 'source' s:vimrc_local_post
 endif
-
