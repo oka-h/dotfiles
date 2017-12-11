@@ -1,0 +1,38 @@
+# ------------------------------------------------------------------------------
+# dotfiles/shell/shellrc
+# ------------------------------------------------------------------------------
+
+export HISTSIZE=10000
+export SAVEHIST=10000
+
+export LS_COLORS="\
+no=38;05;254:\
+fi=38;05;254:\
+di=38;05;75:\
+ln=38;05;86:\
+or=38;05;242:\
+mi=38;05;242:\
+ex=38;05;218:\
+ow=38;05;106"
+
+if type nvim > /dev/null 2>&1; then
+  export EDITOR=nvim
+elif type vim > /dev/null 2>&1; then
+  export EDITOR=vim
+elif type vi > /dev/null 2>&1; then
+  export EDITOR=vi
+fi
+
+case "$OSTYPE" in
+  freebsd* | darwin*)
+    alias ls="ls -G -w"
+    ;;
+  linux* | cygwin)
+    alias ls="ls --color"
+    ;;
+esac
+
+alias la="ls -a"
+alias ll="ls -l"
+alias lal="ls -al"
+alias lla="ls -al"
