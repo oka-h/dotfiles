@@ -2,9 +2,7 @@
 # dotfiles/shell/.bashrc
 # ------------------------------------------------------------------------------
 
-shellrc=$(dirname $(readlink ~/.bashrc))/shellrc
-source $shellrc
-unset shellrc
+source $(dirname $(readlink ~/.bashrc))/shellrc
 
 export HISTFILE=~/.bash_history
 
