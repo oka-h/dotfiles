@@ -240,14 +240,6 @@ hook_source = '''
 '''
 
 [[plugins]]
-repo = 'haya14busa/vim-edgemotion'
-on_map = ['<Plug>(edgemotion-']
-hook_add = '''
-    map <C-J> <Plug>(edgemotion-j)
-    map <C-k> <Plug>(edgemotion-k)
-'''
-
-[[plugins]]
 repo = 'haya14busa/incsearch.vim'
 on_map = ['<Plug>(incsearch-']
 hook_add = '''
@@ -282,6 +274,14 @@ hook_add = '''
     nnoremap <silent> <C-W>aq         :<C-U>call rewindow#tabclose()<CR>
     nnoremap <silent> <C-W><C-A>q     :<C-U>call rewindow#tabclose()<CR>
     nnoremap <silent> <C-W><C-A><C-Q> :<C-U>call rewindow#tabclose()<CR>
+'''
+
+[[plugins]]
+repo = 'haya14busa/vim-edgemotion'
+on_map = ['<Plug>(edgemotion-']
+hook_add = '''
+    map <C-J> <Plug>(edgemotion-j)
+    map <C-k> <Plug>(edgemotion-k)
 '''
 
 [[plugins]]
@@ -385,4 +385,3 @@ if = "g:is_filetype_enable_of.python && has('nvim') && has('python3')"
 depends = 'deoplete.nvim'
 on_ft = 'python'
 on_i = 1
-
