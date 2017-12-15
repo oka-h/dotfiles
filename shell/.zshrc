@@ -32,8 +32,13 @@ setopt hist_ignore_dups
 setopt nolistbeep
 setopt list_packed
 setopt auto_pushd
+setopt pushdignoredups
 
 bindkey -v
+bindkey -M viins '' backward-char
+bindkey -M viins '' forward-char
+bindkey -M vicmd ' h' beginning-of-line
+bindkey -M vicmd ' l' end-of-line
 
 # Historical backward/forward search with linehead string binded to Ctrl-P/N.
 autoload history-search-end
