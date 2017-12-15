@@ -240,6 +240,14 @@ hook_source = '''
 '''
 
 [[plugins]]
+repo = 'haya14busa/vim-edgemotion'
+on_map = ['<Plug>(edgemotion-']
+hook_add = '''
+    map <C-J> <Plug>(edgemotion-j)
+    map <C-k> <Plug>(edgemotion-k)
+'''
+
+[[plugins]]
 repo = 'haya14busa/incsearch.vim'
 on_map = ['<Plug>(incsearch-']
 hook_add = '''
