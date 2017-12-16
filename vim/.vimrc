@@ -436,6 +436,92 @@ endif
 
 
 " ------------------------------------------------------------------------------
+" My commands
+" ------------------------------------------------------------------------------
+
+" :RemoveTailSpaces
+command! RemoveTailSpaces %s/ \+$//
+
+" :W
+" Write by sudo.
+if executable('sudo')
+    command! -nargs=? -complete=file_in_path W call <SID>sudo_write(<f-args>)
+endif
+
+function! s:sudo_write(...) abort
+    if a:0 <= 0
+        let l:file = '%'
+    else
+        let l:file = expand(a:1)
+    endif
+    execute 'write !sudo tee' l:file '> /dev/null'
+endfunction
+
+
+" :Redir
+" View Ex command output on file.
+command! -nargs=+ -complete=command -bang Redir call <SID>redir_output(<q-bang>, <f-args>)
+
+function! s:redir_output(bang, ...) abort
+    let l:temp_file_name = tempname()
+
+    execute 'redir >' l:temp_file_name
+    silent execute join(a:000)
+    redir END
+
+    if a:bang == ''
+        let l:win_id = win_getid()
+        if winheight(l:win_id) * 5 >= winwidth(l:win_id) * 2
+            let l:ex_cmd = 'split'
+        else
+            let l:ex_cmd = 'vsplit'
+        endif
+    else
+        let l:ex_cmd = 'tabedit'
+    endif
+    execute l:ex_cmd l:temp_file_name
+endfunction
+
+
+" :DisplayMode
+" Switch "set number" and "set cursorline" respectively.
+command! DisplayMode call s:switch_display_mode()
+
+function! s:switch_display_mode() abort
+    let l:cur_tab = tabpagenr()
+    let l:cur_win = winnr()
+
+    let l:terminal = '^term://'
+    if &cursorline
+        setglobal nocursorline
+        setglobal nonumber
+        setglobal relativenumber
+        tabdo windo if expand('%') !~ l:terminal
+                \ |     setlocal nocursorline
+                \ |     if &number || &relativenumber
+                \ |         setlocal nonumber
+                \ |         setlocal relativenumber
+                \ |     endif
+                \ | endif
+    else
+        setglobal cursorline
+        setglobal number
+        setglobal norelativenumber
+        tabdo windo if expand('%') !~ l:terminal
+                \ |     setlocal cursorline
+                \ |     if &number || &relativenumber
+                \ |         setlocal number
+                \ |         setlocal norelativenumber
+                \ |     endif
+                \ | endif
+    endif
+
+    execute 'tabnext' l:cur_tab
+    execute 'normal!' l:cur_win . "\<C-W>w"
+endfunction
+
+
+" ------------------------------------------------------------------------------
 " Other settings
 " ------------------------------------------------------------------------------
 
@@ -488,43 +574,6 @@ function! s:display_file_info() abort
 endfunction
 
 
-" ":DisplayMode" switches "set number" and "set cursorline" respectively.
-command! DisplayMode call s:switch_display_mode()
-
-function! s:switch_display_mode() abort
-    let l:cur_tab = tabpagenr()
-    let l:cur_win = winnr()
-
-    let l:terminal = '^term://'
-    if &cursorline
-        setglobal nocursorline
-        setglobal nonumber
-        setglobal relativenumber
-        tabdo windo if expand('%') !~ l:terminal
-                \ |     setlocal nocursorline
-                \ |     if &number || &relativenumber
-                \ |         setlocal nonumber
-                \ |         setlocal relativenumber
-                \ |     endif
-                \ | endif
-    else
-        setglobal cursorline
-        setglobal number
-        setglobal norelativenumber
-        tabdo windo if expand('%') !~ l:terminal
-                \ |     setlocal cursorline
-                \ |     if &number || &relativenumber
-                \ |         setlocal number
-                \ |         setlocal norelativenumber
-                \ |     endif
-                \ | endif
-    endif
-
-    execute 'tabnext' l:cur_tab
-    execute 'normal!' l:cur_win . "\<C-W>w"
-endfunction
-
-
 " If Repository that is contained vimrc has been updated, tell about it.
 if exists('*jobstart') || exists('*job_start')
     let s:vimrc_git_dir = expand('<sfile>:p')
@@ -570,45 +619,6 @@ if exists('*jobstart') || exists('*job_start')
     endif
     command! CheckVimrcReposUpdated call s:check_vimrc_repos_updated()
 endif
-
-
-" Write by sudo.
-if executable('sudo')
-    command! -nargs=? -complete=file_in_path W call <SID>sudo_write(<f-args>)
-endif
-
-function! s:sudo_write(...) abort
-    if a:0 <= 0
-        let l:file = '%'
-    else
-        let l:file = expand(a:1)
-    endif
-    execute 'write !sudo tee' l:file '> /dev/null'
-endfunction
-
-
-" View Ex command output on file.
-command! -nargs=+ -complete=command -bang Redir call <SID>redir_output(<q-bang>, <f-args>)
-
-function! s:redir_output(bang, ...) abort
-    let l:temp_file_name = tempname()
-
-    execute 'redir >' l:temp_file_name
-    silent execute join(a:000)
-    redir END
-
-    if a:bang == ''
-        let l:win_id = win_getid()
-        if winheight(l:win_id) * 5 >= winwidth(l:win_id) * 2
-            let l:ex_cmd = 'split'
-        else
-            let l:ex_cmd = 'vsplit'
-        endif
-    else
-        let l:ex_cmd = 'tabedit'
-    endif
-    execute l:ex_cmd l:temp_file_name
-endfunction
 
 
 " ------------------------------------------------------------------------------
