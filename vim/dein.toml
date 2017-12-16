@@ -355,6 +355,7 @@ on_ft = 'go'
 [[plugins]]
 repo = 'Shougo/vim-javacomplete2'
 if = "g:is_filetype_enable_of.java && (v:version >= 704 || has('nvim')) && has('python') && executable('java')"
+on_ft = 'java'
 hook_add = '''
     augroup javacomplete2
         autocmd!
