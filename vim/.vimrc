@@ -327,15 +327,15 @@ set laststatus=2
 set statusline=%!g:My_status_line()
 
 function! g:My_status_line() abort
-    let l:pwd  = ' [%{(getcwd()==$HOME)?''~/'':''/''.fnamemodify(getcwd(),'':~:t'')}] '
+    let l:pwd = " [%{(getcwd() == $HOME) ? '~/' : '/' . fnamemodify(getcwd(), ':~:t')}] "
     let l:file = '%<%F%m%r%h%w%= '
 
-    let l:format   = '%{&fileformat==''''?'''':''| ''.&fileformat.'' ''}'
-    let l:encoding = '%{&fileencoding==''''?'''':''| ''.&fileencoding.'' ''}'
-    let l:filetype = '%{&filetype==''''?'''':''| ''.&filetype.'' ''}'
+    let l:format   = "%{&fileformat   == '' ? '' : '| ' . &fileformat   . ' '}"
+    let l:encoding = "%{&fileencoding == '' ? '' : '| ' . &fileencoding . ' '}"
+    let l:filetype = "%{&filetype     == '' ? '' : '| ' . &filetype     . ' '}"
 
     let l:col = '| %3v'
-    let l:line = ':%{printf(''%''.len(line(''$'')).''d'',line(''.''))} '
+    let l:line = ":%{printf('%' . len(line('$')) . 'd', line('.'))} "
     let l:lastline = '/ %L '
 
     return l:pwd . l:file . l:format . l:encoding . l:filetype . l:col . l:line . l:lastline
