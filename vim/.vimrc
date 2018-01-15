@@ -554,6 +554,14 @@ if exists('+inccommand')
     set inccommand=split
 endif
 
+if executable('/usr/bin/python')
+    let g:python_host_prog = '/usr/bin/python'
+endif
+
+if executable('/usr/bin/python3')
+    let g:python3_host_prog = '/usr/bin/python3'
+endif
+
 " Display latest update time of the current file by <C-G>.
 nnoremap <C-G> :<C-U>call <SID>display_file_info()<CR>
 
