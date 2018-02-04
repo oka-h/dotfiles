@@ -202,6 +202,7 @@ noremap <Space>F F<C-K>
 nnoremap <C-W>t     <C-W>T
 nnoremap <C-W><C-T> <C-W>T
 nnoremap <C-W>T     <C-W>t
+nnoremap <C-W>Q :<C-U>quit!<CR>
 
 nnoremap <Esc><Esc> :<C-U>nohlsearch<CR>
 
