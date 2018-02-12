@@ -347,6 +347,18 @@ if = "g:is_filetype_enable_of.go && executable('go')"
 on_ft = 'go'
 
 [[plugins]]
+repo = 'mattn/emmet-vim'
+if = 'g:is_filetype_enable_of.html'
+on_ft = ['html', 'css']
+hook_add = '''
+    let g:user_emmet_leader_key = '<C-J>'
+    " augroup emmet
+    "     autocmd!
+    "     autocmd FileType html imap <buffer> <C-J> <C-Y>,
+    " augroup END
+'''
+
+[[plugins]]
 repo = 'zchee/deoplete-go'
 depends = 'deoplete.nvim'
 if = "g:is_filetype_enable_of.go && has('nvim') && executable('go')"
