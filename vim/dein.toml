@@ -240,7 +240,7 @@ hook_source = '''
 
 [[plugins]]
 repo = 'haya14busa/incsearch.vim'
-on_map = ['<Plug>(incsearch-']
+on_map = '<Plug>(incsearch-'
 hook_add = '''
     let g:incsearch#auto_nohlsearch = 1
     map / <Plug>(incsearch-forward)
@@ -259,25 +259,23 @@ hook_add = '''
 repo = '0x841/re-window.vim'
 hook_add = '''
     nmap <Space>w [rewindow]
-    nnoremap <silent> [rewindow]w     :<C-U>call rewindow#reopen_window(1)<CR>
-    nnoremap <silent> [rewindow]j     :<C-U>call rewindow#reopen_window(3)<CR>
-    nnoremap <silent> [rewindow]k     :<C-U>call rewindow#reopen_window(2)<CR>
-    nnoremap <silent> [rewindow]h     :<C-U>call rewindow#reopen_window(4)<CR>
-    nnoremap <silent> [rewindow]l     :<C-U>call rewindow#reopen_window(5)<CR>
-    nnoremap <silent> [rewindow]J     :<C-U>call rewindow#reopen_window(7)<CR>
-    nnoremap <silent> [rewindow]K     :<C-U>call rewindow#reopen_window(6)<CR>
-    nnoremap <silent> [rewindow]H     :<C-U>call rewindow#reopen_window(8)<CR>
-    nnoremap <silent> [rewindow]L     :<C-U>call rewindow#reopen_window(9)<CR>
-    nnoremap <silent> <C-W>o          :<C-U>call rewindow#only()<CR>
-    nnoremap <silent> <C-W><C-O>      :<C-U>call rewindow#only()<CR>
-    nnoremap <silent> <C-W>aq         :<C-U>call rewindow#tabclose()<CR>
-    nnoremap <silent> <C-W><C-A>q     :<C-U>call rewindow#tabclose()<CR>
-    nnoremap <silent> <C-W><C-A><C-Q> :<C-U>call rewindow#tabclose()<CR>
+    nnoremap <silent> [rewindow]w :<C-U>call rewindow#reopen_window(1)<CR>
+    nnoremap <silent> [rewindow]k :<C-U>call rewindow#reopen_window(2)<CR>
+    nnoremap <silent> [rewindow]j :<C-U>call rewindow#reopen_window(3)<CR>
+    nnoremap <silent> [rewindow]h :<C-U>call rewindow#reopen_window(4)<CR>
+    nnoremap <silent> [rewindow]l :<C-U>call rewindow#reopen_window(5)<CR>
+    nnoremap <silent> [rewindow]K :<C-U>call rewindow#reopen_window(6)<CR>
+    nnoremap <silent> [rewindow]J :<C-U>call rewindow#reopen_window(7)<CR>
+    nnoremap <silent> [rewindow]H :<C-U>call rewindow#reopen_window(8)<CR>
+    nnoremap <silent> [rewindow]L :<C-U>call rewindow#reopen_window(9)<CR>
+    nnoremap <silent> <C-W>o      :<C-U>call rewindow#only()<CR>
+    nnoremap <silent> <C-W><C-O>  :<C-U>call rewindow#only()<CR>
+    nnoremap <silent> <C-W>aq     :<C-U>call rewindow#tabclose()<CR>
 '''
 
 [[plugins]]
 repo = 'haya14busa/vim-edgemotion'
-on_map = ['<Plug>(edgemotion-']
+on_map = '<Plug>(edgemotion-'
 hook_add = '''
     map <Space>j <Plug>(edgemotion-j)
     map <Space>k <Plug>(edgemotion-k)
@@ -354,7 +352,7 @@ hook_add = '''
     let g:user_emmet_leader_key = '<C-J>'
     " augroup emmet
     "     autocmd!
-    "     autocmd FileType html imap <buffer> <C-J> <C-Y>,
+    "     autocmd FileType html,css imap <buffer> <C-J> <C-Y>,
     " augroup END
 '''
 
