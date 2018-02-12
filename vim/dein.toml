@@ -350,10 +350,6 @@ if = 'g:is_filetype_enable_of.html'
 on_ft = ['html', 'css']
 hook_add = '''
     let g:user_emmet_leader_key = '<C-J>'
-    " augroup emmet
-    "     autocmd!
-    "     autocmd FileType html,css imap <buffer> <C-J> <C-Y>,
-    " augroup END
 '''
 
 [[plugins]]
