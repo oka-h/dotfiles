@@ -281,6 +281,12 @@ hook_add = '''
 '''
 
 [[plugins]]
+repo = 'tomtom/tcomment_vim'
+hook_add = '''
+    let g:tcommentModeExtra = 'B'
+'''
+
+[[plugins]]
 repo = 'fuenor/jpmoveword.vim'
 hook_add = '''
     let g:jpmoveword_enable_WBE = 1
