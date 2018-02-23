@@ -346,7 +346,7 @@ hook_source = '''
 
 [[plugins]]
 repo = 'zchee/deoplete-clang'
-if = "executable('clang')"
+if = "(g:is_filetype_enable_of.c || g:is_filetype_enable_of.cpp) && executable('clang')"
 on_ft = ['c', 'cpp', 'cmake']
 depends = 'deoplete.nvim'
 hook_add = '''

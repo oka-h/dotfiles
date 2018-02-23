@@ -25,6 +25,8 @@ let s:xdg_cache_home = empty($XDG_CACHE_HOME) ? expand('~/.cache')
                                             \ : $XDG_CACHE_HOME
 
 let g:is_filetype_enable_of = {
+\   'c'          : 0,
+\   'cpp'        : 0,
 \   'go'         : 0,
 \   'html'       : 0,
 \   'java'       : 0,
