@@ -127,8 +127,10 @@ repo = 'Shougo/neosnippet-snippets'
 if = "v:version >= 704 || has('nvim')"
 on_source = 'neosnippet'
 hook_add = '''
-    let g:neosnippet#snippets_directory =
-        \ g:plugins_dir . expand('/repos/github.com/Shougo/neosnippet-snippets/snippets/')
+    let g:neosnippet#snippets_directory = [
+    \   g:plugins_dir . expand('/repos/github.com/Shougo/neosnippet-snippets/snippets/'),
+    \   g:dotfiles_vim_dir . expand('/snippets')
+    \]
 '''
 
 [[plugins]]

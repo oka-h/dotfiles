@@ -45,14 +45,10 @@ endif
 " Dein.vim settings
 " ------------------------------------------------------------------------------
 
-" The directory installed plugins.
 let g:plugins_dir = s:xdg_cache_home . expand('/dein')
-
-" Dein.vim location.
 let s:dein_dir = g:plugins_dir . expand('/repos/github.com/Shougo/dein.vim')
-
-" dein.toml location.
-let s:toml = fnamemodify(s:vimrc, ':h') . expand('/dein.toml')
+let g:dotfiles_vim_dir = fnamemodify(s:vimrc, ':h')
+let s:toml = g:dotfiles_vim_dir . expand('/dein.toml')
 
 if !isdirectory(g:plugins_dir . expand('/repos/github.com/vim-ja/vimdoc-ja'))
     let g:dein#install_process_timeout = 300
@@ -73,11 +69,10 @@ function! s:load_dein() abort
 
     if dein#load_state(g:plugins_dir)
         let l:vimrcs = [s:vimrc, s:vimrc_local_pre, s:vimrc_local_post]
-        let l:local_toml = expand('~/.dein_local.toml')
-
         call dein#begin(g:plugins_dir, l:vimrcs)
         call dein#load_toml(s:toml)
 
+        let l:local_toml = expand('~/.dein_local.toml')
         if filereadable(l:local_toml)
             call dein#load_toml(l:local_toml)
         endif

@@ -33,3 +33,4 @@ bind '"\C-p": history-search-backward'
 bind '"\C-n": history-search-forward'
 
 [ -f ~/.shellrc_local ] && source ~/.shellrc_local
+source ~/qmk_utils/activate_msys2.sh
