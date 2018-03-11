@@ -43,6 +43,7 @@ hook_add = '''
 hook_post_source = '''
     call denite#custom#source('file_rec', 'matchers', ['matcher_regexp'])
     call denite#custom#source('file_mru', 'matchers', ['matcher_regexp'])
+    call denite#custom#map('normal', 's', '<denite:do_action:split>', 'noremap')
 '''
 
 [[plugins]]
