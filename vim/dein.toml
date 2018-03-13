@@ -271,9 +271,9 @@ hook_add = '''
     nnoremap <silent> [rewindow]J :<C-U>call rewindow#reopen_window(7)<CR>
     nnoremap <silent> [rewindow]H :<C-U>call rewindow#reopen_window(8)<CR>
     nnoremap <silent> [rewindow]L :<C-U>call rewindow#reopen_window(9)<CR>
-    nnoremap <silent> <C-W>o      :<C-U>call rewindow#only()<CR>
-    nnoremap <silent> <C-W><C-O>  :<C-U>call rewindow#only()<CR>
-    nnoremap <silent> <C-W>aq     :<C-U>call rewindow#tabclose()<CR>
+    noremap  <silent> <C-W>o      :<C-U>call rewindow#only()<CR>
+    noremap  <silent> <C-W><C-O>  :<C-U>call rewindow#only()<CR>
+    noremap  <silent> <C-W>aq     :<C-U>call rewindow#tabclose()<CR>
 '''
 
 [[plugins]]
