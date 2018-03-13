@@ -181,7 +181,9 @@ noremap gj j
 noremap k gk
 noremap gk k
 
-noremap <Space>y "+y
+noremap m y
+
+noremap <Space>m "+y
 noremap <Space>p "+p
 noremap <Space>P "+P
 
