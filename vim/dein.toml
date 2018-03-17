@@ -167,6 +167,19 @@ hook_add = '''
     \   'runner/vimproc/updatetime' : 60
     \}
 
+    if executable('clang')
+        let g:quickrun_config.c = {
+        \   'command' : 'clang'
+        \}
+    endif
+
+    if executable('clang++')
+        let g:quickrun_config.cpp = {
+        \   'command' : 'clang++',
+        \   'cmdopt'  : '--std=c++11'
+        \}
+    endif
+
     let g:quickrun_config.markdown = {
     \   'outputter' : 'browser'
     \}
