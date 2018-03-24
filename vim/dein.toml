@@ -291,6 +291,7 @@ hook_add = '''
 
 [[plugins]]
 repo = 'haya14busa/vim-edgemotion'
+if = "(v:version + has('patch313') >= 705) || has('nvim')"
 hook_add = '''
     map <Space>j <Plug>(edgemotion-j)
     map <Space>k <Plug>(edgemotion-k)
