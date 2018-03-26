@@ -145,6 +145,7 @@ hook_add = '''
     let g:quickrun_no_default_key_mappings = 1
 
     nnoremap <silent> <expr> <Space>q ':<C-U>QuickRun' . (exists('b:quickrun_args') ? (' -args ' . b:quickrun_args) : '') . '<CR>'
+    nnoremap <silent> <expr> <C-C> quickrun#is_running() ? quickrun#sweep_sessions() : "\<C-C>"
 
     if !exists('g:quickrun_config')
         let g:quickrun_config = {}
