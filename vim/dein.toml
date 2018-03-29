@@ -303,6 +303,10 @@ hook_add = '''
 repo = 'tomtom/tcomment_vim'
 hook_add = '''
     let g:tcommentModeExtra = 'B'
+    let g:tcommentMaps = 0
+    nmap <Space>o  <Plug>TComment_gc
+    xmap <Space>o  <Plug>TComment_gc
+    nmap <Space>oo <Plug>TComment_gcc
 '''
 
 [[plugins]]
