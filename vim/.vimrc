@@ -645,6 +645,12 @@ augroup markdown
     autocmd FileType markdown inoremap <buffer> <nowait> ' '
 augroup END
 
+" neosnippet
+augroup neosnippet
+    autocmd!
+    autocmd FileType neosnippet setlocal noexpandtab
+augroup END
+
 " shell script
 augroup shellscript
     autocmd!

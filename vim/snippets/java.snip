@@ -1,53 +1,53 @@
 snippet list
 options word
-    List<${1:type}>${0}
+	List<${1:type}>${0}
 
 snippet map
 options word
-    Map<${1:key}, ${2:value}>${0}
+	Map<${1:key}, ${2:value}>${0}
 
 snippet set
 options word
-    Set<${1:type}>${0}
+	Set<${1:type}>${0}
 
 snippet milli
 options word
-    System.currentTimeMillis()${1}
+	System.currentTimeMillis()${1}
 
 snippet nano
 options word
-    System.nanoTime()${1}
+	System.nanoTime()${1}
 
 snippet ifelse
 abbr if () {} else {}
 alias ife, ifel
 options head
-    if (${1:#:condition}) {
-        ${2:TARGET}
-    }
-    else {
-        ${3:TARGET}
-    }
+	if (${1:#:condition}) {
+		${2:TARGET}
+	}
+	else {
+		${3:TARGET}
+	}
 
 snippet fori
 abbr for (int i=0; ...) {}
 options head
-    for (int ${1:i}=0; $1<${2:N}; $1++) {
-        ${0:TARGET}
-    }
+	for (int ${1:i}=0; $1<${2:N}; $1++) {
+		${0:TARGET}
+	}
 
 snippet foreach
 abbr for ( : ) {}
 alias fore
 options head
-    for (${1}: ${2}) {
-        ${3:TARGET}
-    }
+	for (${1}: ${2}) {
+		${3:TARGET}
+	}
 
 snippet main
 options head
-    class `expand('%:p:t:r')` {
-        public static void main(String[] args) {
-            ${0:#:body}
-        }
-    }
+	class `expand('%:p:t:r')` {
+		public static void main(String[] args) {
+			${0:#:body}
+		}
+	}

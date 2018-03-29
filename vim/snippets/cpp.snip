@@ -2,46 +2,46 @@ snippet std
 abbr std::
 alias st
 options word
-    std::${1}
+	std::${1}
 
 snippet container
 abbr container<type...>
 alias co
 options word
-    ${1:#:container}<${2:#:type}>${0}
+	${1:#:container}<${2:#:type}>${0}
 
 snippet ifelse
 abbr if () {} else {}
 alias ife, ifel
 options head
-    if (${1:#:condition}) {
-        ${2:TARGET}
-    }
-    else {
-        ${3:TARGET}
-    }
+	if (${1:#:condition}) {
+		${2:TARGET}
+	}
+	else {
+		${3:TARGET}
+	}
 
 snippet for
 abbr for ( ; ; ) {}
 options head
-    for (${1}; ${2}; ${3}) {
-        ${0:TARGET}
-    }
+	for (${1}; ${2}; ${3}) {
+		${0:TARGET}
+	}
 
 snippet fori
 abbr for (int i=0; ...) {}
 options head
-    for (int ${1:i}=0; $1<${2:N}; $1++) {
-        ${0:TARGET}
-    }
+	for (int ${1:i}=0; $1<${2:N}; $1++) {
+		${0:TARGET}
+	}
 
 snippet foreach
 abbr for ( : ) {}
 alias fore
 options head
-    for (${1}: ${2}) {
-        ${0:TARGET}
-    }
+	for (${1}: ${2}) {
+		${0:TARGET}
+	}
 
 snippet main
 options head
@@ -52,9 +52,9 @@ options head
 
 snippet helloworld
 options head
-    #include <iostream>
+	#include <iostream>
 
-    int main(int argc, char const* argv[]) {
-        std::cout << "hello, world!" << std::endl;
-        return 0;
-    }
+	int main(int argc, char const* argv[]) {
+		std::cout << "hello, world!" << std::endl;
+		return 0;
+	}
