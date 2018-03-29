@@ -223,6 +223,7 @@ endfunction
 
 if exists(':terminal') == 2
     nmap <Space>t [terminal]
+    nnoremap [terminal] <Nop>
     nnoremap [terminal]<Space> :<C-U>                        terminal<CR><C-\><C-N>i
     nnoremap [terminal]t :<C-U>tabedit                   | terminal<CR><C-\><C-N>i
     nnoremap [terminal]j :<C-U>         rightbelow split | terminal<CR><C-\><C-N>i
