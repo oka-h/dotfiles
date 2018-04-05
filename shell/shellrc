@@ -37,3 +37,4 @@ alias ll="ls -l"
 alias lal="ls -al"
 alias lla="ls -al"
 alias grep="grep --color"
+alias e=$EDITOR
