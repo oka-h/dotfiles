@@ -91,14 +91,16 @@ function! s:load_dein() abort
     unlet g:disable_plugins
 endfunction
 
-if isdirectory(s:dein_dir)
-    call s:load_dein()
-elseif (v:version >= 704) || has('nvim')
-    command! DeinInstall call s:install_dein()
-    augroup nodein_call
-        autocmd!
-        autocmd VimEnter * echomsg 'Dein.vim is not installed. Please install it by :DeinIntall.'
-    augroup END
+if (v:version >= 704) || has('nvim')
+    if isdirectory(s:dein_dir)
+        call s:load_dein()
+    else
+        command! DeinInstall call s:install_dein()
+        augroup nodein_call
+            autocmd!
+            autocmd VimEnter * echomsg 'Dein.vim is not installed. Please install it by :DeinIntall.'
+        augroup END
+    endif
 endif
 
 
