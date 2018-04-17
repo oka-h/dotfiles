@@ -636,44 +636,37 @@ endif
 " Settings for each language
 " ------------------------------------------------------------------------------
 
-" Java
 let g:java_highlight_all       = 1
 let g:java_highlight_functions = 'style'
 let g:java_space_error         = 1
 
-" Markdown
 augroup markdown
     autocmd!
     autocmd FileType markdown inoremap <buffer> <nowait> ' '
 augroup END
 
-" neosnippet
 augroup neosnippet
     autocmd!
     autocmd FileType neosnippet setlocal noexpandtab
 augroup END
 
-" shell script
-augroup shellscript
+augroup plain_text
+    autocmd!
+    autocmd FileType text inoremap <buffer> <nowait> ' '
+augroup END
+
+augroup python
+    autocmd!
+    autocmd FileType python setlocal textwidth=79
+augroup END
+
+augroup shell_script
     autocmd!
     autocmd FileType *sh setlocal tabstop=2
     autocmd FileType *sh setlocal shiftwidth=2
     autocmd BufRead,BufNewFile *shellrc* set filetype=sh
 augroup END
 
-" plain text
-augroup textfile
-    autocmd!
-    autocmd FileType text inoremap <buffer> <nowait> ' '
-augroup END
-
-" Python
-augroup python
-    autocmd!
-    autocmd FileType python setlocal textwidth=79
-augroup END
-
-" Terminal
 if exists('##TermOpen') && exists('##TermClose')
     augroup terminal
         autocmd!
@@ -682,16 +675,14 @@ if exists('##TermOpen') && exists('##TermClose')
     augroup END
 endif
 
-" Tex
-augroup texfile
+augroup tex
     autocmd!
     autocmd FileType *tex setlocal conceallevel=0
     " Transform markdown to tex.
     autocmd FileType *tex setlocal formatprg=pandoc\ --from=markdown\ --to=latex
 augroup END
 
-" Vim script
-augroup vimscript
+augroup vim_script
     autocmd!
     autocmd BufRead,BufNewFile *.toml set filetype=conf
 
@@ -708,7 +699,6 @@ augroup vimscript
     autocmd BufRead,BufNewFile *.toml nnoremap <buffer> <silent> K :<C-U>help <C-R><C-W><CR>
 augroup END
 
-" Yacc
 augroup yacc
     autocmd!
     autocmd BufRead,BufNewFile *.jay set filetype=yacc
