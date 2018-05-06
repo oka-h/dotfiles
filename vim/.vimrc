@@ -313,6 +313,56 @@ if has('unix') && !has('gui_running')
     cnoremap  
 endif
 
+" Keymap for Planck keyboard
+noremap <F2> :<C-U>call g:Map_planck(1)<CR>
+let s:is_planck = 0
+function! g:Map_planck(notice) abort
+    let s:is_planck = !s:is_planck
+    if s:is_planck
+        map <BS> <Space>
+        noremap - <C-]>
+        noremap _ }
+        map ( *
+        map ) #
+    else
+        silent! unmap <BS>
+        silent! unmap -
+        silent! unmap _
+        silent! unmap (
+        silent! unmap )
+    endif
+    if v:vim_did_enter && a:notice
+        echo 's:map_planck is' s:is_planck ? 'enable' : 'disable'
+    endif
+endfunction
+
+" Keymap for qycv layout
+noremap <F3> :<C-U>call g:Map_qycv(1)<CR>
+let s:is_qycv = 0
+function! g:Map_qycv(notice) abort
+    let s:is_qycv = !s:is_qycv
+    if s:is_qycv
+        noremap y v
+        noremap Y V
+        noremap <C-Y> <C-V>
+        noremap gy gv
+        noremap <C-W>y <C-W>q
+        noremap <C-W>Y :<C-U>quit!<CR>
+        noremap <silent> <C-W>ay :<C-U>call rewindow#tabclose()<CR>
+    else
+        silent! unmap y
+        silent! unmap Y
+        silent! unmap <C-Y>
+        silent! unmap gy
+        silent! unmap <C-W>y
+        silent! unmap <C-W>Y
+        silent! unmap <C-W>ay
+    endif
+    if v:vim_did_enter && a:notice
+        echo 's:map_qycv is' s:is_qycv ? 'enable' : 'disable'
+    endif
+endfunction
+
 
 " ------------------------------------------------------------------------------
 " Display settings
