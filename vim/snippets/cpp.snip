@@ -4,6 +4,12 @@ alias st
 options word
 	std::${1}
 
+snippet iterator_range
+abbr vec.begin(), vec.end()
+alias it
+options word
+    ${1:vector}.begin(), $1.end()${0}
+
 snippet container
 abbr container<type...>
 alias co
