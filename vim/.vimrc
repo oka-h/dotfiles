@@ -363,6 +363,21 @@ function! g:Map_qycv(notice) abort
     endif
 endfunction
 
+function! g:Myplanck_enable(...) abort
+    if v:vim_did_enter
+        return 
+    endif
+    if a:0 < 1 || a:1
+        augroup myplanck_enable
+            autocmd!
+            autocmd VimEnter * call g:Map_planck(0)
+        augroup END
+    endif
+    if a:0 < 2 || a:2
+        call g:Map_qycv(0)
+    endif
+endfunction
+
 
 " ------------------------------------------------------------------------------
 " Display settings
