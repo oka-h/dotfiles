@@ -8,7 +8,7 @@ snippet iterator_range
 abbr vec.begin(), vec.end()
 alias it
 options word
-    ${1:vector}.begin(), $1.end()${0}
+	${1:vector}.begin(), $1.end()${0}
 
 snippet container
 abbr container<type...>
@@ -46,6 +46,19 @@ abbr for ( : ) {}
 alias fore
 options head
 	for (${1}: ${2}) {
+		${0:TARGET}
+	}
+
+snippet class
+abbr class {};
+options head
+	class ${1:`expand('%:p:t:r')`} {
+		${2}
+	public:
+		$1(${3});
+	};
+
+	$1::$1($3) {
 		${0:TARGET}
 	}
 
