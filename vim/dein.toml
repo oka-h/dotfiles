@@ -337,6 +337,11 @@ hook_add = '''
 repo = 'deton/jasentence.vim'
 hook_add = '''
     let g:jasentence_endpat = '[。．？！]\+'
+    let g:jasentence_no_default_key_mappings = 1
+    omap <silent> as <Plug>JaSentenceTextObjA
+    omap <silent> is <Plug>JaSentenceTextObjI
+    xmap <silent> as <Plug>JaSentenceTextObjVA
+    xmap <silent> is <Plug>JaSentenceTextObjVI
 '''
 
 [[plugins]]
