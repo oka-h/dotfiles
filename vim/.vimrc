@@ -24,6 +24,11 @@ let s:vimrc_local_post = expand('~/.vimrc_local')
 let s:xdg_cache_home = empty($XDG_CACHE_HOME) ? expand('~/.cache')
                                             \ : $XDG_CACHE_HOME
 
+function! g:Version_check(version, ...) abort
+    let l:patch = a:0 > 0 ? has('patch' . a:1) : 0
+    return v:version + l:patch >= a:version || has('nvim')
+endfunction
+
 let g:is_filetype_enable_of = {
 \   'c'          : 0,
 \   'cpp'        : 0,
@@ -91,7 +96,7 @@ function! s:load_dein() abort
     unlet g:disable_plugins
 endfunction
 
-if (v:version >= 704) || has('nvim')
+if g:Version_check(704)
     if isdirectory(s:dein_dir)
         call s:load_dein()
     else
@@ -618,7 +623,7 @@ augroup format_options
     autocmd BufEnter * setlocal formatoptions+=M
                               \ formatoptions-=r
                               \ formatoptions-=o
-    if (v:version + has('patch541') >= 704) || has('nvim')
+    if g:Version_check(704, 541)
         autocmd BufEnter * setlocal formatoptions+=j
     endif
 augroup END

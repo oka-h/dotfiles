@@ -22,7 +22,7 @@ repo = 'tyru/open-browser.vim'
 
 [[plugins]]
 repo = 'Shougo/unite.vim'
-if = "!(has('python3') && (v:version >= 800 || has('nvim')))"
+if = "!(has('python3') && g:Version_check(800))"
 depends = 'neomru.vim'
 hook_add = '''
     nnoremap <silent> <Space>n :<C-U>Unite file_rec<CR>
@@ -32,7 +32,7 @@ hook_add = '''
 
 [[plugins]]
 repo = 'Shougo/denite.nvim'
-if = "has('python3') && (v:version >= 800 || has('nvim'))"
+if = "has('python3') && g:Version_check(800)"
 on_cmd = ['Denite', 'DeniteBufferDir', 'DeniteCursorWord', 'DeniteProjectDir']
 depends = 'neomru.vim'
 hook_add = '''
@@ -55,7 +55,7 @@ on_source = ['unite.vim', 'denite.nvim']
 
 [[plugins]]
 repo = 'Shougo/neocomplete.vim'
-if = "!((v:version >= 800 || has('nvim')) && has('python3')) && (v:version + has('patch885') >= 704 || has('nvim')) && has('lua')"
+if = "!(g:Version_check(800) && has('python3')) && g:Version_check(704, 885) && has('lua')"
 on_i = 1
 hook_add = '''
     let g:acp_enableAtStartup = 0
@@ -108,7 +108,7 @@ hook_add = '''
 
 [[plugins]]
 repo = 'Shougo/deoplete.nvim'
-if = "(v:version >= 800 || has('nvim')) && has('python3')"
+if = "g:Version_check(800) && has('python3')"
 on_i = 1
 hook_add = '''
     let g:deoplete#enable_at_startup = 1
@@ -125,7 +125,7 @@ if = "v:version >= 800 && has('python3')"
 
 [[plugins]]
 repo = 'Shougo/neosnippet'
-if = "v:version >= 704 || has('nvim')"
+if = "g:Version_check(704)"
 on_i = 1
 hook_add = '''
     imap <C-k> <Plug>(neosnippet_expand_or_jump)
@@ -139,7 +139,7 @@ hook_add = '''
 
 [[plugins]]
 repo = 'Shougo/neosnippet-snippets'
-if = "v:version >= 704 || has('nvim')"
+if = "g:Version_check(704)"
 on_source = 'neosnippet'
 hook_add = '''
     let g:neosnippet#snippets_directory = [
@@ -271,7 +271,7 @@ hook_source = '''
 
 [[plugins]]
 repo = 'kana/vim-submode'
-if = "v:version >= 702 || has('nvim')"
+if = "g:Version_check(702)"
 hook_source = '''
     call submode#enter_with('winsize', 'n', '', '<C-W>+', '<C-W>+')
     call submode#enter_with('winsize', 'n', '', '<C-W>-', '<C-W>-')
@@ -321,7 +321,7 @@ hook_add = '''
 
 [[plugins]]
 repo = 'haya14busa/vim-edgemotion'
-if = "(v:version + has('patch313') >= 705) || has('nvim')"
+if = "g:Version_check(705, 313)"
 hook_add = '''
     map <Space>j <Plug>(edgemotion-j)
     map <Space>k <Plug>(edgemotion-k)
@@ -417,7 +417,7 @@ on_ft = 'go'
 
 [[plugins]]
 repo = 'zchee/deoplete-go'
-if = "g:is_filetype_enable_of.go && has('nvim') && executable('go')"
+if = "g:is_filetype_enable_of.go && g:Version_check(800) && has('python3') && executable('go')"
 on_ft = 'go'
 depends = 'deoplete.nvim'
 
@@ -431,7 +431,7 @@ hook_add = '''
 
 [[plugins]]
 repo = 'Shougo/vim-javacomplete2'
-if = "g:is_filetype_enable_of.java && (v:version >= 704 || has('nvim')) && has('python') && executable('java')"
+if = "g:is_filetype_enable_of.java && g:Version_check(704) && has('python') && executable('java')"
 on_ft = 'java'
 hook_add = '''
     augroup javacomplete2
@@ -457,7 +457,7 @@ hook_add = '''
 
 [[plugins]]
 repo = 'zchee/deoplete-jedi'
-if = "g:is_filetype_enable_of.python && has('nvim') && has('python3')"
+if = "g:is_filetype_enable_of.python && g:Version_check(800) && has('python3')"
 on_ft = 'python'
 on_i = 1
 depends = 'deoplete.nvim'
