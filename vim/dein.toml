@@ -430,8 +430,8 @@ hook_add = '''
 '''
 
 [[plugins]]
-repo = 'Shougo/vim-javacomplete2'
-if = "g:is_filetype_enable_of.java && g:Version_check(704) && has('python') && executable('java')"
+repo = 'artur-shaik/vim-javacomplete2'
+if = "g:is_filetype_enable_of.java && g:Version_check(704) && (has('python') || has('python3')) && executable('java')"
 on_ft = 'java'
 hook_add = '''
     augroup javacomplete2
