@@ -226,16 +226,29 @@ endfunction
 if exists(':terminal') == 2
     nmap <Space>t [terminal]
     nnoremap [terminal] <Nop>
-    nnoremap [terminal]<Space> :<C-U>                        terminal<CR><C-\><C-N>i
-    nnoremap [terminal]t :<C-U>tabedit                   | terminal<CR><C-\><C-N>i
-    nnoremap [terminal]j :<C-U>         rightbelow split | terminal<CR><C-\><C-N>i
-    nnoremap [terminal]k :<C-U>         leftabove  split | terminal<CR><C-\><C-N>i
-    nnoremap [terminal]h :<C-U>vertical leftabove  split | terminal<CR><C-\><C-N>i
-    nnoremap [terminal]l :<C-U>vertical rightbelow split | terminal<CR><C-\><C-N>i
-    nnoremap [terminal]J :<C-U>         botright   split | terminal<CR><C-\><C-N>i
-    nnoremap [terminal]K :<C-U>         topleft    split | terminal<CR><C-\><C-N>i
-    nnoremap [terminal]H :<C-U>vertical topleft    split | terminal<CR><C-\><C-N>i
-    nnoremap [terminal]L :<C-U>vertical botright   split | terminal<CR><C-\><C-N>i
+    if has('nvim')
+        nnoremap [terminal]<Space> :<C-U>                        terminal<CR><C-\><C-N>i
+        nnoremap [terminal]t :<C-U>tabedit                   | terminal<CR><C-\><C-N>i
+        nnoremap [terminal]j :<C-U>         rightbelow split | terminal<CR><C-\><C-N>i
+        nnoremap [terminal]k :<C-U>         leftabove  split | terminal<CR><C-\><C-N>i
+        nnoremap [terminal]h :<C-U>vertical leftabove  split | terminal<CR><C-\><C-N>i
+        nnoremap [terminal]l :<C-U>vertical rightbelow split | terminal<CR><C-\><C-N>i
+        nnoremap [terminal]J :<C-U>         botright   split | terminal<CR><C-\><C-N>i
+        nnoremap [terminal]K :<C-U>         topleft    split | terminal<CR><C-\><C-N>i
+        nnoremap [terminal]H :<C-U>vertical topleft    split | terminal<CR><C-\><C-N>i
+        nnoremap [terminal]L :<C-U>vertical botright   split | terminal<CR><C-\><C-N>i
+    else
+        nnoremap <silent> [terminal]<Space> :<C-U>              terminal ++curwin<CR>
+        nnoremap <silent> [terminal]t :<C-U>tabedit |         terminal ++curwin<CR>
+        nnoremap <silent> [terminal]j :<C-U>         rightbelow terminal<CR>
+        nnoremap <silent> [terminal]k :<C-U>         leftabove  terminal<CR>
+        nnoremap <silent> [terminal]h :<C-U>vertical leftabove  terminal<CR>
+        nnoremap <silent> [terminal]l :<C-U>vertical rightbelow terminal<CR>
+        nnoremap <silent> [terminal]J :<C-U>         botright   terminal<CR>
+        nnoremap <silent> [terminal]K :<C-U>         topleft    terminal<CR>
+        nnoremap <silent> [terminal]H :<C-U>vertical topleft    terminal<CR>
+        nnoremap <silent> [terminal]L :<C-U>vertical botright   terminal<CR>
+    endif
 endif
 
 inoremap <C-B> <Left>
@@ -305,6 +318,9 @@ endfunction
 
 if exists(':tnoremap') == 2
     tnoremap <Esc><Esc> <C-\><C-N>
+    if !has('nvim')
+        tnoremap <C-W> <C-W>.
+    endif
 endif
 
 " Solve the problem that Delete key does not work.
