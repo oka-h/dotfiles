@@ -392,6 +392,7 @@ endfunction
 " Display settings
 " ------------------------------------------------------------------------------
 
+set showmode
 set relativenumber
 set numberwidth=3
 set scrolloff=3
