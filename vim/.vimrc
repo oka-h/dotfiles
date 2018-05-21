@@ -126,6 +126,10 @@ execute 'set backupdir=' . s:temp_dir
 set swapfile
 execute 'set directory=' . s:temp_dir
 
+if exists('+clipboard')
+    set clipboard-=autoselect
+endif
+
 " Don't beep.
 if exists('+belloff')
     set belloff=all
