@@ -719,7 +719,9 @@ let g:java_space_error         = 1
 augroup each_language
     autocmd!
     " terminal
-    if exists('##TermOpen') && exists('##TermClose')
+    if exists('##TerminalOpen')
+        autocmd TerminalOpen * setlocal norelativenumber
+    elseif exists('##TermOpen') && exists('##TermClose')
         autocmd TermOpen  * setlocal norelativenumber
         autocmd TermClose * setlocal relativenumber
     endif
