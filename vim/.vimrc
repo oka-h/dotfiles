@@ -237,6 +237,7 @@ if exists(':terminal') == 2
     if has('nvim')
         nnoremap [terminal]<Space> :<C-U>                        terminal<CR><C-\><C-N>i
         nnoremap [terminal]t :<C-U>tabedit                   | terminal<CR><C-\><C-N>i
+        nnoremap [terminal]r :<C-U>-tabedit                  | terminal<CR><C-\><C-N>i
         nnoremap [terminal]j :<C-U>         rightbelow split | terminal<CR><C-\><C-N>i
         nnoremap [terminal]k :<C-U>         leftabove  split | terminal<CR><C-\><C-N>i
         nnoremap [terminal]h :<C-U>vertical leftabove  split | terminal<CR><C-\><C-N>i
@@ -247,7 +248,8 @@ if exists(':terminal') == 2
         nnoremap [terminal]L :<C-U>vertical botright   split | terminal<CR><C-\><C-N>i
     else
         nnoremap <silent> [terminal]<Space> :<C-U>              terminal ++curwin<CR>
-        nnoremap <silent> [terminal]t :<C-U>tabedit |         terminal ++curwin<CR>
+        nnoremap <silent> [terminal]t :<C-U>tabedit  |        terminal ++curwin<CR>
+        nnoremap <silent> [terminal]r :<C-U>-tabedit |        terminal ++curwin<CR>
         nnoremap <silent> [terminal]j :<C-U>         rightbelow terminal<CR>
         nnoremap <silent> [terminal]k :<C-U>         leftabove  terminal<CR>
         nnoremap <silent> [terminal]h :<C-U>vertical leftabove  terminal<CR>
