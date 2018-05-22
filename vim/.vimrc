@@ -109,14 +109,21 @@ endif
 
 
 " ------------------------------------------------------------------------------
-" General settings
+" Options
 " ------------------------------------------------------------------------------
 
+filetype plugin indent on
 set autoread
-set noundofile
 set history=10000
 set helplang=ja
-filetype plugin indent on
+set noundofile
+set spelllang&
+set spelllang+=cjk
+set splitbelow
+set splitright
+set whichwrap=h,l,<,>,[,]
+set wildmenu
+set wildmode=longest:full,full
 
 " Dirctory for backup/swap file.
 let s:temp_dir = s:xdg_cache_home . expand('/vim')
@@ -141,32 +148,27 @@ else
     set visualbell t_vb=
 endif
 
-" Save vim state when vim finishes, and restore it when vim starts.
-" This is available only when g:save_session is not 0.
-augroup save_and_load_session
+augroup format_options
     autocmd!
-    let s:session_file = expand('~/.vimsession')
-
-    if filereadable(s:session_file)
-        " Restore a previous session file when vim starts with no argument.
-        autocmd VimEnter * nested if @% == '' && s:get_buf_byte() == 0
-                              \ |     execute 'source' s:session_file
-                              \ |     call delete(s:session_file)
-                              \ | endif
+    autocmd BufEnter * setlocal formatoptions+=M
+                              \ formatoptions-=r
+                              \ formatoptions-=o
+    if g:Version_check(704, 541)
+        autocmd BufEnter * setlocal formatoptions+=j
     endif
-
-    " Save current session file when vim finishes.
-    let g:save_session = 0
-    autocmd VimLeave * if g:save_session != 0
-                   \ |     execute 'mksession!' s:session_file
-                   \ | endif
 augroup END
 
-function! s:get_buf_byte() abort
-    let l:byte = line2byte(line('$') + 1)
-    return l:byte == -1 ? 0 : byte - 1
-endfunction
+set textwidth=0
+if has('win32unix')
+    augroup textwidth_cygwin_vimscript
+        autocmd!
+        autocmd FileType vim set textwidth=0
+    augroup END
+endif
 
+if exists('+inccommand')
+    set inccommand=split
+endif
 
 if exists('+scrollback')
     set scrollback=-1
@@ -604,36 +606,6 @@ endfunction
 " Other settings
 " ------------------------------------------------------------------------------
 
-set splitbelow
-set splitright
-set whichwrap=h,l,<,>,[,]
-set wildmenu
-set wildmode=longest:full,full
-set spelllang&
-set spelllang+=cjk
-
-set textwidth=0
-if has('win32unix')
-    augroup textwidth_cygwin_vimscript
-        autocmd!
-        autocmd FileType vim set textwidth=0
-    augroup END
-endif
-
-augroup format_options
-    autocmd!
-    autocmd BufEnter * setlocal formatoptions+=M
-                              \ formatoptions-=r
-                              \ formatoptions-=o
-    if g:Version_check(704, 541)
-        autocmd BufEnter * setlocal formatoptions+=j
-    endif
-augroup END
-
-if exists('+inccommand')
-    set inccommand=split
-endif
-
 if executable('/usr/bin/python')
     let g:python_host_prog = '/usr/bin/python'
 endif
@@ -658,6 +630,33 @@ function! s:display_file_info() abort
     else
         echomsg ' ' . l:filename
     endif
+endfunction
+
+
+" Save vim state when vim finishes, and restore it when vim starts.
+" This is available only when g:save_session is not 0.
+augroup save_and_load_session
+    autocmd!
+    let s:session_file = expand('~/.vimsession')
+
+    if filereadable(s:session_file)
+        " Restore a previous session file when vim starts with no argument.
+        autocmd VimEnter * nested if @% == '' && s:get_buf_byte() == 0
+                              \ |     execute 'source' s:session_file
+                              \ |     call delete(s:session_file)
+                              \ | endif
+    endif
+
+    " Save current session file when vim finishes.
+    let g:save_session = 0
+    autocmd VimLeave * if g:save_session != 0
+                   \ |     execute 'mksession!' s:session_file
+                   \ | endif
+augroup END
+
+function! s:get_buf_byte() abort
+    let l:byte = line2byte(line('$') + 1)
+    return l:byte == -1 ? 0 : byte - 1
 endfunction
 
 
