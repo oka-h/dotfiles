@@ -93,7 +93,6 @@ function! s:load_dein() abort
     endif
 
     call dein#disable(g:disable_plugins)
-    unlet g:disable_plugins
 endfunction
 
 if g:Version_check(704)
