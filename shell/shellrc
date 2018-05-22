@@ -15,7 +15,9 @@ mi=38;05;242:\
 ex=38;05;218:\
 ow=38;05;106"
 
-if type nvim > /dev/null 2>&1; then
+if type vim > /dev/null 2>&1 && [ $(vim --version | grep -c +terminal) -gt 0 ]; then
+  export EDITOR=vim
+elif type nvim > /dev/null 2>&1; then
   export EDITOR=nvim
 elif type vim > /dev/null 2>&1; then
   export EDITOR=vim
