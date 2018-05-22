@@ -114,6 +114,7 @@ endif
 
 filetype plugin indent on
 set autoread
+set backspace=indent,eol,start
 set history=10000
 set helplang=ja
 set noundofile
