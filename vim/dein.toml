@@ -151,6 +151,7 @@ hook_add = '''
 [[plugins]]
 repo = 'ujihisa/neco-look'
 if = "executable('look')"
+on_ft = ['gitcommit', 'gitrebase', 'help', 'markdown', 'tex', 'text']
 
 [[plugins]]
 repo = 'thinca/vim-quickrun'
