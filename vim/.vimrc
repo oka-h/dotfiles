@@ -716,67 +716,51 @@ let g:java_highlight_all       = 1
 let g:java_highlight_functions = 'style'
 let g:java_space_error         = 1
 
-augroup markdown
+augroup each_language
     autocmd!
+    " terminal
+    if exists('##TermOpen') && exists('##TermClose')
+        autocmd TermOpen  * setlocal norelativenumber
+        autocmd TermClose * setlocal relativenumber
+    endif
+
+    " markdown
     autocmd FileType markdown inoremap <buffer> <nowait> ' '
-augroup END
 
-augroup neosnippet
-    autocmd!
+    " neosnippet
     autocmd FileType neosnippet setlocal noexpandtab
-augroup END
 
-augroup plain_text
-    autocmd!
+    " plain text
     autocmd FileType text inoremap <buffer> <nowait> ' '
-augroup END
 
-augroup python
-    autocmd!
+    " python
     autocmd FileType python setlocal textwidth=79
-augroup END
 
-augroup shell_script
-    autocmd!
+    " shell script
     autocmd FileType *sh setlocal tabstop=2
     autocmd FileType *sh setlocal shiftwidth=2
     autocmd BufRead,BufNewFile *shellrc* set filetype=sh
-augroup END
 
-if exists('##TermOpen') && exists('##TermClose')
-    augroup terminal
-        autocmd!
-        autocmd TermOpen  * setlocal norelativenumber
-        autocmd TermClose * setlocal relativenumber
-    augroup END
-endif
-
-augroup tex
-    autocmd!
+    " tex
     autocmd FileType *tex setlocal conceallevel=0
     " Transform markdown to tex.
-    autocmd FileType *tex setlocal formatprg=pandoc\ --from=markdown\ --to=latex
-augroup END
+    if executable('pandoc')
+        autocmd FileType *tex setlocal formatprg=pandoc\ --from=markdown\ --to=latex
+    endif
 
-augroup vim_script
-    autocmd!
+    " vim script
     autocmd BufRead,BufNewFile *.toml set filetype=conf
-
     autocmd FileType vim              inoremap <buffer> <nowait> " "
     autocmd BufRead,BufNewFile *.toml inoremap <buffer> <nowait> " "
     autocmd BufRead,BufNewFile *.toml inoremap <buffer> '''<CR>  '''<CR>'''<Esc>O<Tab>
-
     autocmd FileType vim              inoremap <buffer> [<CR> [<CR>\]<Esc>O\<Tab>
     autocmd BufRead,BufNewFile *.toml inoremap <buffer> [<CR> [<CR>\]<Esc>O\<Tab>
     autocmd FileType vim              inoremap <buffer> {<CR> {<CR><C-D>\}<Esc>O\<Tab>
     autocmd BufRead,BufNewFile *.toml inoremap <buffer> {<CR> {<CR><C-D>\}<Esc>O\<Tab>
-
     autocmd FileType vim,help         nnoremap <buffer> <silent> K :<C-U>help <C-R><C-W><CR>
     autocmd BufRead,BufNewFile *.toml nnoremap <buffer> <silent> K :<C-U>help <C-R><C-W><CR>
-augroup END
 
-augroup yacc
-    autocmd!
+    " yacc
     autocmd BufRead,BufNewFile *.jay set filetype=yacc
 augroup END
 
