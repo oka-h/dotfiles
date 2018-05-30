@@ -302,6 +302,13 @@ hook_add = '''
 '''
 
 [[plugins]]
+repo = 'osyo-manga/vim-over'
+if = "!has('nvim')"
+hook_add = '''
+    nnoremap <silent> <Space>a :<C-U>OverCommandLine %s/<CR>
+'''
+
+[[plugins]]
 repo = 'oka-h/re-window.vim'
 hook_add = '''
     nmap <Space>w [rewindow]

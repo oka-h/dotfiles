@@ -107,6 +107,10 @@ if g:Version_check(704)
     endif
 endif
 
+function! g:Is_plugins_sourced(plugin_name) abort
+    return exists('*g:dein#is_sourced') ? g:dein#is_sourced(a:plugin_name) : 0
+endfunction
+
 
 " ------------------------------------------------------------------------------
 " Options
@@ -218,6 +222,10 @@ nnoremap <C-W>T     <C-W>t
 nnoremap <C-W>Q :<C-U>quit!<CR>
 
 nnoremap <Esc><Esc> :<C-U>nohlsearch<CR>
+
+if !g:Is_plugins_sourced('vim-over')
+    nnoremap <Space>a :<C-U>%s/
+endif
 
 " Go to optional tab page.
 for s:i in range(10)
