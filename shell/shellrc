@@ -39,4 +39,11 @@ alias ll="ls -l"
 alias lal="ls -al"
 alias lla="ls -al"
 alias grep="grep --color"
-alias e=$EDITOR
+
+if [ -z "$VIM_SERVERNAME" ]; then
+  alias e=$EDITOR
+  alias tabe="$EDITOR -p"
+else
+  alias e="vim --servername \$VIM_SERVERNAME --remote"
+  alias tabe="vim --servername \$VIM_SERVERNAME --remote-tab"
+fi

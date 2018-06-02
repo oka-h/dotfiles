@@ -623,6 +623,10 @@ if executable('/usr/bin/python3')
     let g:python3_host_prog = '/usr/bin/python3'
 endif
 
+if exists(':terminal') == 2 && has('clientserver')
+    call remote_startserver('vim-server' . getpid())
+endif
+
 " Display latest update time of the current file by <C-G>.
 nnoremap <C-G> :<C-U>call <SID>display_file_info()<CR>
 
