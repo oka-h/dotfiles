@@ -623,7 +623,7 @@ if executable('/usr/bin/python3')
     let g:python3_host_prog = '/usr/bin/python3'
 endif
 
-if exists(':terminal') == 2 && has('clientserver')
+if exists(':terminal') == 2 && has('clientserver') && v:servername == ''
     call remote_startserver('vim-server' . getpid())
 endif
 
