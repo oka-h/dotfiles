@@ -275,19 +275,19 @@ endif
 inoremap <C-B> <Left>
 inoremap <C-F> <Right>
 
-inoremap {     {}<Left>
+inoremap {     {}<C-G>U<Left>
 inoremap {<CR> {<CR>}<Esc>O
 inoremap {}    {}
 inoremap {{{   {{{
-inoremap (     ()<Left>
+inoremap (     ()<C-G>U<Left>
 inoremap (<CR> (<CR>)<Esc>O
 inoremap ()    ()
-inoremap [     []<Left>
+inoremap [     []<C-G>U<Left>
 inoremap [<CR> [<CR>]<Esc>O
 inoremap []    []
-inoremap "     ""<Left>
+inoremap "     ""<C-G>U<Left>
 inoremap ""    ""
-inoremap '     ''<Left>
+inoremap '     ''<C-G>U<Left>
 inoremap ''    ''
 
 cnoremap <C-P> <Up>
