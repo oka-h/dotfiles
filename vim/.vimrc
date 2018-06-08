@@ -61,6 +61,12 @@ endif
 
 function! s:install_dein() abort
     execute '!git clone https://github.com/Shougo/dein.vim' s:dein_dir
+    if !g:Version_check(800)
+        let l:cwd = getcwd()
+        execute 'cd' s:dein_dir
+        execute '!git checkout 1.5'
+        execute 'cd' l:cwd
+    endif
     if isdirectory(s:dein_dir)
         call s:load_dein()
         delcommand DeinInstall
