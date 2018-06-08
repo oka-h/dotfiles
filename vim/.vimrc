@@ -25,8 +25,8 @@ let s:xdg_cache_home = empty($XDG_CACHE_HOME) ? expand('~/.cache')
                                             \ : $XDG_CACHE_HOME
 
 function! g:Version_check(version, ...) abort
-    let l:patch = a:0 > 0 ? has('patch' . a:1) : 0
-    return v:version + l:patch >= a:version || has('nvim')
+    let l:patch = a:0 > 0 ? has('patch' . a:1) : 1
+    return v:version + l:patch > a:version || has('nvim')
 endfunction
 
 let g:is_filetype_enable_of = {
