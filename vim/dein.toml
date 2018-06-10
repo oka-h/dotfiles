@@ -419,6 +419,28 @@ hook_add = '''
 '''
 
 [[plugins]]
+repo = 'vim-scripts/Conque-GDB'
+if = 'g:is_filetype_enable_of.c || g:is_filetype_enable_of.cpp'
+on_ft = ['c', 'cpp']
+hook_add = '''
+    nmap <Space>g [gdb]
+    nnoremap [gdb] <Nop>
+    nnoremap [gdb]j :<C-U>ConqueGdbSplit<Space>
+    nnoremap [gdb]k :<C-U>ConqueGdbVSplit<Space>
+    nnoremap [gdb]; :<C-U>ConqueGdbCommand<Space>
+    nnoremap <silent> [gdb]q :<C-U>ConqueGdbCommand quit<CR>
+
+    let g:ConqueGdb_Leader = '[gdb]'
+    let g:ConqueGdb_SaveHistory = 1
+    let g:ConqueTerm_FastMode = 1
+    let g:ConqueTerm_ReadUnfocused = 1
+    let g:ConqueTerm_CloseOnEnd = 1
+    if has('python3')
+        let g:ConqueTerm_PyVersion = 3
+    endif
+'''
+
+[[plugins]]
 repo = 'fatih/vim-go'
 if = "g:is_filetype_enable_of.go && executable('go')"
 on_ft = 'go'
