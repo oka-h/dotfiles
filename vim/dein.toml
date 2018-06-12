@@ -426,7 +426,7 @@ hook_add = '''
     nmap <Space>g [gdb]
     nnoremap [gdb] <Nop>
     nnoremap [gdb]j :<C-U>ConqueGdbSplit<Space>
-    nnoremap [gdb]k :<C-U>ConqueGdbVSplit<Space>
+    nnoremap [gdb]l :<C-U>ConqueGdbVSplit<Space>
     nnoremap [gdb]; :<C-U>ConqueGdbCommand<Space>
     nnoremap <silent> [gdb]q :<C-U>ConqueGdbCommand quit<CR>
 
