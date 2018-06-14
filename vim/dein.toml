@@ -329,7 +329,7 @@ hook_add = '''
 
 [[plugins]]
 repo = 'haya14busa/vim-edgemotion'
-if = "g:Version_check(705, 313)"
+if = "g:Version_check(704, 313)"
 hook_add = '''
     map <Space>j <Plug>(edgemotion-j)
     map <Space>k <Plug>(edgemotion-k)
