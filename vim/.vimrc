@@ -41,6 +41,8 @@ let g:is_filetype_enable_of = {
 
 let g:disable_plugins = []
 
+let g:is_my_layout = 0
+
 if filereadable(s:vimrc_local_pre)
     execute 'source' s:vimrc_local_pre
 endif
@@ -169,6 +171,11 @@ augroup format_options
     endif
 augroup END
 
+let s:dict = expand('/usr/share/dict/words')
+if filereadable(s:dict)
+    execute 'set dictionary=' . s:dict
+endif
+
 set textwidth=0
 if has('win32unix')
     augroup textwidth_cygwin_vimscript
@@ -225,12 +232,21 @@ noremap <Space>F F<C-K>
 nnoremap <C-W>t     <C-W>T
 nnoremap <C-W><C-T> <C-W>T
 nnoremap <C-W>T     <C-W>t
-nnoremap <C-W>Q :<C-U>quit!<CR>
+
+if g:is_my_layout
+    nnoremap <C-W>Y :<C-U>quit!<CR>
+else
+    nnoremap <C-W>Q :<C-U>quit!<CR>
+endif
 
 nnoremap <Esc><Esc> :<C-U>nohlsearch<CR>
 
 if !g:Is_plugins_sourced('vim-over')
-    nnoremap <Space>a :<C-U>%s/
+    if g:is_my_layout
+        nnoremap <Space>a :<C-U>%s=
+    else
+        nnoremap <Space>a :<C-U>%s/
+    endif
 endif
 
 " Go to optional tab page.
@@ -281,6 +297,12 @@ endif
 inoremap <C-B> <Left>
 inoremap <C-F> <Right>
 
+inoremap <C-L> <C-X><C-L>
+inoremap <C-K> <C-X><C-K>
+
+inoremap <expr> <C-E> pumvisible() ? '<C-Y><C-E>' : '<C-E>'
+inoremap <expr> <C-Y> pumvisible() ? '<C-Y><C-Y>' : '<C-Y>'
+
 inoremap {     {}<C-G>U<Left>
 inoremap {<CR> {<CR>}<Esc>O
 inoremap {}    {}
@@ -299,11 +321,11 @@ inoremap ''    ''
 cnoremap <C-P> <Up>
 cnoremap <C-N> <Down>
 
-inoremap <C-L> <Del>
-cnoremap <C-L> <Del>
+inoremap <C-Z> <Del>
+cnoremap <C-Z> <Del>
 
-inoremap <C-G> <C-G>u<C-R>"
-cnoremap <C-G> <C-R>"
+inoremap <C-A> <C-G>u<C-R>"
+cnoremap <C-A> <C-R>"
 
 " Assign <Home> and <End> to "<Space>h" and "<Space>l". This uses "g^", "^" and
 " "0" or "g$" and "$" for different purposes in accordance situations.
@@ -350,61 +372,23 @@ if exists(':tnoremap') == 2
     endif
 endif
 
+if g:is_my_layout
+    map <BS> <Space>
+    noremap - <C-]>
+    noremap _ }
+    noremap y v
+    noremap Y V
+    noremap <C-Y> <C-V>
+    noremap gy gv
+    noremap <C-W>y <C-W>q
+endif
+
 " Solve the problem that Delete key does not work.
 if has('unix') && !has('gui_running')
     inoremap  
     cnoremap  
 endif
 
-" Keymap for Planck keyboard
-noremap <F2> :<C-U>call g:Map_planck(1)<CR>
-let s:is_planck = 0
-function! g:Map_planck(notice) abort
-    let s:is_planck = !s:is_planck
-    if s:is_planck
-        map <BS> <Space>
-        noremap - <C-]>
-        noremap _ }
-        map ( *
-        map ) #
-    else
-        silent! unmap <BS>
-        silent! unmap -
-        silent! unmap _
-        silent! unmap (
-        silent! unmap )
-    endif
-    if v:vim_did_enter && a:notice
-        echo 's:map_planck is' s:is_planck ? 'enable' : 'disable'
-    endif
-endfunction
-
-" Keymap for qycv layout
-noremap <F3> :<C-U>call g:Map_qycv(1)<CR>
-let s:is_qycv = 0
-function! g:Map_qycv(notice) abort
-    let s:is_qycv = !s:is_qycv
-    if s:is_qycv
-        noremap y v
-        noremap Y V
-        noremap <C-Y> <C-V>
-        noremap gy gv
-        noremap <C-W>y <C-W>q
-        noremap <C-W>Y :<C-U>quit!<CR>
-        noremap <silent> <C-W>ay :<C-U>call rewindow#tabclose()<CR>
-    else
-        silent! unmap y
-        silent! unmap Y
-        silent! unmap <C-Y>
-        silent! unmap gy
-        silent! unmap <C-W>y
-        silent! unmap <C-W>Y
-        silent! unmap <C-W>ay
-    endif
-    if v:vim_did_enter && a:notice
-        echo 's:map_qycv is' s:is_qycv ? 'enable' : 'disable'
-    endif
-endfunction
 
 " ------------------------------------------------------------------------------
 " Display settings
@@ -494,8 +478,13 @@ augroup localized_search
 augroup END
 
 " In visual mode, search the selected string by "*" or "#".
-vnoremap <silent> * :<C-U>call <SID>visual_star_search('/')<CR>
-vnoremap <silent> # :<C-U>call <SID>visual_star_search('?')<CR>
+if g:is_my_layout
+    vnoremap <silent> ( :<C-U>call <SID>visual_star_search('/')<CR>
+    vnoremap <silent> ) :<C-U>call <SID>visual_star_search('?')<CR>
+else
+    vnoremap <silent> * :<C-U>call <SID>visual_star_search('/')<CR>
+    vnoremap <silent> # :<C-U>call <SID>visual_star_search('?')<CR>
+endif
 
 function! s:visual_star_search(key) abort
     let l:count = v:count1
@@ -677,53 +666,6 @@ function! s:get_buf_byte() abort
     let l:byte = line2byte(line('$') + 1)
     return l:byte == -1 ? 0 : byte - 1
 endfunction
-
-
-" If Repository that is contained vimrc has been updated, tell about it.
-if exists('*jobstart') || exists('*job_start')
-    let s:vimrc_git_dir = expand('<sfile>:p')
-    let s:vimrc_git_dir = resolve(s:vimrc_git_dir)
-    let s:vimrc_git_dir = fnamemodify(s:vimrc_git_dir, ':h:h')
-
-    function! g:Compare_repos_hash(...) abort
-        if type(a:2) == type([])
-            let l:git_msg = a:2[0]
-        else
-            let l:git_msg = a:2
-        endif
-
-        let l:remote_repos_hash = split(l:git_msg)[0]
-        if l:remote_repos_hash != s:local_repos_hash
-            let l:msg = 'Repository of "' . fnamemodify(s:vimrc_git_dir, ':~') . '" has been updated.'
-            if v:vim_did_enter
-                echomsg l:msg
-            else
-                autocmd vimrc_repos_updated VimEnter * echomsg l:msg
-            endif
-        elseif s:check_after_vim_entered
-            echomsg 'Repository of "' . fnamemodify(s:vimrc_git_dir, ':~') . '" is already up-to-date.'
-        endif
-    endfunction
-
-    function! s:check_vimrc_repos_updated() abort
-        let s:check_after_vim_entered = v:vim_did_enter
-
-        let s:local_repos_hash = system('git -C ' . s:vimrc_git_dir . ' log -1 origin | grep commit')
-        let s:local_repos_hash = split(s:local_repos_hash)[1]
-
-        let l:command = 'git -C ' . s:vimrc_git_dir . ' ls-remote origin HEAD | grep HEAD'
-        if exists('*jobstart')
-            call jobstart(l:command, {'on_stdout' : 'Compare_repos_hash'})
-        else
-            call job_start(l:command, {'out_cb' : 'Compare_repos_hash'})
-        endif
-    endfunction
-
-    if !v:vim_did_enter
-        call s:check_vimrc_repos_updated()
-    endif
-    command! CheckVimrcReposUpdated call s:check_vimrc_repos_updated()
-endif
 
 
 " ------------------------------------------------------------------------------

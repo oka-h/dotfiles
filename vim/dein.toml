@@ -128,8 +128,8 @@ repo = 'Shougo/neosnippet'
 if = "g:Version_check(704)"
 on_i = 1
 hook_add = '''
-    imap <C-k> <Plug>(neosnippet_expand_or_jump)
-    smap <C-k> <Plug>(neosnippet_expand_or_jump)
+    imap <C-G> <Plug>(neosnippet_expand_or_jump)
+    smap <C-G> <Plug>(neosnippet_expand_or_jump)
 
     " For conceal markers.
     if has('conceal')
@@ -149,17 +149,16 @@ hook_add = '''
 '''
 
 [[plugins]]
-repo = 'ujihisa/neco-look'
-if = "executable('look')"
-on_ft = ['gitcommit', 'gitrebase', 'help', 'markdown', 'tex', 'text']
-
-[[plugins]]
 repo = 'thinca/vim-quickrun'
 depends = 'vimproc.vim'
 hook_add = '''
     let g:quickrun_no_default_key_mappings = 1
 
-    nnoremap <silent> <expr> <Space>q ':<C-U>QuickRun' . (exists('b:quickrun_args') ? (' -args ' . b:quickrun_args) : '') . '<CR>'
+    if g:is_my_layout
+        nnoremap <silent> <expr> <Space>y ':<C-U>QuickRun' . (exists('b:quickrun_args') ? (' -args ' . b:quickrun_args) : '') . '<CR>'
+    else
+        nnoremap <silent> <expr> <Space>q ':<C-U>QuickRun' . (exists('b:quickrun_args') ? (' -args ' . b:quickrun_args) : '') . '<CR>'
+    endif
     nnoremap <silent> <expr> <C-C> quickrun#is_running() ? quickrun#sweep_sessions() : "\<C-C>"
 
     if !exists('g:quickrun_config')
@@ -289,27 +288,43 @@ repo = 'haya14busa/incsearch.vim'
 on_map = '<Plug>(incsearch-'
 hook_add = '''
     let g:incsearch#auto_nohlsearch = 1
-    map / <Plug>(incsearch-forward)
-    map ? <Plug>(incsearch-backward)
-    map * <Plug>(incsearch-nohl-*)
-    map # <Plug>(incsearch-nohl-#)
+    if g:is_my_layout
+        map = <Plug>(incsearch-forward)
+        map + <Plug>(incsearch-backward)
+        map ( <Plug>(incsearch-nohl-*)
+        map ) <Plug>(incsearch-nohl-#)
+        noremap <Space>= /
+        noremap <Space>+ ?
+        noremap <Space>( *
+        noremap <Space>) #
+    else
+        map / <Plug>(incsearch-forward)
+        map ? <Plug>(incsearch-backward)
+        map * <Plug>(incsearch-nohl-*)
+        map # <Plug>(incsearch-nohl-#)
+        noremap <Space>/ /
+        noremap <Space>? ?
+        noremap <Space>* *
+        noremap <Space># #
+    endif
     map n <Plug>(incsearch-nohl-n)
     map N <Plug>(incsearch-nohl-N)
-    noremap <Space>/ /
-    noremap <Space>? ?
-    noremap <Space>* *
-    noremap <Space># #
 '''
 
 [[plugins]]
 repo = 'osyo-manga/vim-over'
 if = "!has('nvim')"
 hook_add = '''
-    nnoremap <silent> <Space>a :<C-U>OverCommandLine %s/<CR>
+    if g:is_my_layout
+        nnoremap <silent> <Space>r :<C-U>OverCommandLine %s=<CR>
+    else
+        nnoremap <silent> <Space>r :<C-U>OverCommandLine %s/<CR>
+    endif
 '''
 
 [[plugins]]
 repo = 'oka-h/re-window.vim'
+if = "g:Version_check(800)"
 hook_add = '''
     nmap <Space>w [rewindow]
     nnoremap [rewindow] <Nop>
@@ -324,7 +339,12 @@ hook_add = '''
     nnoremap <silent> [rewindow]L :<C-U>call rewindow#reopen_window(9)<CR>
     noremap  <silent> <C-W>o      :<C-U>call rewindow#only()<CR>
     noremap  <silent> <C-W><C-O>  :<C-U>call rewindow#only()<CR>
-    noremap  <silent> <C-W>aq     :<C-U>call rewindow#tabclose()<CR>
+
+    if g:is_my_layout
+        noremap <silent> <C-W>ay :<C-U>call rewindow#tabclose()<CR>
+    else
+        noremap <silent> <C-W>aq :<C-U>call rewindow#tabclose()<CR>
+    endif
 '''
 
 [[plugins]]
@@ -339,7 +359,7 @@ hook_add = '''
 repo = 'tomtom/tcomment_vim'
 hook_add = '''
     let g:tcomment#mode_extra = 'B'
-    let g:tcommentMaps = 0
+    let g:tcomment_maps = 0
     nmap <Space>o  <Plug>TComment_gc
     xmap <Space>o  <Plug>TComment_gc
     nmap <Space>oo <Plug>TComment_gcc
@@ -397,8 +417,8 @@ hook_add = '''
         return l:str
     endfunction
 
-    nnoremap <Space>r :<C-U>Ref webdict alc<Space>
-    nnoremap <Space>r<Space> :<C-U>call histadd(':', 'Ref webdict alc ' . expand('<cword>'))<CR>:<UP><CR>
+    nnoremap <Space>a :<C-U>Ref webdict alc<Space>
+    nnoremap <Space>a<Space> :<C-U>call histadd(':', 'Ref webdict alc ' . expand('<cword>'))<CR>:<UP><CR>
 '''
 
 [[plugins]]
