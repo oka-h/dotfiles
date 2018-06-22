@@ -35,8 +35,8 @@ setopt auto_pushd
 setopt pushdignoredups
 
 bindkey -v
-bindkey -M viins '' backward-char
-bindkey -M viins '' forward-char
+bindkey -M viins '^b' backward-char
+bindkey -M viins '^f' forward-char
 bindkey -M vicmd ' h' beginning-of-line
 bindkey -M vicmd ' l' end-of-line
 
