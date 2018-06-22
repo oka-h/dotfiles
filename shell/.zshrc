@@ -44,7 +44,7 @@ bindkey -M vicmd ' l' end-of-line
 autoload history-search-end
 zle -N history-beginning-search-backward-end history-search-end
 zle -N history-beginning-search-forward-end  history-search-end
-bindkey "" history-beginning-search-backward-end
-bindkey "" history-beginning-search-forward-end
+bindkey "^p" history-beginning-search-backward-end
+bindkey "^n" history-beginning-search-forward-end
 
 [ -f ~/.shellrc_local ] && source ~/.shellrc_local
