@@ -4,10 +4,10 @@
 
 source $ZDOTDIR/shellrc
 
-autoload -U colors
+autoload -Uz colors
 colors
 if ! declare -f compinit > /dev/null 2>&1; then
-  autoload -U compinit
+  autoload -Uz compinit
   compinit -u
 fi
 
@@ -41,7 +41,7 @@ bindkey -M vicmd ' h' beginning-of-line
 bindkey -M vicmd ' l' end-of-line
 
 # Historical backward/forward search with linehead string binded to Ctrl-P/N.
-autoload history-search-end
+autoload -Uz history-search-end
 zle -N history-beginning-search-backward-end history-search-end
 zle -N history-beginning-search-forward-end  history-search-end
 bindkey "^p" history-beginning-search-backward-end
