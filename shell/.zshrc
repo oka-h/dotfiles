@@ -40,11 +40,32 @@ bindkey -M viins '^f' forward-char
 bindkey -M vicmd ' h' beginning-of-line
 bindkey -M vicmd ' l' end-of-line
 
-# Historical backward/forward search with linehead string binded to Ctrl-P/N.
 autoload -Uz history-search-end
 zle -N history-beginning-search-backward-end history-search-end
 zle -N history-beginning-search-forward-end  history-search-end
-bindkey "^p" history-beginning-search-backward-end
-bindkey "^n" history-beginning-search-forward-end
+bindkey '^p' history-beginning-search-backward-end
+bindkey '^n' history-beginning-search-forward-end
+
+cd-upper() {
+  zle push-line
+  LBUFFER="cd .."
+  zle accept-line
+}
+
+cd-before() {
+  zle push-line
+  LBUFFER="cd -"
+  zle accept-line
+}
+
+zle -N cd-upper
+zle -N cd-before
+bindkey '^k' cd-upper
+bindkey '^o' cd-before
+
+autoload -Uz smart-insert-last-word
+zstyle :insert-last-word match '*([[:alpha:]/\\]?|?[[:alpha:]/\\])*'
+zle -N insert-last-word smart-insert-last-word
+bindkey '^t' insert-last-word
 
 [ -f ~/.shellrc_local ] && source ~/.shellrc_local
