@@ -336,8 +336,8 @@ cnoremap <C-A> <C-R>"
 nnoremap <silent> <Space>h :<C-U>call <SID>go_to_line_head('n')<CR>
 xnoremap <silent> <Space>h :<C-U>call <SID>go_to_line_head('x')<CR>
 onoremap          <Space>h ^
-nnoremap <silent> <Space>l :<C-U>call <SID>go_to_line_end('n')<CR>
-xnoremap <silent> <Space>l :<C-U>call <SID>go_to_line_end('x')<CR>
+nnoremap <silent> <Space>l :<C-U>call <SID>go_to_line_tail('n')<CR>
+xnoremap <silent> <Space>l :<C-U>call <SID>go_to_line_tail('x')<CR>
 onoremap          <Space>l $
 
 function! s:go_to_line_head(mode) abort
@@ -356,7 +356,7 @@ function! s:go_to_line_head(mode) abort
     endif
 endfunction
 
-function! s:go_to_line_end(mode) abort
+function! s:go_to_line_tail(mode) abort
     if a:mode == 'x'
         normal! gv
     endif
