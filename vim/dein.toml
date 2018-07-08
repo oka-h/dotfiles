@@ -289,26 +289,26 @@ on_map = '<Plug>(incsearch-'
 hook_add = '''
     let g:incsearch#auto_nohlsearch = 1
     if g:is_my_layout
-        map = <Plug>(incsearch-forward)
-        map + <Plug>(incsearch-backward)
-        map ( <Plug>(incsearch-nohl-*)
-        map ) <Plug>(incsearch-nohl-#)
-        noremap <Space>= /
-        noremap <Space>+ ?
-        noremap <Space>( *
-        noremap <Space>) #
+        NXmap = <Plug>(incsearch-forward)
+        NXmap + <Plug>(incsearch-backward)
+        NXmap ( <Plug>(incsearch-nohl-*)
+        NXmap ) <Plug>(incsearch-nohl-#)
+        NXnoremap <Space>= /
+        NXnoremap <Space>+ ?
+        NXnoremap <Space>( *
+        NXnoremap <Space>) #
     else
-        map / <Plug>(incsearch-forward)
-        map ? <Plug>(incsearch-backward)
-        map * <Plug>(incsearch-nohl-*)
-        map # <Plug>(incsearch-nohl-#)
-        noremap <Space>/ /
-        noremap <Space>? ?
-        noremap <Space>* *
-        noremap <Space># #
+        NXmap / <Plug>(incsearch-forward)
+        NXmap ? <Plug>(incsearch-backward)
+        NXmap * <Plug>(incsearch-nohl-*)
+        NXmap # <Plug>(incsearch-nohl-#)
+        NXnoremap <Space>/ /
+        NXnoremap <Space>? ?
+        NXnoremap <Space>* *
+        NXnoremap <Space># #
     endif
-    map n <Plug>(incsearch-nohl-n)
-    map N <Plug>(incsearch-nohl-N)
+    NXOmap n <Plug>(incsearch-nohl-n)
+    NXOmap N <Plug>(incsearch-nohl-N)
 '''
 
 [[plugins]]
@@ -337,13 +337,13 @@ hook_add = '''
     nnoremap <silent> [rewindow]J :<C-U>call rewindow#reopen_window(7)<CR>
     nnoremap <silent> [rewindow]H :<C-U>call rewindow#reopen_window(8)<CR>
     nnoremap <silent> [rewindow]L :<C-U>call rewindow#reopen_window(9)<CR>
-    noremap  <silent> <C-W>o      :<C-U>call rewindow#only()<CR>
-    noremap  <silent> <C-W><C-O>  :<C-U>call rewindow#only()<CR>
+    NXnoremap <silent> <C-W>o     :<C-U>call rewindow#only()<CR>
+    NXnoremap <silent> <C-W><C-O> :<C-U>call rewindow#only()<CR>
 
     if g:is_my_layout
-        noremap <silent> <C-W>ay :<C-U>call rewindow#tabclose()<CR>
+        NXnoremap <silent> <C-W>ay :<C-U>call rewindow#tabclose()<CR>
     else
-        noremap <silent> <C-W>aq :<C-U>call rewindow#tabclose()<CR>
+        NXnoremap <silent> <C-W>aq :<C-U>call rewindow#tabclose()<CR>
     endif
 '''
 
@@ -351,8 +351,8 @@ hook_add = '''
 repo = 'haya14busa/vim-edgemotion'
 if = "g:Version_check(704, 313)"
 hook_add = '''
-    map <Space>j <Plug>(edgemotion-j)
-    map <Space>k <Plug>(edgemotion-k)
+    NXOmap <Space>j <Plug>(edgemotion-j)
+    NXOmap <Space>k <Plug>(edgemotion-k)
 '''
 
 [[plugins]]
@@ -360,8 +360,7 @@ repo = 'tomtom/tcomment_vim'
 hook_add = '''
     let g:tcomment#mode_extra = 'B'
     let g:tcomment_maps = 0
-    nmap <Space>o  <Plug>TComment_gc
-    xmap <Space>o  <Plug>TComment_gc
+    NXmap <Space>o <Plug>TComment_gc
     nmap <Space>oo <Plug>TComment_gcc
 '''
 

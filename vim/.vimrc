@@ -29,6 +29,11 @@ function! g:Version_check(version, ...) abort
     return v:version + l:patch > a:version || has('nvim')
 endfunction
 
+command! -nargs=1 NXmap      nmap     <args>| xmap     <args>
+command! -nargs=1 NXnoremap  nnoremap <args>| xnoremap <args>
+command! -nargs=1 NXOmap     nmap     <args>| xmap     <args>| omap     <args>
+command! -nargs=1 NXOnoremap nnoremap <args>| xnoremap <args>| onoremap <args>
+
 let g:is_filetype_enable_of = {
 \   'c'          : 0,
 \   'cpp'        : 0,
@@ -199,44 +204,43 @@ endif
 " Keymap settings
 " ------------------------------------------------------------------------------
 
-noremap <BS>    <Nop>
-noremap <Space> <Nop>
+NXOnoremap <BS>    <Nop>
+NXOnoremap <Space> <Nop>
 
-noremap ; :
-noremap : ;
-nnoremap q; q:
+NXOnoremap ; :
+NXOnoremap : ;
+NXnoremap q; q:
 
-noremap j gj
-noremap gj j
-noremap k gk
-noremap gk k
+NXOnoremap j gj
+NXOnoremap gj j
+NXOnoremap k gk
+NXOnoremap gk k
 
-noremap m y
+NXnoremap m y
 
-noremap <Space>m "+y
-noremap <Space>p "+p
-noremap <Space>P "+P
+NXnoremap <Space>m "+y
+NXnoremap <Space>p "+p
+NXnoremap <Space>P "+P
 
-noremap <Space>c "_c
-noremap <Space>C "_C
-noremap <Space>d "_d
-noremap <Space>D "_D
-noremap <Space>s "_s
-noremap <Space>S "_S
-noremap <Space>x "_x
-noremap <Space>X "_X
+NXnoremap <Space>c "_c
+NXnoremap <Space>C "_C
+NXnoremap <Space>d "_d
+NXnoremap <Space>D "_D
+NXnoremap <Space>s "_s
+NXnoremap <Space>S "_S
+NXnoremap <Space>x "_x
+NXnoremap <Space>X "_X
 
-noremap <Space>f f<C-K>
-noremap <Space>F F<C-K>
+NXOnoremap <Space>f f<C-K>
+NXOnoremap <Space>F F<C-K>
 
-nnoremap <C-W>t     <C-W>T
-nnoremap <C-W><C-T> <C-W>T
-nnoremap <C-W>T     <C-W>t
+NXnoremap <C-W>t     <C-W>T
+NXnoremap <C-W><C-T> <C-W>T
 
 if g:is_my_layout
-    nnoremap <C-W>Y :<C-U>quit!<CR>
+    NXnoremap <C-W>Y :<C-U>quit!<CR>
 else
-    nnoremap <C-W>Q :<C-U>quit!<CR>
+    NXnoremap <C-W>Q :<C-U>quit!<CR>
 endif
 
 nnoremap <Esc><Esc> :<C-U>nohlsearch<CR>
@@ -330,14 +334,14 @@ cnoremap <C-A> <C-R>"
 " Assign <Home> and <End> to "<Space>h" and "<Space>l". This uses "g^", "^" and
 " "0" or "g$" and "$" for different purposes in accordance situations.
 nnoremap <silent> <Space>h :<C-U>call <SID>go_to_line_head('n')<CR>
-vnoremap <silent> <Space>h :<C-U>call <SID>go_to_line_head('v')<CR>
+xnoremap <silent> <Space>h :<C-U>call <SID>go_to_line_head('x')<CR>
 onoremap          <Space>h ^
 nnoremap <silent> <Space>l :<C-U>call <SID>go_to_line_end('n')<CR>
-vnoremap <silent> <Space>l :<C-U>call <SID>go_to_line_end('v')<CR>
+xnoremap <silent> <Space>l :<C-U>call <SID>go_to_line_end('x')<CR>
 onoremap          <Space>l $
 
 function! s:go_to_line_head(mode) abort
-    if a:mode == 'v'
+    if a:mode == 'x'
         normal! gv
     endif
     let l:bef_col = col('.')
@@ -353,7 +357,7 @@ function! s:go_to_line_head(mode) abort
 endfunction
 
 function! s:go_to_line_end(mode) abort
-    if a:mode == 'v'
+    if a:mode == 'x'
         normal! gv
     endif
     let l:bef_col = col('.')
@@ -373,14 +377,14 @@ if exists(':tnoremap') == 2
 endif
 
 if g:is_my_layout
-    map <BS> <Space>
-    noremap - <C-]>
-    noremap _ }
-    noremap y v
-    noremap Y V
-    noremap <C-Y> <C-V>
-    noremap gy gv
-    noremap <C-W>y <C-W>q
+    NXOmap <BS> <Space>
+    NXnoremap - <C-]>
+    NXOnoremap _ }
+    NXnoremap y v
+    NXnoremap Y V
+    NXnoremap <C-Y> <C-V>
+    NXnoremap gy gv
+    NXnoremap <C-W>y <C-W>q
 endif
 
 " Solve the problem that Delete key does not work.
