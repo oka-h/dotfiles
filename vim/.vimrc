@@ -216,7 +216,7 @@ NXOnoremap gj j
 NXOnoremap k gk
 NXOnoremap gk k
 
-NXnoremap m y
+NXOnoremap m y
 
 NXnoremap <Space>m "+y
 NXnoremap <Space>p "+p
@@ -271,22 +271,35 @@ endfunction
 if exists(':terminal') == 2
     nmap <Space>t [terminal]
     nnoremap [terminal] <Nop>
+    nmap [terminal]c [cd-term]
+    nnoremap [cd-term] <Nop>
     if has('nvim')
-        nnoremap [terminal]<Space> :<C-U>                        terminal<CR><C-\><C-N>i
-        nnoremap [terminal]t :<C-U>tabedit                   | terminal<CR><C-\><C-N>i
-        nnoremap [terminal]r :<C-U>-tabedit                  | terminal<CR><C-\><C-N>i
-        nnoremap [terminal]j :<C-U>         rightbelow split | terminal<CR><C-\><C-N>i
-        nnoremap [terminal]k :<C-U>         leftabove  split | terminal<CR><C-\><C-N>i
-        nnoremap [terminal]h :<C-U>vertical leftabove  split | terminal<CR><C-\><C-N>i
-        nnoremap [terminal]l :<C-U>vertical rightbelow split | terminal<CR><C-\><C-N>i
-        nnoremap [terminal]J :<C-U>         botright   split | terminal<CR><C-\><C-N>i
-        nnoremap [terminal]K :<C-U>         topleft    split | terminal<CR><C-\><C-N>i
-        nnoremap [terminal]H :<C-U>vertical topleft    split | terminal<CR><C-\><C-N>i
-        nnoremap [terminal]L :<C-U>vertical botright   split | terminal<CR><C-\><C-N>i
+        nnoremap <silent> [terminal]<Space> :<C-U>                        terminal<CR><C-\><C-N>i
+        nnoremap <silent> [terminal]t :<C-U>tabedit                   | terminal<CR><C-\><C-N>i
+        nnoremap <silent> [terminal]r :<C-U>-tabedit                  | terminal<CR><C-\><C-N>i
+        nnoremap <silent> [terminal]j :<C-U>         rightbelow split | terminal<CR><C-\><C-N>i
+        nnoremap <silent> [terminal]k :<C-U>         leftabove  split | terminal<CR><C-\><C-N>i
+        nnoremap <silent> [terminal]h :<C-U>vertical leftabove  split | terminal<CR><C-\><C-N>i
+        nnoremap <silent> [terminal]l :<C-U>vertical rightbelow split | terminal<CR><C-\><C-N>i
+        nnoremap <silent> [terminal]J :<C-U>         botright   split | terminal<CR><C-\><C-N>i
+        nnoremap <silent> [terminal]K :<C-U>         topleft    split | terminal<CR><C-\><C-N>i
+        nnoremap <silent> [terminal]H :<C-U>vertical topleft    split | terminal<CR><C-\><C-N>i
+        nnoremap <silent> [terminal]L :<C-U>vertical botright   split | terminal<CR><C-\><C-N>i
+        nnoremap <silent> <expr> [cd-term]<Space> ':<C-U>                        terminal<CR><C-\><C-N>icd ' . expand('%:h:p') . '<CR><C-L>'
+        nnoremap <silent> <expr> [cd-term]t ':<C-U>tabedit                   | terminal<CR><C-\><C-N>icd ' . expand('%:h:p') . '<CR><C-L>'
+        nnoremap <silent> <expr> [cd-term]r ':<C-U>-tabedit                  | terminal<CR><C-\><C-N>icd ' . expand('%:h:p') . '<CR><C-L>'
+        nnoremap <silent> <expr> [cd-term]j ':<C-U>         rightbelow split | terminal<CR><C-\><C-N>icd ' . expand('%:h:p') . '<CR><C-L>'
+        nnoremap <silent> <expr> [cd-term]k ':<C-U>         leftabove  split | terminal<CR><C-\><C-N>icd ' . expand('%:h:p') . '<CR><C-L>'
+        nnoremap <silent> <expr> [cd-term]h ':<C-U>vertical leftabove  split | terminal<CR><C-\><C-N>icd ' . expand('%:h:p') . '<CR><C-L>'
+        nnoremap <silent> <expr> [cd-term]l ':<C-U>vertical rightbelow split | terminal<CR><C-\><C-N>icd ' . expand('%:h:p') . '<CR><C-L>'
+        nnoremap <silent> <expr> [cd-term]J ':<C-U>         botright   split | terminal<CR><C-\><C-N>icd ' . expand('%:h:p') . '<CR><C-L>'
+        nnoremap <silent> <expr> [cd-term]K ':<C-U>         topleft    split | terminal<CR><C-\><C-N>icd ' . expand('%:h:p') . '<CR><C-L>'
+        nnoremap <silent> <expr> [cd-term]H ':<C-U>vertical topleft    split | terminal<CR><C-\><C-N>icd ' . expand('%:h:p') . '<CR><C-L>'
+        nnoremap <silent> <expr> [cd-term]L ':<C-U>vertical botright   split | terminal<CR><C-\><C-N>icd ' . expand('%:h:p') . '<CR><C-L>'
     else
-        nnoremap <silent> [terminal]<Space> :<C-U>              terminal ++curwin<CR>
-        nnoremap <silent> [terminal]t :<C-U>tabedit  |        terminal ++curwin<CR>
-        nnoremap <silent> [terminal]r :<C-U>-tabedit |        terminal ++curwin<CR>
+        nnoremap <silent> [terminal]<Space> :<C-U>terminal ++curwin<CR>
+        nnoremap <silent> [terminal]t :<C-U>tab                 terminal<CR>
+        nnoremap <silent> [terminal]r :<C-U>-tab                terminal<CR>
         nnoremap <silent> [terminal]j :<C-U>         rightbelow terminal<CR>
         nnoremap <silent> [terminal]k :<C-U>         leftabove  terminal<CR>
         nnoremap <silent> [terminal]h :<C-U>vertical leftabove  terminal<CR>
@@ -295,6 +308,17 @@ if exists(':terminal') == 2
         nnoremap <silent> [terminal]K :<C-U>         topleft    terminal<CR>
         nnoremap <silent> [terminal]H :<C-U>vertical topleft    terminal<CR>
         nnoremap <silent> [terminal]L :<C-U>vertical botright   terminal<CR>
+        nnoremap <silent> <expr> [cd-term]<Space> ':<C-U>terminal ++curwin     <CR>cd ' . expand('%:h:p') . '<CR><C-L>'
+        nnoremap <silent> <expr> [cd-term]t ':<C-U>tab                 terminal<CR>cd ' . expand('%:h:p') . '<CR><C-L>'
+        nnoremap <silent> <expr> [cd-term]r ':<C-U>-tab                terminal<CR>cd ' . expand('%:h:p') . '<CR><C-L>'
+        nnoremap <silent> <expr> [cd-term]j ':<C-U>         rightbelow terminal<CR>cd ' . expand('%:h:p') . '<CR><C-L>'
+        nnoremap <silent> <expr> [cd-term]k ':<C-U>         leftabove  terminal<CR>cd ' . expand('%:h:p') . '<CR><C-L>'
+        nnoremap <silent> <expr> [cd-term]h ':<C-U>vertical leftabove  terminal<CR>cd ' . expand('%:h:p') . '<CR><C-L>'
+        nnoremap <silent> <expr> [cd-term]l ':<C-U>vertical rightbelow terminal<CR>cd ' . expand('%:h:p') . '<CR><C-L>'
+        nnoremap <silent> <expr> [cd-term]J ':<C-U>         botright   terminal<CR>cd ' . expand('%:h:p') . '<CR><C-L>'
+        nnoremap <silent> <expr> [cd-term]K ':<C-U>         topleft    terminal<CR>cd ' . expand('%:h:p') . '<CR><C-L>'
+        nnoremap <silent> <expr> [cd-term]H ':<C-U>vertical topleft    terminal<CR>cd ' . expand('%:h:p') . '<CR><C-L>'
+        nnoremap <silent> <expr> [cd-term]L ':<C-U>vertical botright   terminal<CR>cd ' . expand('%:h:p') . '<CR><C-L>'
     endif
 endif
 
