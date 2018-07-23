@@ -313,6 +313,12 @@ hook_add = '''
 '''
 
 [[plugins]]
+repo = 'thinca/vim-ambicmd'
+hook_add = '''
+    cnoremap <expr> <Space> ambicmd#expand("\<Space>")
+'''
+
+[[plugins]]
 repo = 'osyo-manga/vim-over'
 if = "!has('nvim')"
 hook_add = '''
