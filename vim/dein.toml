@@ -322,10 +322,20 @@ hook_add = '''
 repo = 'osyo-manga/vim-over'
 if = "!has('nvim')"
 hook_add = '''
+    function! s:replace_vim_over(key) abort
+        let l:cmdline = getcmdline()
+        if getcmdtype() ==# ':' && getcmdpos() == len(l:cmdline) + 1
+                    \ && l:cmdline =~# "^\\(%\\|'<,'>\\)\\?s\\%[ubstitute]$"
+            return "\<C-U>OverCommandLine " . l:cmdline . a:key . "\<CR>"
+        else
+            return a:key
+        endif
+    endfunction
+
     if g:is_my_layout
-        nnoremap <silent> <Space>r :<C-U>OverCommandLine %s=<CR>
+        cnoremap <expr> <silent> = <SID>replace_vim_over('=')
     else
-        nnoremap <silent> <Space>r :<C-U>OverCommandLine %s/<CR>
+        cnoremap <expr> <silent> / <SID>replace_vim_over('/')
     endif
 '''
 

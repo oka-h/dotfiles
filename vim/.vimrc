@@ -247,14 +247,6 @@ endif
 
 nnoremap <Esc><Esc> :<C-U>nohlsearch<CR>
 
-if !g:Is_plugins_sourced('vim-over')
-    if g:is_my_layout
-        nnoremap <Space>a :<C-U>%s=
-    else
-        nnoremap <Space>a :<C-U>%s/
-    endif
-endif
-
 " Go to optional tab page.
 for s:i in range(10)
     execute 'nnoremap <silent> <Space>' . s:i . ' :<C-U>call <SID>go_to_tab(' . s:i . ')<CR>'
