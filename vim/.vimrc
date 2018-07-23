@@ -31,6 +31,8 @@ endfunction
 
 command! -nargs=1 NXmap      nmap     <args>| xmap     <args>
 command! -nargs=1 NXnoremap  nnoremap <args>| xnoremap <args>
+command! -nargs=1 XOmap      xmap     <args>| omap     <args>
+command! -nargs=1 XOnoremap  xnoremap <args>| onoremap <args>
 command! -nargs=1 NXOmap     nmap     <args>| xmap     <args>| omap     <args>
 command! -nargs=1 NXOnoremap nnoremap <args>| xnoremap <args>| onoremap <args>
 
@@ -402,8 +404,8 @@ endif
 
 if g:is_my_layout
     NXOmap <BS> <Space>
-    NXnoremap - <C-]>
-    NXOnoremap _ }
+    NXnoremap { <C-]>
+    " } To not break syntax color
     NXnoremap y v
     NXnoremap Y V
     NXnoremap <C-Y> <C-V>

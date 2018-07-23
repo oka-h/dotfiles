@@ -2,6 +2,10 @@
 # dotfiles/vim/dein.toml
 # ------------------------------------------------------------------------------
 
+# ------------------------------------------------------------------------------
+# General plugins
+# ------------------------------------------------------------------------------
+
 [[plugins]]
 repo = 'Shougo/dein.vim'
 
@@ -16,9 +20,6 @@ hook_post_update = '''
 [[plugins]]
 repo = 'Shougo/vimproc.vim'
 build = 'make'
-
-[[plugins]]
-repo = 'tyru/open-browser.vim'
 
 [[plugins]]
 repo = 'Shougo/unite.vim'
@@ -107,6 +108,14 @@ hook_add = '''
 '''
 
 [[plugins]]
+repo = 'roxma/nvim-yarp'
+if = "v:version >= 800 && has('python3')"
+
+[[plugins]]
+repo = 'roxma/vim-hug-neovim-rpc'
+if = "v:version >= 800 && has('python3')"
+
+[[plugins]]
 repo = 'Shougo/deoplete.nvim'
 if = "g:Version_check(800) && has('python3')"
 on_i = 1
@@ -114,14 +123,6 @@ hook_add = '''
     let g:deoplete#enable_at_startup = 1
     let g:deoplete#enable_refresh_always = 1
 '''
-
-[[plugins]]
-repo = 'roxma/nvim-yarp'
-if = "v:version >= 800 && has('python3')"
-
-[[plugins]]
-repo = 'roxma/vim-hug-neovim-rpc'
-if = "v:version >= 800 && has('python3')"
 
 [[plugins]]
 repo = 'Shougo/neosnippet'
@@ -348,41 +349,6 @@ hook_add = '''
 '''
 
 [[plugins]]
-repo = 'haya14busa/vim-edgemotion'
-if = "g:Version_check(704, 313)"
-hook_add = '''
-    NXOmap <Space>j <Plug>(edgemotion-j)
-    NXOmap <Space>k <Plug>(edgemotion-k)
-'''
-
-[[plugins]]
-repo = 'tomtom/tcomment_vim'
-hook_add = '''
-    let g:tcomment#mode_extra = 'B'
-    let g:tcomment_maps = 0
-    NXmap <Space>o <Plug>TComment_gc
-    nmap <Space>oo <Plug>TComment_gcc
-'''
-
-[[plugins]]
-repo = 'fuenor/jpmoveword.vim'
-hook_add = '''
-    let g:jpmoveword_enable_WBE = 1
-    let g:jpmoveword_separator = '，．、。（）'
-'''
-
-[[plugins]]
-repo = 'deton/jasentence.vim'
-hook_add = '''
-    let g:jasentence_endpat = '[。．？！]\+'
-    let g:jasentence_no_default_key_mappings = 1
-    omap <silent> as <Plug>JaSentenceTextObjA
-    omap <silent> is <Plug>JaSentenceTextObjI
-    xmap <silent> as <Plug>JaSentenceTextObjVA
-    xmap <silent> is <Plug>JaSentenceTextObjVI
-'''
-
-[[plugins]]
 repo = 'koron/codic-vim'
 on_cmd = 'Codic'
 
@@ -426,6 +392,130 @@ if = "has('gui_running')"
 hook_source = '''
     call singleton#enable()
 '''
+
+
+# ------------------------------------------------------------------------------
+# Motion plugins
+# ------------------------------------------------------------------------------
+
+[[plugins]]
+repo = 'haya14busa/vim-edgemotion'
+if = "g:Version_check(704, 313)"
+hook_add = '''
+    NXOmap <Space>j <Plug>(edgemotion-j)
+    NXOmap <Space>k <Plug>(edgemotion-k)
+'''
+
+[[plugins]]
+repo = 'fuenor/jpmoveword.vim'
+hook_add = '''
+    let g:jpmoveword_enable_WBE = 1
+    let g:jpmoveword_separator = '，．、。（）'
+'''
+
+[[plugins]]
+repo = 'deton/jasentence.vim'
+hook_add = '''
+    let g:jasentence_endpat = '[。．？！]\+'
+    let g:jasentence_no_default_key_mappings = 1
+    omap <silent> as <Plug>JaSentenceTextObjA
+    omap <silent> is <Plug>JaSentenceTextObjI
+    xmap <silent> as <Plug>JaSentenceTextObjVA
+    xmap <silent> is <Plug>JaSentenceTextObjVI
+'''
+
+
+# ------------------------------------------------------------------------------
+# Edit plugins
+# ------------------------------------------------------------------------------
+
+[[plugins]]
+repo = 'tpope/vim-repeat'
+
+[[plugins]]
+repo = 'tpope/vim-surround'
+hook_add = '''
+    let g:surround_no_mappings = 1
+    let g:surround_no_insert_mappings = 1
+    nmap ds  <Plug>Dsurround
+    nmap cs  <Plug>Csurround
+    nmap cS  <Plug>CSurround
+    nmap ms  <Plug>Ysurround
+    nmap mS  <Plug>YSurround
+    nmap mss <Plug>Yssurround
+    nmap mSs <Plug>YSsurround
+    nmap mSS <Plug>YSsurround
+    xmap S   <Plug>VSurround
+    xmap gS  <Plug>VgSurround
+'''
+
+[[plugins]]
+repo = 'tomtom/tcomment_vim'
+hook_add = '''
+    let g:tcomment#mode_extra = 'B'
+    let g:tcomment_maps = 0
+    NXmap <Space>o <Plug>TComment_gc
+    nmap <Space>oo <Plug>TComment_gcc
+'''
+
+
+# ------------------------------------------------------------------------------
+# Text object plugins
+# ------------------------------------------------------------------------------
+
+[[plugins]]
+repo = 'kana/vim-textobj-user'
+
+[[plugins]]
+repo = 'anyakichi/vim-textobj-subword'
+depends = 'vim-textobj-user'
+hook_add = '''
+    if g:is_my_layout
+        NXOmap - <Plug>(textobj-subword-n)
+        NXOmap _ <Plug>(textobj-subword-p)
+        XOmap a- <Plug>(textobj-subword-a)
+        XOmap a_ <Plug>(textobj-subword-a)
+        XOmap i- <Plug>(textobj-subword-i)
+        XOmap i_ <Plug>(textobj-subword-i)
+    else
+        NXOmap ] <Plug>(textobj-subword-n)
+        NXOmap } <Plug>(textobj-subword-p)
+        XOmap a] <Plug>(textobj-subword-a)
+        XOmap a} <Plug>(textobj-subword-a)
+        XOmap i] <Plug>(textobj-subword-i)
+        XOmap i} <Plug>(textobj-subword-i)
+    endif
+'''
+
+[[plugins]]
+repo = 'kana/vim-textobj-function'
+depends = 'vim-textobj-user'
+
+[[plugins]]
+repo = 'kana/vim-textobj-indent'
+depends = 'vim-textobj-user'
+
+[[plugins]]
+repo = 'anyakichi/vim-textobj-xbrackets'
+depends = 'vim-textobj-user'
+hook_add = '''
+    let g:textobj_xbrackets_extra_iskeyword = '*.:'
+'''
+
+[[plugins]]
+repo = 'sgur/vim-textobj-parameter'
+depends = 'vim-textobj-user'
+
+[[plugins]]
+repo = 'bps/vim-textobj-python'
+if = 'g:is_filetype_enable_of.python'
+on_ft = 'python'
+depends = 'vim-textobj-user'
+
+
+# ------------------------------------------------------------------------------
+# Filetype plugins
+# ------------------------------------------------------------------------------
 
 [[plugins]]
 repo = 'zchee/deoplete-clang'
