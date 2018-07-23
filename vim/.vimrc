@@ -500,13 +500,6 @@ augroup hlsearch
     autocmd VimEnter * set hlsearch
 augroup END
 
-" Save the last search word and hlsearch for each buffers.
-augroup localized_search
-    autocmd!
-    autocmd WinLeave * let b:last_pattern = @/
-    autocmd WinEnter * let @/ = get(b:, 'last_pattern', @/)
-augroup END
-
 " In visual mode, search the selected string by "*" or "#".
 if g:is_my_layout
     vnoremap <silent> ( :<C-U>call <SID>visual_star_search('/')<CR>
