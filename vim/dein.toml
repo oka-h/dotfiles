@@ -322,20 +322,31 @@ hook_add = '''
 repo = 'osyo-manga/vim-over'
 if = "!has('nvim')"
 hook_add = '''
+    let s:is_vim_over_replaced = 0
     function! s:replace_vim_over(key) abort
+        let s:is_vim_over_replaced = 1
+        let l:substitute_expr = "^\\s\\?\\(%\\|'<,'>\\)\\?\\s\\?s\\%[ubstitute]\\s\\?$"
         let l:cmdline = getcmdline()
         if getcmdtype() ==# ':' && getcmdpos() == len(l:cmdline) + 1
-                    \ && l:cmdline =~# "^\\(%\\|'<,'>\\)\\?s\\%[ubstitute]$"
-            return "\<C-U>OverCommandLine " . l:cmdline . a:key . "\<CR>"
+                    \ && l:cmdline =~# l:substitute_expr
+            return "\<C-U>OverCommandLine\<CR>" . l:cmdline . a:key
         else
             return a:key
         endif
     endfunction
 
+    augroup remove_vim_over_cmd
+        autocmd!
+        autocmd User OverCmdLineEnter if s:is_vim_over_replaced
+                                  \ |     call histdel(':', 'OverCommandLine')
+                                  \ |     let s:is_vim_over_replaced = 0
+                                  \ | endif
+    augroup END
+
     if g:is_my_layout
-        cnoremap <expr> <silent> = <SID>replace_vim_over('=')
+        cnoremap <expr> = <SID>replace_vim_over('=')
     else
-        cnoremap <expr> <silent> / <SID>replace_vim_over('/')
+        cnoremap <expr> / <SID>replace_vim_over('/')
     endif
 '''
 
