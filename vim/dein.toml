@@ -77,7 +77,7 @@ hook_add = '''
 
     inoremap <silent> <CR> <C-R>=<SID>my_cr_function()<CR>
 
-    function! s:my_cr_function()
+    function! s:my_cr_function() abort
       return (pumvisible() ? "\<C-Y>" : "" ) . "\<CR>"
       " For no inserting <CR> key.
       " return pumvisible() ? "\<C-Y>" : "\<CR>"
@@ -395,15 +395,15 @@ hook_add = '''
 
     let g:ref_source_webdict_sites.default = 'alc'
 
-    function! g:ref_source_webdict_sites.alc.filter(output)
+    function! g:ref_source_webdict_sites.alc.filter(output) abort
         return s:remove_wasted_lines(a:output, 24)
     endfunction
 
-    function! g:ref_source_webdict_sites.wiki.filter(output)
+    function! g:ref_source_webdict_sites.wiki.filter(output) abort
         return s:remove_wasted_lines(a:output, 2)
     endfunction
 
-    function! s:remove_wasted_lines(text, head_lines)
+    function! s:remove_wasted_lines(text, head_lines) abort
         let l:str = substitute(a:text, '\n\{3,}', '\n\n', 'g')
         let l:str =  join(split(l:str, "\n")[a:head_lines:], "\n")
         return l:str
