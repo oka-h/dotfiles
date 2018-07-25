@@ -24,9 +24,29 @@ let s:vimrc_local_post = expand('~/.vimrc_local')
 let s:xdg_cache_home = empty($XDG_CACHE_HOME) ? expand('~/.cache')
                                             \ : $XDG_CACHE_HOME
 
-function! g:Version_check(version, ...) abort
-    let l:patch = a:0 > 0 ? has('patch' . a:1) : 1
-    return v:version + l:patch > a:version || has('nvim')
+function! g:Version_check(...) abort
+    if a:0 == 0
+        return 1
+    endif
+    let l:required_version = 0
+    let l:required_patch = 1
+    for l:arg in a:000
+        if type(l:arg) == type(0)
+            if l:required_version <= 0
+                let l:required_version = l:arg
+            else
+                let l:required_patch = l:required_patch && has('patch' . l:arg)
+            endif
+        elseif type(l:arg) == type('')
+            if has('nvim')
+                return stridx(l:arg, 'n') >= 0
+            elseif stridx(l:arg, 'v') < 0
+                return 0
+            endif
+        endif
+        unlet l:arg
+    endfor
+    return v:version + l:required_patch > l:required_version || has('nvim')
 endfunction
 
 command! -nargs=1 NXmap      nmap     <args>| xmap     <args>

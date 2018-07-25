@@ -8,6 +8,7 @@
 
 [[plugins]]
 repo = 'Shougo/dein.vim'
+if = 'g:Version_check(704)'
 
 [[plugins]]
 repo = 'vim-jp/vimdoc-ja'
@@ -19,6 +20,7 @@ hook_post_update = '''
 
 [[plugins]]
 repo = 'Shougo/vimproc.vim'
+if = "g:Version_check(702) && has('reltime')"
 build = 'make'
 
 [[plugins]]
@@ -64,28 +66,15 @@ hook_add = '''
     let g:neocomplete#enable_smart_case = 1
     let g:neocomplete#sources#syntax#min_keyword_length = 2
 
-    let g:neocomplete#sources#dictionary#dictionaries = {
-    \   'default'  : '',
-    \   'vimshell' : $HOME.'/.vimshell_hist',
-    \   'scheme'   : $HOME.'/.gosh_completions'
-    \}
-
     if !exists('g:neocomplete#keyword_patterns')
         let g:neocomplete#keyword_patterns = {}
     endif
     let g:neocomplete#keyword_patterns['default'] = '\h\w*'
 
-    inoremap <silent> <CR> <C-R>=<SID>my_cr_function()<CR>
-
-    function! s:my_cr_function() abort
-      return (pumvisible() ? "\<C-Y>" : "" ) . "\<CR>"
-      " For no inserting <CR> key.
-      " return pumvisible() ? "\<C-Y>" : "\<CR>"
-    endfunction
-
-    inoremap <expr> <TAB> pumvisible() ? "\<C-N>" : "\<TAB>"
-    inoremap <expr> <C-H> neocomplete#smart_close_popup()."\<C-H>"
-    inoremap <expr> <BS>  neocomplete#smart_close_popup()."\<C-H>"
+    if !exists('g:neocomplete#sources#omni#input_patterns')
+        let g:neocomplete#sources#omni#input_patterns = {}
+    endif
+    let g:neocomplete#sources#omni#input_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
 
     augroup neocomplete
         autocmd!
@@ -96,24 +85,19 @@ hook_add = '''
         autocmd FileType xml           setlocal omnifunc=xmlcomplete#CompleteTags
     augroup END
 
-    " For perlomni.vim setting.
-    " https://github.com/c9s/perlomni.vim
-    if !exists('g:neocomplete#sources#omni#input_patterns')
-        let g:neocomplete#sources#omni#input_patterns = {}
-    endif
-    let g:neocomplete#sources#omni#input_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
-
-    " Don't display preview window.
-    set completeopt-=preview
+    inoremap <expr> <CR>  pumvisible() ? '<C-Y><CR>' : '<CR>'
+    inoremap <expr> <Tab> pumvisible() ? '<C-N>' : '<Tab>'
+    inoremap <expr> <BS>  neocomplete#smart_close_popup() . '<BS>'
+    inoremap <expr> <C-H> neocomplete#smart_close_popup() . '<C-H>'
 '''
 
 [[plugins]]
 repo = 'roxma/nvim-yarp'
-if = "v:version >= 800 && has('python3')"
+if = "g:Version_check(800, 'v') && has('python3')"
 
 [[plugins]]
 repo = 'roxma/vim-hug-neovim-rpc'
-if = "v:version >= 800 && has('python3')"
+if = "g:Version_check(800, 'v') && has('python3')"
 
 [[plugins]]
 repo = 'Shougo/deoplete.nvim'
@@ -126,7 +110,7 @@ hook_add = '''
 
 [[plugins]]
 repo = 'Shougo/neosnippet'
-if = "g:Version_check(704)"
+if = 'g:Version_check(704)'
 on_i = 1
 hook_add = '''
     imap <C-G> <Plug>(neosnippet_expand_or_jump)
@@ -140,7 +124,7 @@ hook_add = '''
 
 [[plugins]]
 repo = 'Shougo/neosnippet-snippets'
-if = "g:Version_check(704)"
+if = 'g:Version_check(704)'
 on_source = 'neosnippet'
 hook_add = '''
     let g:neosnippet#snippets_directory = [
@@ -151,6 +135,7 @@ hook_add = '''
 
 [[plugins]]
 repo = 'thinca/vim-quickrun'
+if = 'g:Version_check(702)'
 depends = 'vimproc.vim'
 hook_add = '''
     let g:quickrun_no_default_key_mappings = 1
@@ -160,7 +145,7 @@ hook_add = '''
     else
         nnoremap <silent> <expr> <Space>q ':<C-U>QuickRun' . (exists('b:quickrun_args') ? (' -args ' . b:quickrun_args) : '') . '<CR>'
     endif
-    nnoremap <silent> <expr> <C-C> quickrun#is_running() ? quickrun#sweep_sessions() : "\<C-C>"
+    nnoremap <silent> <expr> <C-C> quickrun#is_running() ? quickrun#sweep_sessions() : '<C-C>'
 
     if !exists('g:quickrun_config')
         let g:quickrun_config = {}
@@ -272,7 +257,7 @@ hook_source = '''
 
 [[plugins]]
 repo = 'kana/vim-submode'
-if = "g:Version_check(702)"
+if = 'g:Version_check(702)'
 hook_source = '''
     call submode#enter_with('winsize', 'n', '', '<C-W>+', '<C-W>+')
     call submode#enter_with('winsize', 'n', '', '<C-W>-', '<C-W>-')
@@ -315,12 +300,12 @@ hook_add = '''
 [[plugins]]
 repo = 'thinca/vim-ambicmd'
 hook_add = '''
-    cnoremap <expr> <Space> ambicmd#expand("\<Space>")
+    cnoremap <expr> <Space> ambicmd#expand('<Space>')
 '''
 
 [[plugins]]
 repo = 'osyo-manga/vim-over'
-if = "!has('nvim')"
+if = "g:Version_check(703, 'v')"
 hook_add = '''
     let s:is_vim_over_replaced = 0
     function! s:replace_vim_over(key) abort
@@ -352,7 +337,7 @@ hook_add = '''
 
 [[plugins]]
 repo = 'oka-h/re-window.vim'
-if = "g:Version_check(800)"
+if = 'g:Version_check(800)'
 hook_add = '''
     nmap <Space>w [rewindow]
     nnoremap [rewindow] <Nop>
@@ -381,7 +366,7 @@ on_cmd = 'Codic'
 
 [[plugins]]
 repo = 'thinca/vim-ref'
-if = "executable('w3m') || executable('lynx')"
+if = "(executable('w3m') || executable('lynx')) && g:Version_check(702)"
 on_cmd = 'Ref'
 hook_add = '''
     let g:ref_source_webdict_sites = {
@@ -427,7 +412,7 @@ hook_source = '''
 
 [[plugins]]
 repo = 'haya14busa/vim-edgemotion'
-if = "g:Version_check(704, 313)"
+if = 'g:Version_check(704, 313)'
 hook_add = '''
     NXOmap <Space>j <Plug>(edgemotion-j)
     NXOmap <Space>k <Plug>(edgemotion-k)
@@ -461,6 +446,7 @@ repo = 'tpope/vim-repeat'
 
 [[plugins]]
 repo = 'tpope/vim-surround'
+if = 'g:Version_check(700)'
 hook_add = '''
     let g:surround_no_mappings = 1
     let g:surround_no_insert_mappings = 1
@@ -478,6 +464,7 @@ hook_add = '''
 
 [[plugins]]
 repo = 'tomtom/tcomment_vim'
+if = 'g:Version_check(702, 407)'
 hook_add = '''
     let g:tcomment#mode_extra = 'B'
     let g:tcomment_maps = 0
@@ -492,9 +479,11 @@ hook_add = '''
 
 [[plugins]]
 repo = 'kana/vim-textobj-user'
+if = 'g:Version_check(704)'
 
 [[plugins]]
 repo = 'anyakichi/vim-textobj-subword'
+if = 'g:Version_check(704)'
 depends = 'vim-textobj-user'
 hook_add = '''
     if g:is_my_layout
@@ -516,26 +505,30 @@ hook_add = '''
 
 [[plugins]]
 repo = 'kana/vim-textobj-function'
+if = 'g:Version_check(704)'
 depends = 'vim-textobj-user'
 
 [[plugins]]
 repo = 'kana/vim-textobj-indent'
+if = 'g:Version_check(704)'
 depends = 'vim-textobj-user'
 
 [[plugins]]
 repo = 'anyakichi/vim-textobj-xbrackets'
 depends = 'vim-textobj-user'
+if = 'g:Version_check(704)'
 hook_add = '''
     let g:textobj_xbrackets_extra_iskeyword = '*.:'
 '''
 
 [[plugins]]
 repo = 'sgur/vim-textobj-parameter'
+if = 'g:Version_check(704)'
 depends = 'vim-textobj-user'
 
 [[plugins]]
 repo = 'bps/vim-textobj-python'
-if = 'g:is_filetype_enable_of.python'
+if = 'g:is_filetype_enable_of.python && g:Version_check(704)'
 on_ft = 'python'
 depends = 'vim-textobj-user'
 
