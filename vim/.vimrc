@@ -425,6 +425,10 @@ if g:is_my_layout
     NXnoremap <C-Y> <C-V>
     NXnoremap gy gv
     NXnoremap <C-W>y <C-W>q
+    if !g:Is_plugins_sourced('incsearch.vim')
+        NXnoremap = /
+        NXnoremap + ?
+    endif
 endif
 
 " Solve the problem that Delete key does not work.
