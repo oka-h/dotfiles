@@ -367,6 +367,7 @@ cnoremap <C-N> <Down>
 inoremap <C-Z> <Del>
 cnoremap <C-Z> <Del>
 
+snoremap <C-A> <C-O>pa
 inoremap <C-A> <C-G>u<C-R>"
 cnoremap <C-A> <C-R>"
 
