@@ -142,8 +142,8 @@ if g:Version_check(704)
     endif
 endif
 
-function! g:Is_plugins_sourced(plugin_name) abort
-    return exists('*g:dein#is_sourced') ? g:dein#is_sourced(a:plugin_name) : 0
+function! g:Is_plugin_enable(plugin_name) abort
+    return exists('*g:dein#get') ? !empty(g:dein#get(a:plugin_name)) : 0
 endfunction
 
 
@@ -425,7 +425,7 @@ if g:is_my_layout
     NXnoremap <C-Y> <C-V>
     NXnoremap gy gv
     NXnoremap <C-W>y <C-W>q
-    if !g:Is_plugins_sourced('incsearch.vim')
+    if !g:Is_plugin_enable('incsearch.vim')
         NXnoremap = /
         NXnoremap + ?
     endif
