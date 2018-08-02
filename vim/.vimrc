@@ -754,15 +754,36 @@ augroup each_language
 
     " vim script
     autocmd BufRead,BufNewFile *.toml set filetype=conf
+    autocmd FileType vim,help         nnoremap <buffer> <silent> K :<C-U>help <C-R><C-W><CR>
+    autocmd BufRead,BufNewFile *.toml nnoremap <buffer> <silent> K :<C-U>help <C-R><C-W><CR>
     autocmd FileType vim              inoremap <buffer> <nowait> " "
     autocmd BufRead,BufNewFile *.toml inoremap <buffer> <nowait> " "
     autocmd BufRead,BufNewFile *.toml inoremap <buffer> '''<CR>  '''<CR>'''<Esc>O<Tab>
-    autocmd FileType vim              inoremap <buffer> [<CR> [<CR>\]<Esc>O\<Tab>
-    autocmd BufRead,BufNewFile *.toml inoremap <buffer> [<CR> [<CR>\]<Esc>O\<Tab>
-    autocmd FileType vim              inoremap <buffer> {<CR> {<CR><C-D>\}<Esc>O\<Tab>
-    autocmd BufRead,BufNewFile *.toml inoremap <buffer> {<CR> {<CR><C-D>\}<Esc>O\<Tab>
-    autocmd FileType vim,help         nnoremap <buffer> <silent> K :<C-U>help <C-R><C-W><CR>
-    autocmd BufRead,BufNewFile *.toml nnoremap <buffer> <silent> K :<C-U>help <C-R><C-W><CR>
+
+    autocmd FileType vim              inoremap <buffer> <expr> (<CR> <SID>vim_continue_line('(')
+    autocmd BufRead,BufNewFile *.toml inoremap <buffer> <expr> (<CR> <SID>vim_continue_line('(')
+    autocmd FileType vim              inoremap <buffer> <expr> [<CR> <SID>vim_continue_line('[')
+    autocmd BufRead,BufNewFile *.toml inoremap <buffer> <expr> [<CR> <SID>vim_continue_line('[')
+    autocmd FileType vim              inoremap <buffer> <expr> {<CR> <SID>vim_continue_line('{')
+    autocmd BufRead,BufNewFile *.toml inoremap <buffer> <expr> {<CR> <SID>vim_continue_line('{')
+    autocmd FileType vim              inoremap <buffer> <expr> ,<CR> <SID>vim_continue_line(',')
+    autocmd BufRead,BufNewFile *.toml inoremap <buffer> <expr> ,<CR> <SID>vim_continue_line(',')
+
+    function! s:vim_continue_line(char) abort
+        let l:indent = matchstr(getline('.'), "\\s*\\\\\\?\\s*")
+        if match(l:indent,'\') < 0
+            let l:indent .= '\'
+        endif
+        let l:pair_char = a:char == '(' ? ')'
+                      \ : a:char == '[' ? ']'
+                      \ : a:char == '{' ? '}'
+                                      \ : ''
+        return a:char . "\<Esc>"
+           \ . ":call append(line('.'), '" . l:indent . "')\<CR>"
+           \ . (l:pair_char != '' ? ":call append(line('.') + 1, '" . l:indent . l:pair_char . "')\<CR>" : '')
+           \ . "jA" . (l:pair_char != '' ? "\<Tab>" : '')
+    endfunction
+
 
     " yacc
     autocmd BufRead,BufNewFile *.jay set filetype=yacc
