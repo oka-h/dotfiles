@@ -714,12 +714,13 @@ endfunction
 " Settings for each language
 " ------------------------------------------------------------------------------
 
-let g:java_highlight_all       = 1
-let g:java_highlight_functions = 'style'
-let g:java_space_error         = 1
-
 augroup each_language
     autocmd!
+    " java
+    let g:java_highlight_all       = 1
+    let g:java_highlight_functions = 'style'
+    let g:java_space_error         = 1
+
     " terminal
     if exists('##TerminalOpen')
         autocmd TerminalOpen * setlocal norelativenumber
