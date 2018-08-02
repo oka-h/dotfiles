@@ -760,17 +760,17 @@ augroup each_language
     autocmd BufRead,BufNewFile *.toml inoremap <buffer> <nowait> " "
     autocmd BufRead,BufNewFile *.toml inoremap <buffer> '''<CR>  '''<CR>'''<Esc>O<Tab>
 
-    autocmd FileType vim              inoremap <buffer> <expr> (<CR> <SID>vim_continue_line('(')
-    autocmd BufRead,BufNewFile *.toml inoremap <buffer> <expr> (<CR> <SID>vim_continue_line('(')
-    autocmd FileType vim              inoremap <buffer> <expr> [<CR> <SID>vim_continue_line('[')
-    autocmd BufRead,BufNewFile *.toml inoremap <buffer> <expr> [<CR> <SID>vim_continue_line('[')
-    autocmd FileType vim              inoremap <buffer> <expr> {<CR> <SID>vim_continue_line('{')
-    autocmd BufRead,BufNewFile *.toml inoremap <buffer> <expr> {<CR> <SID>vim_continue_line('{')
-    autocmd FileType vim              inoremap <buffer> <expr> ,<CR> <SID>vim_continue_line(',')
-    autocmd BufRead,BufNewFile *.toml inoremap <buffer> <expr> ,<CR> <SID>vim_continue_line(',')
+    autocmd FileType vim              inoremap <buffer> <silent> <expr> (<CR> <SID>vim_continue_line('(')
+    autocmd BufRead,BufNewFile *.toml inoremap <buffer> <silent> <expr> (<CR> <SID>vim_continue_line('(')
+    autocmd FileType vim              inoremap <buffer> <silent> <expr> [<CR> <SID>vim_continue_line('[')
+    autocmd BufRead,BufNewFile *.toml inoremap <buffer> <silent> <expr> [<CR> <SID>vim_continue_line('[')
+    autocmd FileType vim              inoremap <buffer> <silent> <expr> {<CR> <SID>vim_continue_line('{')
+    autocmd BufRead,BufNewFile *.toml inoremap <buffer> <silent> <expr> {<CR> <SID>vim_continue_line('{')
+    autocmd FileType vim              inoremap <buffer> <silent> <expr> ,<CR> <SID>vim_continue_line(',')
+    autocmd BufRead,BufNewFile *.toml inoremap <buffer> <silent> <expr> ,<CR> <SID>vim_continue_line(',')
 
     function! s:vim_continue_line(char) abort
-        let l:indent = matchstr(getline('.'), "\\s*\\\\\\?\\s*")
+        let l:indent = matchstr(getline('.'), '\s*\\\?\s*')
         if match(l:indent,'\') < 0
             let l:indent .= '\'
         endif
