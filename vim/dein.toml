@@ -336,6 +336,18 @@ hook_add = '''
 '''
 
 [[plugins]]
+repo = 'h1mesuke/vim-alignta'
+# on_cmd = 'Alignta'
+hook_add = '''
+    nnoremap <silent> <Space>a :<C-U>set operatorfunc=<SID>alignta<CR>g@
+    xnoremap <Space>a :Alignta<Space>
+
+    function! s:alignta(type) abort
+        call feedkeys("'[V']:Alignta ", 'n')
+    endfunction
+'''
+
+[[plugins]]
 repo = 'oka-h/re-window.vim'
 if = 'g:Version_check(800)'
 hook_add = '''
@@ -394,8 +406,8 @@ hook_add = '''
         return l:str
     endfunction
 
-    nnoremap <Space>a :<C-U>Ref webdict alc<Space>
-    nnoremap <Space>a<Space> :<C-U>call histadd(':', 'Ref webdict alc ' . expand('<cword>'))<CR>:<UP><CR>
+    nnoremap <Space>r :<C-U>Ref webdict alc<Space>
+    nnoremap <Space>r<Space> :<C-U>call histadd(':', 'Ref webdict alc ' . expand('<cword>'))<CR>:<UP><CR>
 '''
 
 [[plugins]]
