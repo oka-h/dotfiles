@@ -307,6 +307,12 @@ hook_add = '''
 repo = 'osyo-manga/vim-over'
 if = "g:Version_check(703, 'v')"
 hook_add = '''
+    if g:is_my_layout
+        cnoremap <expr> = <SID>replace_vim_over('=')
+    else
+        cnoremap <expr> / <SID>replace_vim_over('/')
+    endif
+
     let s:is_vim_over_replaced = 0
     function! s:replace_vim_over(key) abort
         let s:is_vim_over_replaced = 1
@@ -327,17 +333,10 @@ hook_add = '''
                                   \ |     let s:is_vim_over_replaced = 0
                                   \ | endif
     augroup END
-
-    if g:is_my_layout
-        cnoremap <expr> = <SID>replace_vim_over('=')
-    else
-        cnoremap <expr> / <SID>replace_vim_over('/')
-    endif
 '''
 
 [[plugins]]
 repo = 'h1mesuke/vim-alignta'
-# on_cmd = 'Alignta'
 hook_add = '''
     nnoremap <silent> <Space>a :<C-U>set operatorfunc=<SID>alignta<CR>g@
     xnoremap <Space>a :Alignta<Space>
