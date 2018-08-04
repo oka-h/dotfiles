@@ -270,31 +270,36 @@ hook_source = '''
 '''
 
 [[plugins]]
+repo = 'osyo-manga/vim-anzu'
+if = 'g:Version_check(703, 867)'
+on_map = '<Plug>(anzu-'
+
+[[plugins]]
 repo = 'haya14busa/incsearch.vim'
 on_map = '<Plug>(incsearch-'
 hook_add = '''
     let g:incsearch#auto_nohlsearch = 1
+
+    nmap n <Plug>(incsearch-nohl)<Plug>(anzu-n-with-echo)
+    nmap N <Plug>(incsearch-nohl)<Plug>(anzu-N-with-echo)
+    XOmap n <Plug>(incsearch-nohl-n)
+    XOmap N <Plug>(incsearch-nohl-N)
+
     if g:is_my_layout
         NXmap = <Plug>(incsearch-forward)
         NXmap + <Plug>(incsearch-backward)
-        NXmap ( <Plug>(incsearch-nohl-*)
-        NXmap ) <Plug>(incsearch-nohl-#)
+        nmap ( <Plug>(incsearch-nohl)<Plug>(anzu-star-with-echo)
+        nmap ) <Plug>(incsearch-nohl)<Plug>(anzu-sharp-with-echo)
         NXnoremap <Space>= /
         NXnoremap <Space>+ ?
-        NXnoremap <Space>( *
-        NXnoremap <Space>) #
     else
         NXmap / <Plug>(incsearch-forward)
         NXmap ? <Plug>(incsearch-backward)
-        NXmap * <Plug>(incsearch-nohl-*)
-        NXmap # <Plug>(incsearch-nohl-#)
+        nmap * <Plug>(incsearch-nohl)<Plug>(anzu-star-with-echo)
+        nmap # <Plug>(incsearch-nohl)<Plug>(anzu-sharp-with-echo)
         NXnoremap <Space>/ /
         NXnoremap <Space>? ?
-        NXnoremap <Space>* *
-        NXnoremap <Space># #
     endif
-    NXOmap n <Plug>(incsearch-nohl-n)
-    NXOmap N <Plug>(incsearch-nohl-N)
 '''
 
 [[plugins]]
