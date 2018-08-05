@@ -521,11 +521,11 @@ augroup END
 
 " In visual mode, search the selected string by "*" or "#".
 if g:is_my_layout
-    vnoremap <silent> ( :<C-U>call <SID>visual_star_search('/')<CR>
-    vnoremap <silent> ) :<C-U>call <SID>visual_star_search('?')<CR>
+    xnoremap <silent> ( :<C-U>call <SID>visual_star_search('/')<CR>
+    xnoremap <silent> ) :<C-U>call <SID>visual_star_search('?')<CR>
 else
-    vnoremap <silent> * :<C-U>call <SID>visual_star_search('/')<CR>
-    vnoremap <silent> # :<C-U>call <SID>visual_star_search('?')<CR>
+    xnoremap <silent> * :<C-U>call <SID>visual_star_search('/')<CR>
+    xnoremap <silent> # :<C-U>call <SID>visual_star_search('?')<CR>
 endif
 
 function! s:visual_star_search(key) abort
