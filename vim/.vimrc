@@ -266,7 +266,7 @@ else
     NXnoremap <C-W>Q :<C-U>quit!<CR>
 endif
 
-nnoremap <Esc><Esc> :<C-U>nohlsearch<CR>
+nnoremap <expr> <Space><Space> v:hlsearch ? ':<C-U>nohlsearch<CR>' : ':<C-U>set hlsearch<CR>'
 
 " Go to optional tab page.
 for s:i in range(10)
