@@ -755,8 +755,8 @@ augroup each_language
 
     " vim script
     autocmd BufRead,BufNewFile *.toml set filetype=conf
-    autocmd FileType vim,help         nnoremap <buffer> <silent> K :<C-U>help <C-R><C-W><CR>
-    autocmd BufRead,BufNewFile *.toml nnoremap <buffer> <silent> K :<C-U>help <C-R><C-W><CR>
+    autocmd FileType vim,help         setlocal keywordprg=:help
+    autocmd BufRead,BufNewFile *.toml setlocal keywordprg=:help
     autocmd FileType vim              inoremap <buffer> <nowait> " "
     autocmd BufRead,BufNewFile *.toml inoremap <buffer> <nowait> " "
     autocmd BufRead,BufNewFile *.toml inoremap <buffer> '''<CR>  '''<CR>'''<Esc>O<Tab>
