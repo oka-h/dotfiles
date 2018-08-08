@@ -355,24 +355,20 @@ hook_add = '''
 repo = 'oka-h/re-window.vim'
 if = 'g:Version_check(800)'
 hook_add = '''
-    nmap <Space>w [rewindow]
-    nnoremap [rewindow] <Nop>
-    nnoremap <silent> [rewindow]w :<C-U>call rewindow#reopen_window(1)<CR>
-    nnoremap <silent> [rewindow]k :<C-U>call rewindow#reopen_window(2)<CR>
-    nnoremap <silent> [rewindow]j :<C-U>call rewindow#reopen_window(3)<CR>
-    nnoremap <silent> [rewindow]h :<C-U>call rewindow#reopen_window(4)<CR>
-    nnoremap <silent> [rewindow]l :<C-U>call rewindow#reopen_window(5)<CR>
-    nnoremap <silent> [rewindow]K :<C-U>call rewindow#reopen_window(6)<CR>
-    nnoremap <silent> [rewindow]J :<C-U>call rewindow#reopen_window(7)<CR>
-    nnoremap <silent> [rewindow]H :<C-U>call rewindow#reopen_window(8)<CR>
-    nnoremap <silent> [rewindow]L :<C-U>call rewindow#reopen_window(9)<CR>
-    NXnoremap <silent> <C-W>o     :<C-U>call rewindow#only()<CR>
-    NXnoremap <silent> <C-W><C-O> :<C-U>call rewindow#only()<CR>
+    NXmap <Space>w [rewindow]
+    NXnoremap [rewindow] <Nop>
+
+    for s:d in ['h', 'j', 'k', 'l', 'H', 'J', 'K', 'L']
+        execute 'NXmap [rewindow]' . s:d . ' <Plug>(rewindow-reopen-' . s:d . ')'
+    endfor
+
+    NXmap <C-W>o     <Plug>(rewindow-only)
+    NXmap <C-W><C-O> <Plug>(rewindow-only)
 
     if g:is_my_layout
-        NXnoremap <silent> <C-W>ay :<C-U>call rewindow#tabclose()<CR>
+        NXmap <C-W>ay <Plug>(rewindow-tabclose)
     else
-        NXnoremap <silent> <C-W>aq :<C-U>call rewindow#tabclose()<CR>
+        NXmap <C-W>aq <Plug>(rewindow-tabclose)
     endif
 '''
 
