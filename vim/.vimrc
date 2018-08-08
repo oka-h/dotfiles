@@ -266,6 +266,14 @@ else
     NXnoremap <C-W>Q :<C-U>quit!<CR>
 endif
 
+if !g:Is_plugin_enable('re-window.vim')
+    if g:is_my_layout
+        NXnoremap <silent> <C-W>ay :<C-U>tabclose<CR>
+    else
+        NXnoremap <silent> <C-W>aq :<C-U>tabclose<CR>
+    endif
+endif
+
 nnoremap <expr> <Space><Space> v:hlsearch ? ':<C-U>nohlsearch<CR>' : ':<C-U>set hlsearch<CR>'
 
 " Go to optional tab page.
