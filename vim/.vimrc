@@ -142,8 +142,8 @@ if g:Version_check(704)
     endif
 endif
 
-function! g:Is_plugin_enable(plugin_name) abort
-    return exists('*g:dein#get') ? !empty(g:dein#get(a:plugin_name)) : 0
+function! g:Is_plugin_disable(plugin_name) abort
+    return exists('*g:dein#get') ? empty(g:dein#get(a:plugin_name)) : 1
 endfunction
 
 
@@ -266,7 +266,7 @@ else
     NXnoremap <C-W>Q :<C-U>quit!<CR>
 endif
 
-if !g:Is_plugin_enable('re-window.vim')
+if g:Is_plugin_disable('re-window.vim')
     if g:is_my_layout
         NXnoremap <silent> <C-W>ay :<C-U>tabclose<CR>
     else
@@ -422,7 +422,7 @@ if g:is_my_layout
     NXnoremap <C-Y> <C-V>
     NXnoremap gy gv
     NXnoremap <C-W>y <C-W>q
-    if !g:Is_plugin_enable('incsearch.vim')
+    if g:Is_plugin_disable('incsearch.vim')
         NXnoremap = /
         NXnoremap + ?
     endif
