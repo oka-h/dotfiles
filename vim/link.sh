@@ -12,17 +12,13 @@ fi
 
 if type nvim > /dev/null 2>&1; then
   if [ -n "$XDG_CONFIG_HOME" ]; then
-    config_dir=$XDG_CONFIG_HOME
+    nvim_dir=$XDG_CONFIG_HOME/nvim
   else
-    config_dir=~/.config
-  fi
-  if [ ! -d $config_dir ]; then
-    mkdir $config_dir
+    nvim_dir=~/.config/nvim
   fi
 
-  nvim_dir=$config_dir/nvim
   if [ ! -d $nvim_dir ]; then
-    mkdir $nvim_dir
+    mkdir -p $nvim_dir
   fi
 
   ln -s $current_dir/.vimrc $nvim_dir/init.vim
