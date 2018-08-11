@@ -304,6 +304,7 @@ hook_add = '''
 
 [[plugins]]
 repo = 'thinca/vim-ambicmd'
+if = 'g:Version_check(703)'
 hook_add = '''
     cnoremap <expr> <Space> ambicmd#expand('<Space>')
 '''
