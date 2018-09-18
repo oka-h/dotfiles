@@ -113,12 +113,13 @@ repo = 'Shougo/neosnippet'
 if = 'g:Version_check(704)'
 on_i = 1
 hook_add = '''
-    imap <C-G> <Plug>(neosnippet_expand_or_jump)
-    smap <C-G> <Plug>(neosnippet_expand_or_jump)
+    imap <C-K> <Plug>(neosnippet_expand_or_jump)
+    smap <C-K> <Plug>(neosnippet_expand_or_jump)
 
     " For conceal markers.
     if has('conceal')
-      set conceallevel=2 concealcursor=niv
+      set conceallevel=2
+      set concealcursor=niv
     endif
 '''
 
@@ -284,21 +285,17 @@ hook_add = '''
     nmap N <Plug>(incsearch-nohl)<Plug>(anzu-N-with-echo)
     XOmap n <Plug>(incsearch-nohl-n)
     XOmap N <Plug>(incsearch-nohl-N)
+    NXmap / <Plug>(incsearch-forward)
+    NXmap ? <Plug>(incsearch-backward)
+    NXnoremap <Space>/ /
+    NXnoremap <Space>? ?
 
     if g:is_my_layout
-        NXmap = <Plug>(incsearch-forward)
-        NXmap + <Plug>(incsearch-backward)
         nmap ( <Plug>(incsearch-nohl)<Plug>(anzu-star-with-echo)
         nmap ) <Plug>(incsearch-nohl)<Plug>(anzu-sharp-with-echo)
-        NXnoremap <Space>= /
-        NXnoremap <Space>+ ?
     else
-        NXmap / <Plug>(incsearch-forward)
-        NXmap ? <Plug>(incsearch-backward)
         nmap * <Plug>(incsearch-nohl)<Plug>(anzu-star-with-echo)
         nmap # <Plug>(incsearch-nohl)<Plug>(anzu-sharp-with-echo)
-        NXnoremap <Space>/ /
-        NXnoremap <Space>? ?
     endif
 '''
 
@@ -313,11 +310,7 @@ hook_add = '''
 repo = 'osyo-manga/vim-over'
 if = "g:Version_check(703, 'v')"
 hook_add = '''
-    if g:is_my_layout
-        cnoremap <expr> = <SID>replace_vim_over('=')
-    else
-        cnoremap <expr> / <SID>replace_vim_over('/')
-    endif
+    cnoremap <expr> / <SID>replace_vim_over('/')
 
     let s:is_vim_over_replaced = 0
     function! s:replace_vim_over(key) abort

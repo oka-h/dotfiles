@@ -239,6 +239,11 @@ NXOnoremap gj j
 NXOnoremap k gk
 NXOnoremap gk k
 
+NXOnoremap e b
+NXOnoremap E B
+NXOnoremap b e
+NXOnoremap B E
+
 NXOnoremap m y
 
 NXnoremap <Space>m "+y
@@ -338,7 +343,6 @@ inoremap <C-B> <Left>
 inoremap <C-F> <Right>
 
 inoremap <C-L> <C-X><C-L>
-inoremap <C-K> <C-X><C-K>
 
 inoremap <expr> <C-E> pumvisible() ? '<C-Y><C-E>' : '<C-E>'
 inoremap <expr> <C-Y> pumvisible() ? '<C-Y><C-Y>' : '<C-Y>'
@@ -361,12 +365,9 @@ inoremap ''    ''
 cnoremap <C-P> <Up>
 cnoremap <C-N> <Down>
 
-inoremap <C-Z> <Del>
-cnoremap <C-Z> <Del>
-
-snoremap <C-A> <C-O>pa
-inoremap <C-A> <C-G>u<C-R>"
-cnoremap <C-A> <C-R>"
+snoremap <C-G> <C-O>pa
+inoremap <C-G> <C-G>u<C-R>"
+cnoremap <C-G> <C-R>"
 
 " Assign <Home> and <End> to "<Space>h" and "<Space>l". This uses "g^", "^" and
 " "0" or "g$" and "$" for different purposes in accordance situations.
@@ -415,17 +416,12 @@ endif
 
 if g:is_my_layout
     NXOmap <BS> <Space>
-    NXnoremap { <C-]>
-    " } To not break syntax color
+    NXnoremap + <C-]>
     NXnoremap y v
     NXnoremap Y V
     NXnoremap <C-Y> <C-V>
     NXnoremap gy gv
     NXnoremap <C-W>y <C-W>q
-    if g:Is_plugin_disable('incsearch.vim')
-        NXnoremap = /
-        NXnoremap + ?
-    endif
 endif
 
 " Solve the problem that Delete key does not work.
