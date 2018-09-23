@@ -6,8 +6,10 @@
 " Pre-settings
 " ------------------------------------------------------------------------------
 
+let g:is_windows = has('win32') || has('win64')
+
 if has('vim_starting') && &encoding !=# 'utf-8'
-    if (has('win32') || has('win64')) && !has('gui_running')
+    if g:is_windows && !has('gui_running')
         set encoding=cp932
     else
         set encoding=utf-8
@@ -17,7 +19,15 @@ endif
 set fileencodings=usc-bom,utf-8,iso-2022-jp-3,euc-jp,cp932
 
 
-let s:vimrc = resolve(expand('<sfile>:p'))
+if g:is_windows
+    for s:link in split(system('fsutil hardlink list ' . fnameescape(expand('~/_vimrc'))), '\n')
+        if s:link =~# escape(expand('dotfiles/vim/.vimrc'), '\') . '$'
+            let s:vimrc = s:link
+        endif
+    endfor
+else
+    let s:vimrc = resolve(expand('<sfile>:p'))
+endif
 let s:vimrc_local_pre  = expand('~/.vimrc_local_pre')
 let s:vimrc_local_post = expand('~/.vimrc_local')
 
@@ -157,6 +167,7 @@ set backspace=indent,eol,start
 set completeopt-=preview
 set history=10000
 set helplang=ja
+set mouse=
 set noundofile
 set spelllang&
 set spelllang+=cjk
@@ -239,10 +250,15 @@ NXOnoremap gj j
 NXOnoremap k gk
 NXOnoremap gk k
 
-NXOnoremap e b
-NXOnoremap E B
-NXOnoremap b e
-NXOnoremap B E
+if g:Is_plugin_disable('jpmoveword.vim')
+    NXOnoremap e b
+    NXOnoremap E B
+    NXOnoremap b e
+    NXOnoremap B E
+else
+    XOnoremap e b
+    XOnoremap b e
+endif
 
 NXOnoremap m y
 
@@ -325,19 +341,23 @@ if exists(':terminal') == 2
                         \ . ' split <Bar> terminal<CR><C-\><C-N>icd '' . expand("%:p:h") . ''<CR><C-L>'''
         endfor
     else
-        nnoremap <silent> [terminal]<Space> :<C-U>terminal ++curwin<CR>
-        nnoremap <silent> [terminal]t :<C-U>tab  terminal<CR>
-        nnoremap <silent> [terminal]r :<C-U>-tab terminal<CR>
-        nnoremap <silent> <expr> [cd-term]<Space> ':<C-U>terminal ++curwin <CR>cd ' . expand('%:p:h') . '<CR><C-L>'
-        nnoremap <silent> <expr> [cd-term]t       ':<C-U>tab  terminal     <CR>cd ' . expand('%:p:h') . '<CR><C-L>'
-        nnoremap <silent> <expr> [cd-term]r       ':<C-U>-tab terminal     <CR>cd ' . expand('%:p:h') . '<CR><C-L>'
+        let s:shell = (g:is_windows && executable('powershell')) ? 'powershell' : ''
+        execute 'nnoremap <silent> [terminal]<Space> :<C-U>terminal ++curwin ++close ' . s:shell . '<CR>'
+        execute 'nnoremap <silent> [terminal]t :<C-U>tab  terminal ++close '           . s:shell . '<CR>'
+        execute 'nnoremap <silent> [terminal]r :<C-U>-tab terminal ++close '           . s:shell . '<CR>'
+        execute 'nnoremap <silent> <expr> [cd-term]<Space> '':<C-U>terminal ++curwin ++close '
+                    \ . s:shell . '<CR>cd '' . expand(''%:p:h'') . ''<CR><C-L>'''
+        execute 'nnoremap <silent> <expr> [cd-term]t '':<C-U>tab  terminal ++close ' . s:shell . '<CR>cd '' . expand(''%:p:h'') . ''<CR><C-L>'''
+        execute 'nnoremap <silent> <expr> [cd-term]r '':<C-U>-tab terminal ++close ' . s:shell . '<CR>cd '' . expand(''%:p:h'') . ''<CR><C-L>'''
         for [s:key, s:value] in items(s:position)
-            execute 'nnoremap <silent> [terminal]' . s:key . ' :<C-U>' . s:value . ' terminal<CR>'
+            execute 'nnoremap <silent> [terminal]' . s:key . ' :<C-U>' . s:value . ' terminal ++close ' . s:shell . '<CR>'
             execute 'nnoremap <silent> <expr> [cd-term]' . s:key . ' '':<C-U>' . s:value
-                        \ . ' terminal<CR>cd '' . expand("%:p:h") . ''<CR><C-L>'''
+                        \ . ' terminal ++close ' . s:shell . '<CR>cd '' . expand("%:p:h") . ''<CR><C-L>'''
         endfor
     endif
 endif
+
+inoremap <silent> <ESC> <ESC>:set iminsert=0<CR>
 
 inoremap <C-B> <Left>
 inoremap <C-F> <Right>
@@ -421,7 +441,8 @@ if g:is_my_layout
     NXnoremap Y V
     NXnoremap <C-Y> <C-V>
     NXnoremap gy gv
-    NXnoremap <C-W>y <C-W>q
+    NXnoremap <C-W>y     <C-W>q
+    NXnoremap <C-W><C-Y> <C-W>q
 endif
 
 " Solve the problem that Delete key does not work.
@@ -449,7 +470,8 @@ set laststatus=2
 set statusline=%!g:My_status_line()
 
 function! g:My_status_line() abort
-    let l:pwd = " [%{(getcwd() == $HOME) ? '~/' : '/' . fnamemodify(getcwd(), ':~:t')}] "
+    let l:delimiter = g:is_windows ? '\' : '/'
+    let l:pwd = " [%{(getcwd() == $HOME) ? '~" . l:delimiter . "': '" . l:delimiter . "' . fnamemodify(getcwd(), ':~:t')}] "
     let l:file = '%<%F%m%r%h%w%= '
 
     let l:format   = "%{&fileformat   == '' ? '' : '| ' . &fileformat   . ' '}"
@@ -472,7 +494,7 @@ set t_Co=256
 
 augroup cursor_line_nr
     autocmd!
-    autocmd ColorScheme * highlight CursorLineNr cterm=bold ctermfg=173 gui=bold guifg=#D7875F
+    autocmd VimEnter,ColorScheme * highlight CursorLineNr cterm=bold ctermfg=173 gui=bold guifg=#D7875F
 augroup END
 
 " Highlight two-byte spaces.

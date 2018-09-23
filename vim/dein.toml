@@ -240,9 +240,14 @@ repo = 'dannyob/quickfixstatus'
 
 [[plugins]]
 repo = 'oka-h/yozakura.vim'
-hook_source = '''
-    colorscheme yozakura
+hook_add = '''
+    augroup yozakura
+        autocmd VimEnter * colorscheme yozakura
+    augroup END
 '''
+# hook_source = '''
+#     colorscheme yozakura
+# '''
 
 [[plugins]]
 repo = 'oka-h/stare-tab.vim'
@@ -427,8 +432,25 @@ hook_add = '''
 [[plugins]]
 repo = 'fuenor/jpmoveword.vim'
 hook_add = '''
-    let g:jpmoveword_enable_WBE = 1
+    let g:jpmoveword_enable_WBE = 0
+    let g:moveword_enable_wbe   = 0
     let g:jpmoveword_separator = '，．、。（）'
+    nmap <silent> w <Plug>EolMove_w
+    nmap <silent> e <Plug>EolMove_b
+    nmap <silent> b <Plug>EolMove_e
+    nmap <silent> W <Plug>JpMove_nW
+    omap <silent> W <Plug>JpMove_oW
+    xmap <silent> W <Plug>JpMove_xW
+    nmap <silent> E <Plug>JpMove_nB
+    omap <silent> E <Plug>JpMove_oB
+    xmap <silent> E <Plug>JpMove_xB
+    nmap <silent> B <Plug>JpMove_nE
+    omap <silent> B <Plug>JpMove_oE
+    xmap <silent> B <Plug>JpMove_xE
+    omap <silent> iW <Plug>JpTextObjctIon
+    xmap <silent> iW <Plug>JpTextObjctIxn
+    omap <silent> aW <Plug>JpTextObjctAon
+    xmap <silent> aW <Plug>JpTextObjctAxn
 '''
 
 [[plugins]]

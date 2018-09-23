@@ -2,26 +2,18 @@
 " dotfiles/vim/.gvimrc
 " ------------------------------------------------------------------------------
 
-" Don't display a menu bar.
-set guioptions-=m
+set cmdheight=1
+set guicursor=a:blinkon0
+set guioptions=
 
-" Don't display a tool bar.
-set guioptions-=T
+for s:button in ['Left', 'Right', 'Middle']
+    for s:i in range(1, 4)
+        for s:map in (['map', 'lmap'] + (exists(':terminal') == 2 ? ['tmap'] : []))
+            execute s:map . ' <' . (s:i > 1 ? (s:i . '-') : '') . s:button . 'Mouse> <Nop>'
+        endfor
+    endfor
+endfor
 
-" Display a non-GUI tab pages.
-set guioptions-=e
-
-" Setting of the colorscheme.
 if !exists('g:colors_name')
     colorscheme torte
 endif
-
-" Show the cursor line.
-" set cursorline
-
-" Number of line shown.
-set lines=40
-
-" Number of columns shown.
-set columns=120
-
