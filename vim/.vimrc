@@ -277,7 +277,9 @@ NXnoremap <Space>X "_X
 
 if g:is_my_layout
     NXOnoremap t f
+    NXOnoremap T F
     NXOnoremap f t
+    NXOnoremap F T
     NXOnoremap <Space>t f<C-K>
     NXOnoremap <Space>T F<C-K>
     NXOnoremap <Space>f t<C-K>
