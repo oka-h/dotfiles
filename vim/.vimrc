@@ -280,16 +280,10 @@ if g:is_my_layout
     NXOnoremap T F
     NXOnoremap f t
     NXOnoremap F T
-    NXOnoremap <Space>t f<C-K>
-    NXOnoremap <Space>T F<C-K>
-    NXOnoremap <Space>f t<C-K>
-    NXOnoremap <Space>F T<C-K>
-else
-    NXOnoremap <Space>f f<C-K>
-    NXOnoremap <Space>F F<C-K>
-    NXOnoremap <Space>t t<C-K>
-    NXOnoremap <Space>T T<C-K>
 endif
+
+NXOnoremap <Space>f f<C-K>
+NXOnoremap <Space>F F<C-K>
 
 NXnoremap <C-W>t     <C-W>T
 NXnoremap <C-W><C-T> <C-W>T
