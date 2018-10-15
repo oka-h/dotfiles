@@ -20,7 +20,7 @@ hook_post_update = '''
 
 [[plugins]]
 repo = 'Shougo/vimproc.vim'
-if = "g:Version_check(702) && has('reltime')"
+if = "g:Version_check(702) && !has('kaoriya') && has('reltime')"
 build = 'make'
 
 [[plugins]]

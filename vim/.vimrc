@@ -385,6 +385,10 @@ inoremap ''    ''
 cnoremap <C-P> <Up>
 cnoremap <C-N> <Down>
 
+if g:is_my_layout
+    cnoremap <C-T> <C-F>
+endif
+
 snoremap <C-G> <C-O>pa
 inoremap <C-G> <C-G>u<C-R>"
 cnoremap <C-G> <C-R>"
