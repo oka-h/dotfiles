@@ -275,13 +275,6 @@ NXnoremap <Space>S "_S
 NXnoremap <Space>x "_x
 NXnoremap <Space>X "_X
 
-if g:is_my_layout
-    NXOnoremap t f
-    NXOnoremap T F
-    NXOnoremap f t
-    NXOnoremap F T
-endif
-
 NXOnoremap <Space>f f<C-K>
 NXOnoremap <Space>F F<C-K>
 
