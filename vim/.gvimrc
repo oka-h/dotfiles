@@ -6,6 +6,10 @@ set cmdheight=1
 set guicursor=a:blinkon0
 set guioptions=
 
+if g:is_windows
+    set sessionoptions-=options
+endif
+
 for s:button in ['Left', 'Right', 'Middle']
     for s:i in range(1, 4)
         for s:map in (['map', 'map!'] + (exists(':terminal') == 2 ? ['tmap'] : []))

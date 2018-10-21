@@ -702,30 +702,26 @@ function! s:display_file_info() abort
 endfunction
 
 
-" Save vim state when vim finishes, and restore it when vim starts.
-" This is available only when g:save_session is not 0.
-augroup save_and_load_session
-    autocmd!
-    let s:session_file = expand('~/.vimsession')
+let s:session_file = expand('~/.vimsession')
 
-    if filereadable(s:session_file)
-        " Restore a previous session file when vim starts with no argument.
+if filereadable(s:session_file)
+    augroup load_session
         autocmd VimEnter * nested if @% == '' && s:get_buf_byte() == 0
                               \ |     execute 'source' s:session_file
                               \ |     call delete(s:session_file)
                               \ | endif
-    endif
+    augroup END
 
-    " Save current session file when vim finishes.
-    let g:save_session = 0
-    autocmd VimLeave * if g:save_session != 0
-                   \ |     execute 'mksession!' s:session_file
-                   \ | endif
-augroup END
+    function! s:get_buf_byte() abort
+        let l:byte = line2byte(line('$') + 1)
+        return l:byte == -1 ? 0 : byte - 1
+    endfunction
+endif
 
-function! s:get_buf_byte() abort
-    let l:byte = line2byte(line('$') + 1)
-    return l:byte == -1 ? 0 : byte - 1
+command! PauseVim call s:save_session_and_quit()
+function! s:save_session_and_quit() abort
+    execute 'mksession!' s:session_file
+    qall
 endfunction
 
 
