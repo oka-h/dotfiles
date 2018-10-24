@@ -768,6 +768,11 @@ augroup each_language
         autocmd FileType *tex setlocal formatprg=pandoc\ --from=markdown\ --to=latex
     endif
 
+    " tsv
+    autocmd BufRead,BufNewFile *.tsv set filetype=tsv
+    autocmd FileType tsv setlocal noexpandtab
+    autocmd FileType tsv setlocal tabstop=8
+
     " vim script
     autocmd BufRead,BufNewFile *.toml set filetype=conf
     autocmd FileType vim,help         setlocal keywordprg=:help
