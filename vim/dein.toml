@@ -245,9 +245,6 @@ hook_add = '''
         autocmd VimEnter * colorscheme yozakura
     augroup END
 '''
-# hook_source = '''
-#     colorscheme yozakura
-# '''
 
 [[plugins]]
 repo = 'oka-h/stare-tab.vim'
@@ -408,6 +405,9 @@ hook_add = '''
     nnoremap <Space>r :<C-U>Ref webdict alc<Space>
     nnoremap <Space>r<Space> :<C-U>call histadd(':', 'Ref webdict alc ' . expand('<cword>'))<CR>:<UP><CR>
 '''
+
+[[plugins]]
+repo = 'oka-h/load-indent.vim'
 
 [[plugins]]
 repo = 'thinca/vim-singleton'
