@@ -354,7 +354,7 @@ hook_add = '''
     NXmap <Space>w [rewindow]
     NXnoremap [rewindow] <Nop>
 
-    for s:d in ['h', 'j', 'k', 'l', 'H', 'J', 'K', 'L']
+    for s:d in split('hjklHJKL', '\w\zs')
         execute 'NXmap [rewindow]' . s:d . ' <Plug>(rewindow-reopen-' . s:d . ')'
     endfor
 
