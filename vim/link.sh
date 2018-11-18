@@ -6,7 +6,7 @@ if type vim > /dev/null 2>&1; then
   ln -s $current_dir/.vimrc ~/.vimrc
 fi
 
-if type gvim > /dev/null 2>&1; then
+if type gvim > /dev/null 2>&1 || [ -d /Applications/MacVim.app ]; then
   ln -s $current_dir/.gvimrc ~/.gvimrc
 fi
 
