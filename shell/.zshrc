@@ -14,9 +14,9 @@ fi
 export HISTFILE=~/.zsh_history
 export DIRESTACKSIZE=100
 
-local user="%F{173}%n@%m%f"
-local cdir="%F{242}%~%f"
-local multi_line="%F{226}%_%f"
+local user=$'%{\e[38;05;173m%}%n@%m\e[0m'
+local cdir=$'%{\e[38;05;242m%}%~\e[0m'
+local multi_line=$'%{\e[38;05;226m%}%_\e[0m'
 local mark="%#"
 
 export PROMPT="
