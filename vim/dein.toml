@@ -275,10 +275,29 @@ hook_source = '''
 [[plugins]]
 repo = 'osyo-manga/vim-anzu'
 if = 'g:Version_check(703, 867)'
+on_cmd = 'AnzuUpdateSearchStatus'
 on_map = '<Plug>(anzu-'
+hook_add = '''
+    augroup echo_anzu_post_search
+        autocmd!
+        autocmd CmdlineLeave [/\?] call s:set_echo_anzu_flag()
+    augroup END
+
+    function! s:set_echo_anzu_flag() abort
+        augroup echo_anzu_flag
+            autocmd!
+            autocmd CursorMoved * if v:hlsearch
+                              \ |     AnzuUpdateSearchStatus
+                              \ |     echo anzu#search_status()
+                              \ | endif
+                              \ | autocmd! echo_anzu_flag
+        augroup END
+    endfunction
+'''
 
 [[plugins]]
 repo = 'haya14busa/incsearch.vim'
+if = '!g:Version_check(800, 1238)'
 on_map = '<Plug>(incsearch-'
 hook_add = '''
     let g:incsearch#auto_nohlsearch = 1
@@ -287,10 +306,12 @@ hook_add = '''
     nmap N <Plug>(incsearch-nohl)<Plug>(anzu-N-with-echo)
     XOmap n <Plug>(incsearch-nohl-n)
     XOmap N <Plug>(incsearch-nohl-N)
-    NXmap / <Plug>(incsearch-forward)
-    NXmap ? <Plug>(incsearch-backward)
-    NXnoremap <Space>/ /
-    NXnoremap <Space>? ?
+    if !has('gui_macvim')
+        NXmap / <Plug>(incsearch-forward)
+        NXmap ? <Plug>(incsearch-backward)
+        NXnoremap <Space>/ /
+        NXnoremap <Space>? ?
+    endif
 
     if g:is_my_layout
         nmap ( <Plug>(incsearch-nohl)<Plug>(anzu-star-with-echo)
@@ -299,6 +320,40 @@ hook_add = '''
         nmap * <Plug>(incsearch-nohl)<Plug>(anzu-star-with-echo)
         nmap # <Plug>(incsearch-nohl)<Plug>(anzu-sharp-with-echo)
     endif
+
+    augroup remove_incsearch_vim_augroup
+        autocmd!
+        autocmd TerminalOpen * augroup incsearch-auto-nohlsearch
+                           \ |     autocmd!
+                           \ | augroup END
+    augroup END
+'''
+
+[[plugins]]
+repo = 'haya14busa/is.vim'
+if = 'g:Version_check(800, 1238)'
+hook_add = '''
+    let g:is#do_default_mappings = 0
+
+    nmap n <Plug>(is-nohl)<Plug>(anzu-n-with-echo)
+    nmap N <Plug>(is-nohl)<Plug>(anzu-N-with-echo)
+    XOmap n <Plug>(is-n)
+    XOmap N <Plug>(is-N)
+
+    if g:is_my_layout
+        nmap ( <Plug>(is-nohl)<Plug>(anzu-star-with-echo)
+        nmap ) <Plug>(is-nohl)<Plug>(anzu-sharp-with-echo)
+    else
+        nmap * <Plug>(is-nohl)<Plug>(anzu-star-with-echo)
+        nmap # <Plug>(is-nohl)<Plug>(anzu-sharp-with-echo)
+    endif
+
+    augroup remove_is_vim_augroup
+        autocmd!
+        autocmd TerminalOpen * augroup plugin-is-auto-nohlsearch-internal
+                           \ |     autocmd!
+                           \ | augroup END
+    augroup END
 '''
 
 [[plugins]]

@@ -152,8 +152,8 @@ if g:Version_check(704)
     endif
 endif
 
-function! g:Is_plugin_disable(plugin_name) abort
-    return exists('*g:dein#get') ? empty(g:dein#get(a:plugin_name)) : 1
+function! g:Is_plugin_enable(plugin_name) abort
+    return exists('*g:dein#get') ? !empty(g:dein#get(a:plugin_name)) : 0
 endfunction
 
 
@@ -250,14 +250,14 @@ NXOnoremap gj j
 NXOnoremap k gk
 NXOnoremap gk k
 
-if g:Is_plugin_disable('jpmoveword.vim')
+if g:Is_plugin_enable('jpmoveword.vim')
+    XOnoremap e b
+    XOnoremap b e
+else
     NXOnoremap e b
     NXOnoremap E B
     NXOnoremap b e
     NXOnoremap B E
-else
-    XOnoremap e b
-    XOnoremap b e
 endif
 
 NXOnoremap m y
@@ -287,7 +287,7 @@ else
     NXnoremap <C-W>Q :<C-U>quit!<CR>
 endif
 
-if g:Is_plugin_disable('re-window.vim')
+if !g:Is_plugin_enable('re-window.vim')
     if g:is_my_layout
         NXnoremap <silent> <C-W>ay :<C-U>tabclose<CR>
     else
@@ -313,48 +313,32 @@ endfunction
 
 
 if exists(':terminal') == 2
-    let s:position = {
-    \   'k' : 'leftabove',
-    \   'j' : 'rightbelow',
-    \   'h' : 'vertical leftabove',
-    \   'l' : 'vertical rightbelow',
-    \   'K' : 'topleft',
-    \   'J' : 'botright',
-    \   'H' : 'vertical topleft',
-    \   'L' : 'vertical botright'
+    let s:term_cmd = {
+    \   '<Space>' : 'terminal' . (has('nvim') ? '' : ' ++curwin'),
+    \   't'       : (has('nvim') ? 'tabedit <Bar>' : 'tab') . ' terminal',
+    \   'r'       : (has('nvim') ? '-tabedit <Bar>' : '-tab') . ' terminal',
+    \   'k'       : 'leftabove'           . (has('nvim') ? ' split <Bar>' : '') . ' terminal',
+    \   'j'       : 'rightbelow'          . (has('nvim') ? ' split <Bar>' : '') . ' terminal',
+    \   'h'       : 'vertical leftabove'  . (has('nvim') ? ' split <Bar>' : '') . ' terminal',
+    \   'l'       : 'vertical rightbelow' . (has('nvim') ? ' split <Bar>' : '') . ' terminal',
+    \   'K'       : 'topleft'             . (has('nvim') ? ' split <Bar>' : '') . ' terminal',
+    \   'J'       : 'botright'            . (has('nvim') ? ' split <Bar>' : '') . ' terminal',
+    \   'H'       : 'vertical topleft'    . (has('nvim') ? ' split <Bar>' : '') . ' terminal',
+    \   'L'       : 'vertical botright'   . (has('nvim') ? ' split <Bar>' : '') . ' terminal'
     \}
+    let s:nohls = (g:Is_plugin_enable('incsearch.vim') || g:Is_plugin_enable('is.vim')) ? 'nohlsearch <Bar> ' : ''
+    let s:shell = (g:is_windows && executable('powershell')) ? ' powershell' : ''
+    let s:post_keys = has('nvim') ? '<CR><C-\><C-N>i' : (' ++close' . s:shell . '<CR>')
 
     nmap <Space>t [terminal]
     nnoremap [terminal] <Nop>
     nmap [terminal]c [cd-term]
     nnoremap [cd-term] <Nop>
-    if has('nvim')
-        nnoremap <silent> [terminal]<Space>          :<C-U>terminal<CR><C-\><C-N>i
-        nnoremap <silent> [terminal]t :<C-U>tabedit  <Bar> terminal<CR><C-\><C-N>i
-        nnoremap <silent> [terminal]r :<C-U>-tabedit <Bar> terminal<CR><C-\><C-N>i
-        nnoremap <silent> <expr> [cd-term]<Space>          ':<C-U>terminal<CR><C-\><C-N>icd ' . expand('%:p:h') . '<CR><C-L>'
-        nnoremap <silent> <expr> [cd-term]t ':<C-U>tabedit  <Bar> terminal<CR><C-\><C-N>icd ' . expand('%:p:h') . '<CR><C-L>'
-        nnoremap <silent> <expr> [cd-term]r ':<C-U>-tabedit <Bar> terminal<CR><C-\><C-N>icd ' . expand('%:p:h') . '<CR><C-L>'
-        for [s:key, s:value] in items(s:position)
-            execute 'nnoremap <silent> [terminal]' . s:key . ' :<C-U>' . s:value . ' split <Bar> terminal<CR><C-\><C-N>i'
-            execute 'nnoremap <silent> <expr> [cd-term]' . s:key . ' '':<C-U>' . s:value
-                        \ . ' split <Bar> terminal<CR><C-\><C-N>icd '' . expand("%:p:h") . ''<CR><C-L>'''
-        endfor
-    else
-        let s:shell = (g:is_windows && executable('powershell')) ? 'powershell' : ''
-        execute 'nnoremap <silent> [terminal]<Space> :<C-U>terminal ++curwin ++close ' . s:shell . '<CR>'
-        execute 'nnoremap <silent> [terminal]t :<C-U>tab  terminal ++close '           . s:shell . '<CR>'
-        execute 'nnoremap <silent> [terminal]r :<C-U>-tab terminal ++close '           . s:shell . '<CR>'
-        execute 'nnoremap <silent> <expr> [cd-term]<Space> '':<C-U>terminal ++curwin ++close '
-                    \ . s:shell . '<CR>cd '' . expand(''%:p:h'') . ''<CR><C-L>'''
-        execute 'nnoremap <silent> <expr> [cd-term]t '':<C-U>tab  terminal ++close ' . s:shell . '<CR>cd '' . expand(''%:p:h'') . ''<CR><C-L>'''
-        execute 'nnoremap <silent> <expr> [cd-term]r '':<C-U>-tab terminal ++close ' . s:shell . '<CR>cd '' . expand(''%:p:h'') . ''<CR><C-L>'''
-        for [s:key, s:value] in items(s:position)
-            execute 'nnoremap <silent> [terminal]' . s:key . ' :<C-U>' . s:value . ' terminal ++close ' . s:shell . '<CR>'
-            execute 'nnoremap <silent> <expr> [cd-term]' . s:key . ' '':<C-U>' . s:value
-                        \ . ' terminal ++close ' . s:shell . '<CR>cd '' . expand("%:p:h") . ''<CR><C-L>'''
-        endfor
-    endif
+    for [s:key, s:value] in items(s:term_cmd)
+        execute 'nnoremap <silent> [terminal]'       . s:key . ' :<C-U>'   . s:nohls . s:value . s:post_keys
+        execute 'nnoremap <silent> <expr> [cd-term]' . s:key . ' '':<C-U>' . s:nohls . s:value . s:post_keys
+                    \ . 'cd '' . expand("%:p:h") . ''<CR><C-L>'''
+    endfor
 endif
 
 inoremap <silent> <ESC> <ESC>:set iminsert=0<CR>
