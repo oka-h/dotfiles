@@ -328,8 +328,8 @@ hook_add = '''
         augroup remove_incsearch_vim_augroup
             autocmd!
             execute 'autocmd' s:event '* augroup incsearch-auto-nohlsearch'
-                                  \ . '|     autocmd!'
-                                  \ . '| augroup END'
+                                    \ '|     autocmd!'
+                                    \ '| augroup END'
         augroup END
     endif
 '''
@@ -360,8 +360,8 @@ hook_add = '''
         augroup remove_is_vim_augroup
             autocmd!
             execute 'autocmd' s:event '* augroup plugin-is-auto-nohlsearch-internal'
-                                  \ . '|     autocmd!'
-                                  \ . '| augroup END'
+                                    \ '|     autocmd!'
+                                    \ '| augroup END'
         augroup END
     endif
 '''
