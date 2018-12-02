@@ -321,12 +321,17 @@ hook_add = '''
         nmap # <Plug>(incsearch-nohl)<Plug>(anzu-sharp-with-echo)
     endif
 
-    augroup remove_incsearch_vim_augroup
-        autocmd!
-        autocmd TerminalOpen * augroup incsearch-auto-nohlsearch
-                           \ |     autocmd!
-                           \ | augroup END
-    augroup END
+    let s:event = exists('##TerminalOpen') ? 'TerminalOpen'
+              \ : exists('##TermOpen')     ? 'TermOpen'
+                                         \ : ''
+    if s:event != ''
+        augroup remove_incsearch_vim_augroup
+            autocmd!
+            execute 'autocmd' s:event '* augroup incsearch-auto-nohlsearch'
+                                  \ . '|     autocmd!'
+                                  \ . '| augroup END'
+        augroup END
+    endif
 '''
 
 [[plugins]]
@@ -348,12 +353,17 @@ hook_add = '''
         nmap # <Plug>(is-nohl)<Plug>(anzu-sharp-with-echo)
     endif
 
-    augroup remove_is_vim_augroup
-        autocmd!
-        autocmd TerminalOpen * augroup plugin-is-auto-nohlsearch-internal
-                           \ |     autocmd!
-                           \ | augroup END
-    augroup END
+    let s:event = exists('##TerminalOpen') ? 'TerminalOpen'
+              \ : exists('##TermOpen')     ? 'TermOpen'
+                                         \ : ''
+    if s:event != ''
+        augroup remove_is_vim_augroup
+            autocmd!
+            execute 'autocmd' s:event '* augroup plugin-is-auto-nohlsearch-internal'
+                                  \ . '|     autocmd!'
+                                  \ . '| augroup END'
+        augroup END
+    endif
 '''
 
 [[plugins]]
