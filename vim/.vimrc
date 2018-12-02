@@ -415,10 +415,22 @@ function! s:go_to_line_tail(mode) abort
 endfunction
 
 
+if g:Version_check(800, 764, 'v')
+    set termkey=<C-E>
+endif
+
 if exists(':tnoremap') == 2
     tnoremap <Esc><Esc> <C-\><C-N>
-    if !has('nvim')
-        tnoremap <C-W> <C-W>.
+    if has('nvim')
+        tnoremap <expr> <C-A> '<C-\><C-N>"' . nr2char(getchar()) . 'pi'
+    else
+        if g:Version_check(800, 764, 'v')
+            tnoremap <C-A> <C-E>"
+        else
+            tnoremap <C-A> <C-W>"
+            tnoremap <C-E> <C-W>
+            tnoremap <C-W> <C-W>.
+        endif
     endif
 endif
 
