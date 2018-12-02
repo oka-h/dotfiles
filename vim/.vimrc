@@ -335,9 +335,9 @@ if exists(':terminal') == 2
     nmap [terminal]c [cd-term]
     nnoremap [cd-term] <Nop>
     for [s:key, s:value] in items(s:term_cmd)
-        execute 'nnoremap <silent> [terminal]'       . s:key . ' :<C-U>'   . s:nohls . s:value . s:post_keys
-        execute 'nnoremap <silent> <expr> [cd-term]' . s:key . ' '':<C-U>' . s:nohls . s:value . s:post_keys
-                    \ . 'cd '' . expand("%:p:h") . ''<CR><C-L>'''
+        execute 'nnoremap <silent> [terminal]'       . s:key . ' :<C-U>'  . s:nohls . s:value . s:post_keys
+        execute 'nnoremap <silent> <expr> [cd-term]' . s:key . " ':<C-U>" . s:nohls . s:value . s:post_keys
+                    \ . "cd ' . expand('%:p:h') . '<CR><C-L>'"
     endfor
 endif
 
@@ -459,7 +459,8 @@ set statusline=%!g:My_status_line()
 
 function! g:My_status_line() abort
     let l:delimiter = g:is_windows ? '\' : '/'
-    let l:pwd = " [%{(getcwd() == $HOME) ? '~" . l:delimiter . "': '" . l:delimiter . "' . fnamemodify(getcwd(), ':~:t')}] "
+    let l:pwd = " [%{(getcwd() == $HOME) ? '~" . l:delimiter
+                \ . "': '" . l:delimiter . "' . fnamemodify(getcwd(), ':~:t')}] "
     let l:file = '%<%F%m%r%h%w%= '
 
     let l:format   = "%{&fileformat   == '' ? '' : '| ' . &fileformat   . ' '}"

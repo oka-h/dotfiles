@@ -141,11 +141,8 @@ depends = 'vimproc.vim'
 hook_add = '''
     let g:quickrun_no_default_key_mappings = 1
 
-    if g:is_my_layout
-        nnoremap <silent> <expr> <Space>y ':<C-U>QuickRun' . (exists('b:quickrun_args') ? (' -args ' . b:quickrun_args) : '') . '<CR>'
-    else
-        nnoremap <silent> <expr> <Space>q ':<C-U>QuickRun' . (exists('b:quickrun_args') ? (' -args ' . b:quickrun_args) : '') . '<CR>'
-    endif
+    execute 'nnoremap <silent> <expr> <Space>' . (g:is_my_layout ? 'y' : 'q')
+                \ "':<C-U>QuickRun' . (exists('b:quickrun_args') ? (' -args ' . b:quickrun_args) : '') . '<CR>'"
     nnoremap <silent> <expr> <C-C> quickrun#is_running() ? quickrun#sweep_sessions() : '<C-C>'
 
     if !exists('g:quickrun_config')
