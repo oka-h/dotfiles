@@ -278,21 +278,23 @@ if = 'g:Version_check(703, 867)'
 on_cmd = 'AnzuUpdateSearchStatus'
 on_map = '<Plug>(anzu-'
 hook_add = '''
-    augroup echo_anzu_post_search
-        autocmd!
-        autocmd CmdlineLeave [/\?] call s:set_echo_anzu_flag()
-    augroup END
-
-    function! s:set_echo_anzu_flag() abort
-        augroup echo_anzu_flag
+    if exists('##CmdlineLeave')
+        augroup echo_anzu_post_search
             autocmd!
-            autocmd CursorMoved * if v:hlsearch
-                              \ |     AnzuUpdateSearchStatus
-                              \ |     echo anzu#search_status()
-                              \ | endif
-                              \ | autocmd! echo_anzu_flag
+            autocmd CmdlineLeave [/\?] call s:set_echo_anzu_flag()
         augroup END
-    endfunction
+
+        function! s:set_echo_anzu_flag() abort
+            augroup echo_anzu_flag
+                autocmd!
+                autocmd CursorMoved * if v:hlsearch
+                                  \ |     AnzuUpdateSearchStatus
+                                  \ |     echo anzu#search_status()
+                                  \ | endif
+                                  \ | autocmd! echo_anzu_flag
+            augroup END
+        endfunction
+    endif
 '''
 
 [[plugins]]
