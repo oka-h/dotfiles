@@ -301,10 +301,11 @@ on_map = '<Plug>(incsearch-'
 hook_add = '''
     let g:incsearch#auto_nohlsearch = 1
 
-    nmap n <Plug>(incsearch-nohl)<Plug>(anzu-n-with-echo)
-    nmap N <Plug>(incsearch-nohl)<Plug>(anzu-N-with-echo)
-    XOmap n <Plug>(incsearch-nohl-n)
-    XOmap N <Plug>(incsearch-nohl-N)
+    nmap <expr> n (g:hlsearch ? '' : '<Plug>(incsearch-nohl)') . '<Plug>(anzu-n-with-echo)'
+    nmap <expr> N (g:hlsearch ? '' : '<Plug>(incsearch-nohl)') . '<Plug>(anzu-N-with-echo)'
+    XOmap <expr> n g:hlsearch ? (feedkeys('n', 'n') ? '' : '') : '<Plug>(incsearch-nohl-n)'
+    XOmap <expr> N g:hlsearch ? (feedkeys('N', 'n') ? '' : '') : '<Plug>(incsearch-nohl-N)'
+
     if !has('gui_macvim')
         NXmap / <Plug>(incsearch-forward)
         NXmap ? <Plug>(incsearch-backward)
@@ -339,10 +340,10 @@ if = 'g:Version_check(800, 1238)'
 hook_add = '''
     let g:is#do_default_mappings = 0
 
-    nmap n <Plug>(is-nohl)<Plug>(anzu-n-with-echo)
-    nmap N <Plug>(is-nohl)<Plug>(anzu-N-with-echo)
-    XOmap n <Plug>(is-n)
-    XOmap N <Plug>(is-N)
+    nmap <expr> n (g:hlsearch ? '' : '<Plug>(is-nohl)') . '<Plug>(anzu-n-with-echo)'
+    nmap <expr> N (g:hlsearch ? '' : '<Plug>(is-nohl)') . '<Plug>(anzu-N-with-echo)'
+    XOmap <expr> n g:hlsearch ? (feedkeys('n', 'n') ? '' : '') : '<Plug>(is-n)'
+    XOmap <expr> N g:hlsearch ? (feedkeys('N', 'n') ? '' : '') : '<Plug>(is-N)'
 
     if g:is_my_layout
         nmap ( <Plug>(is-nohl)<Plug>(anzu-star-with-echo)

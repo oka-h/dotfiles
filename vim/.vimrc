@@ -295,7 +295,19 @@ if !g:Is_plugin_enable('re-window.vim')
     endif
 endif
 
-nnoremap <expr> <Space><Space> v:hlsearch ? ':<C-U>nohlsearch<CR>' : ':<C-U>set hlsearch<CR>'
+let g:hlsearch = 0
+nnoremap <silent> <expr> <Space><Space> ':<C-U>' . (g:hlsearch ? 'nohlsearch' : 'set hlsearch')
+            \ . ' \| let g:hlsearch = !g:hlsearch<CR>'
+xnoremap <silent> <expr> <Space><Space> ':<C-U>' . (g:hlsearch ? 'nohlsearch' : 'set hlsearch')
+            \ . ' \| let g:hlsearch = !g:hlsearch<CR>gv'
+
+if exists('##CmdlineEnter')
+    augroup toggle_hlsearch
+        autocmd!
+        autocmd CmdlineEnter [/\?] let g:hlsearch = 0
+    augroup END
+endif
+
 
 " Go to optional tab page.
 for s:i in range(10)
