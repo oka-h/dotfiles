@@ -353,8 +353,6 @@ if exists(':terminal') == 2
     endfor
 endif
 
-inoremap <silent> <ESC> <ESC>:set iminsert=0<CR>
-
 inoremap <C-B> <Left>
 inoremap <C-F> <Right>
 
