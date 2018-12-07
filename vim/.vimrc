@@ -714,7 +714,7 @@ let s:session_file = expand('~/.vimsession')
 if filereadable(s:session_file)
     augroup load_session
         autocmd VimEnter * nested if @% == '' && s:get_buf_byte() == 0
-                              \ |     execute 'source' s:session_file
+                              \ |     silent execute 'source' s:session_file
                               \ |     call delete(s:session_file)
                               \ | endif
     augroup END
