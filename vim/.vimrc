@@ -173,6 +173,7 @@ set spelllang&
 set spelllang+=cjk
 set splitbelow
 set splitright
+set tags=./tags;,./.tags;
 set whichwrap=h,l,<,>,[,]
 set wildmenu
 set wildmode=longest:full,full
