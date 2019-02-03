@@ -425,7 +425,7 @@ function! s:go_to_line_tail(mode) abort
 endfunction
 
 
-if g:Version_check(800, 764, 'v')
+if exists('+termkey')
     set termkey=<C-E>
 endif
 
@@ -434,7 +434,7 @@ if exists(':tnoremap') == 2
     if has('nvim')
         tnoremap <expr> <C-A> '<C-\><C-N>"' . nr2char(getchar()) . 'pi'
     else
-        if g:Version_check(800, 764, 'v')
+        if exists('+termkey')
             tnoremap <C-A> <C-E>"
         else
             tnoremap <C-A> <C-W>"
