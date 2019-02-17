@@ -5,6 +5,7 @@
 set cmdheight=1
 set guicursor=a:blinkon0
 set guioptions=
+set noimdisable
 set sessionoptions-=options
 
 for s:button in ['Left', 'Right', 'Middle']
