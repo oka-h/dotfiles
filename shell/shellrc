@@ -44,6 +44,8 @@ alias la="ls -a"
 alias ll="ls -l"
 alias lal="ls -al"
 alias lla="ls -al"
+alias l="ls"
+alias sl="ls"
 alias grep="grep --color"
 
 if [[ $VIM_SERVERNAME =~ ^vim-server[0-9]+$ ]]; then
