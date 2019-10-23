@@ -296,11 +296,8 @@ if !g:Is_plugin_enable('re-window.vim')
     endif
 endif
 
-let g:hlsearch = 0
-nnoremap <silent> <expr> <Space><Space> ':<C-U>' . (g:hlsearch ? 'nohlsearch' : 'set hlsearch')
-            \ . ' \| let g:hlsearch = !g:hlsearch<CR>'
-xnoremap <silent> <expr> <Space><Space> ':<C-U>' . (g:hlsearch ? 'nohlsearch' : 'set hlsearch')
-            \ . ' \| let g:hlsearch = !g:hlsearch<CR>gv'
+nnoremap <silent> <Space><Space> :<C-U>let v:hlsearch = !v:hlsearch<CR>
+xnoremap <silent> <Space><Space> :<C-U>let v:hlsearch = !v:hlsearch<CR>gv
 
 if exists('##CmdlineEnter')
     augroup toggle_hlsearch
