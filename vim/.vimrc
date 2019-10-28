@@ -351,6 +351,35 @@ if exists(':terminal') == 2
     endfor
 endif
 
+" Repeat jump until another file is found.
+nnoremap <silent> <Space><C-O> :<C-U>call <SID>jump_next_file('old')<CR>
+nnoremap <silent> <Space><C-i> :<C-U>call <SID>jump_next_file('new')<CR>
+
+function! s:jump_next_file(direction) abort
+    if a:direction ==? 'old'
+        let l:index = 1
+        let l:key = "\<C-O>"
+    elseif a:direction ==? 'new'
+        let l:index = -1
+        let l:key = "\<C-I>"
+    else
+        return
+    endif
+
+    let l:distance = split(split(execute('jumps'), '\n')[l:index])[0]
+    if l:distance == '>'
+        return
+    endif
+    let l:oldid = winbufnr('.')
+    for l:i in range(l:distance)
+        call feedkeys(l:key, 'nx')
+        if winbufnr('.') != l:oldid
+            return
+        endif
+    endfor
+endfunction
+
+
 inoremap <C-B> <Left>
 inoremap <C-F> <Right>
 
