@@ -339,7 +339,7 @@ let s:term_cmd = {
 \   'L'       : 'vertical botright'   . (has('nvim') ? ' split <Bar>' : '') . ' terminal'
 \}
 
-function! g:Define_terminal_mapping(shell, prefix_keys, shown_cmd, ...) abort
+function! g:Define_terminal_mappings(shell, prefix_keys, shown_cmd, ...) abort
     if exists(':terminal') != 2
         return
     endif
@@ -369,7 +369,7 @@ function! g:Define_terminal_mapping(shell, prefix_keys, shown_cmd, ...) abort
     endif
 endfunction
 
-call g:Define_terminal_mapping((g:is_windows && executable('powershell')) ? 'powershell' : '',
+call g:Define_terminal_mappings((g:is_windows && executable('powershell')) ? 'powershell' : '',
             \ '<Space>t', '[terminal]', '[cd-term]')
 
 
