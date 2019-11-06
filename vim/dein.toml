@@ -621,7 +621,7 @@ depends = 'vim-textobj-user'
 
 [[plugins]]
 repo = 'bps/vim-textobj-python'
-if = 'g:is_filetype_enable_of.python && g:Version_check(704)'
+if = "g:Is_filetype_enabled('python') && g:Version_check(704)"
 on_ft = 'python'
 depends = 'vim-textobj-user'
 
@@ -632,7 +632,7 @@ depends = 'vim-textobj-user'
 
 [[plugins]]
 repo = 'zchee/deoplete-clang'
-if = "(g:is_filetype_enable_of.c || g:is_filetype_enable_of.cpp) && executable('clang')"
+if = "(g:Is_filetype_enabled('c') || g:Is_filetype_enabled('cpp')) && executable('clang')"
 on_ft = ['c', 'cpp', 'cmake']
 depends = 'deoplete.nvim'
 hook_add = '''
@@ -642,15 +642,18 @@ hook_add = '''
 
 [[plugins]]
 repo = 'vim-scripts/Conque-GDB'
-if = 'g:is_filetype_enable_of.c || g:is_filetype_enable_of.cpp'
+if = "g:Is_filetype_enabled('c') || g:Is_filetype_enabled('cpp')"
 on_ft = ['c', 'cpp']
 hook_add = '''
-    nmap <Space>g [gdb]
-    nnoremap [gdb] <Nop>
-    nnoremap [gdb]j :<C-U>ConqueGdbSplit<Space>
-    nnoremap [gdb]l :<C-U>ConqueGdbVSplit<Space>
-    nnoremap [gdb]; :<C-U>ConqueGdbCommand<Space>
-    nnoremap <silent> [gdb]q :<C-U>ConqueGdbCommand quit<CR>
+    augroup conque_gdb_mapping
+        autocmd!
+        autocmd FileType c,cpp nmap <buffer> <Space>g [gdb]
+        autocmd FileType c,cpp nnoremap <buffer> [gdb] <Nop>
+        autocmd FileType c,cpp nnoremap <buffer> [gdb]j :<C-U>ConqueGdbSplit<Space>
+        autocmd FileType c,cpp nnoremap <buffer> [gdb]l :<C-U>ConqueGdbVSplit<Space>
+        autocmd FileType c,cpp nnoremap <buffer> [gdb]; :<C-U>ConqueGdbCommand<Space>
+        autocmd FileType c,cpp nnoremap <buffer> <silent> [gdb]q :<C-U>ConqueGdbCommand quit<CR>
+    augroup END
 
     let g:ConqueGdb_Leader = '[gdb]'
     let g:ConqueGdb_SaveHistory = 1
@@ -663,19 +666,43 @@ hook_add = '''
 '''
 
 [[plugins]]
+repo = 'OmniSharp/omnisharp-vim'
+if = "g:Is_filetype_enabled('cs')"
+on_ft = ['cs', 'csi', 'csx']
+hook_post_update = '''
+    let s:cmd = g:is_windows ? 'msbuild' : 'xbuild'
+    let g:dein#plugin.build = s:cmd . ' server/OmniSharp.sln'
+'''
+hook_add = '''
+    if !exists('g:neocomplete#sources#omni#input_patterns')
+        let g:neocomplete#sources#omni#input_patterns = {}
+    endif
+    let g:neocomplete#sources#omni#input_patterns.cs = '.*[^=\);]'
+
+    augroup omnisharp_mapping
+        autocmd!
+        if g:is_my_layout
+            autocmd FileType cs,csi,csx nmap <buffer> + <Plug>(omnisharp_go_to_definition)
+        else
+            autocmd FileType cs,csi,csx nmap <buffer> <C-]> <Plug>(omnisharp_go_to_definition)
+        endif
+    augroup END
+'''
+
+[[plugins]]
 repo = 'fatih/vim-go'
-if = "g:is_filetype_enable_of.go && executable('go')"
+if = "g:Is_filetype_enabled('go') && executable('go')"
 on_ft = 'go'
 
 [[plugins]]
 repo = 'zchee/deoplete-go'
-if = "g:is_filetype_enable_of.go && g:Version_check(800) && has('python3') && executable('go')"
+if = "g:Is_filetype_enabled('go') && g:Version_check(800) && has('python3') && executable('go')"
 on_ft = 'go'
 depends = 'deoplete.nvim'
 
 [[plugins]]
 repo = 'mattn/emmet-vim'
-if = 'g:is_filetype_enable_of.html'
+if = "g:Is_filetype_enabled('html')"
 on_ft = ['html', 'css']
 hook_add = '''
     let g:user_emmet_leader_key = '<C-J>'
@@ -683,7 +710,7 @@ hook_add = '''
 
 [[plugins]]
 repo = 'artur-shaik/vim-javacomplete2'
-if = "g:is_filetype_enable_of.java && g:Version_check(704) && (has('python') || has('python3')) && executable('java')"
+if = "g:Is_filetype_enabled('java') && g:Version_check(704) && (has('python') || has('python3')) && executable('java')"
 on_ft = 'java'
 hook_add = '''
     augroup javacomplete2
@@ -694,7 +721,7 @@ hook_add = '''
 
 [[plugins]]
 repo = 'sophacles/vim-processing'
-if = "g:is_filetype_enable_of.processing && executable('processing-java')"
+if = "g:Is_filetype_enabled('processing') && executable('processing-java')"
 on_ft = 'processing'
 hook_add = '''
     if !exists('g:quickrun_config')
@@ -708,8 +735,13 @@ hook_add = '''
 '''
 
 [[plugins]]
+repo = 'PProvost/vim-ps1'
+if = "g:is_windows || g:Is_filetype_enabled('ps1')"
+on_ft = 'ps1'
+
+[[plugins]]
 repo = 'zchee/deoplete-jedi'
-if = "g:is_filetype_enable_of.python && g:Version_check(800) && has('python3')"
+if = "g:Is_filetype_enabled('python') && g:Version_check(800) && has('python3')"
 on_ft = 'python'
 on_i = 1
 depends = 'deoplete.nvim'

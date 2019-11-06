@@ -66,15 +66,15 @@ command! -nargs=1 XOnoremap  xnoremap <args>| onoremap <args>
 command! -nargs=1 NXOmap     nmap     <args>| xmap     <args>| omap     <args>
 command! -nargs=1 NXOnoremap nnoremap <args>| xnoremap <args>| onoremap <args>
 
-let g:is_filetype_enable_of = {
-\   'c'          : 0,
-\   'cpp'        : 0,
-\   'go'         : 0,
-\   'html'       : 0,
-\   'java'       : 0,
-\   'processing' : 0,
-\   'python'     : 0
-\}
+let s:enabled_state_of_filetype = {}
+function! g:Is_filetype_enabled(filetype) abort
+    return get(s:enabled_state_of_filetype, a:filetype)
+endfunction
+
+function! g:Enable_filetype(filetype, ...) abort
+    let s:enabled_state_of_filetype[a:filetype] = a:0 == 0 ? 1 : a:1 ? 1 : 0
+endfunction
+
 
 let g:disable_plugins = []
 
@@ -325,34 +325,53 @@ function! s:go_to_tab(num) abort
 endfunction
 
 
-if exists(':terminal') == 2
-    let s:term_cmd = {
-    \   '<Space>' : 'terminal' . (has('nvim') ? '' : ' ++curwin'),
-    \   't'       : (has('nvim') ? 'tabedit <Bar>' : 'tab') . ' terminal',
-    \   'r'       : (has('nvim') ? '-tabedit <Bar>' : '-tab') . ' terminal',
-    \   'k'       : 'leftabove'           . (has('nvim') ? ' split <Bar>' : '') . ' terminal',
-    \   'j'       : 'rightbelow'          . (has('nvim') ? ' split <Bar>' : '') . ' terminal',
-    \   'h'       : 'vertical leftabove'  . (has('nvim') ? ' split <Bar>' : '') . ' terminal',
-    \   'l'       : 'vertical rightbelow' . (has('nvim') ? ' split <Bar>' : '') . ' terminal',
-    \   'K'       : 'topleft'             . (has('nvim') ? ' split <Bar>' : '') . ' terminal',
-    \   'J'       : 'botright'            . (has('nvim') ? ' split <Bar>' : '') . ' terminal',
-    \   'H'       : 'vertical topleft'    . (has('nvim') ? ' split <Bar>' : '') . ' terminal',
-    \   'L'       : 'vertical botright'   . (has('nvim') ? ' split <Bar>' : '') . ' terminal'
-    \}
-    let s:nohls = (g:Is_plugin_enable('incsearch.vim') || g:Is_plugin_enable('is.vim')) ? 'nohlsearch <Bar> ' : ''
-    let s:shell = (g:is_windows && executable('powershell')) ? ' powershell' : ''
-    let s:post_keys = has('nvim') ? '<CR><C-\><C-N>i' : (' ++close' . s:shell . '<CR>')
+let s:term_cmd = {
+\   '<Space>' : 'terminal' . (has('nvim') ? '' : ' ++curwin'),
+\   't'       : (has('nvim') ? 'tabedit <Bar>' : 'tab') . ' terminal',
+\   'r'       : (has('nvim') ? '-tabedit <Bar>' : '-tab') . ' terminal',
+\   'k'       : 'leftabove'           . (has('nvim') ? ' split <Bar>' : '') . ' terminal',
+\   'j'       : 'rightbelow'          . (has('nvim') ? ' split <Bar>' : '') . ' terminal',
+\   'h'       : 'vertical leftabove'  . (has('nvim') ? ' split <Bar>' : '') . ' terminal',
+\   'l'       : 'vertical rightbelow' . (has('nvim') ? ' split <Bar>' : '') . ' terminal',
+\   'K'       : 'topleft'             . (has('nvim') ? ' split <Bar>' : '') . ' terminal',
+\   'J'       : 'botright'            . (has('nvim') ? ' split <Bar>' : '') . ' terminal',
+\   'H'       : 'vertical topleft'    . (has('nvim') ? ' split <Bar>' : '') . ' terminal',
+\   'L'       : 'vertical botright'   . (has('nvim') ? ' split <Bar>' : '') . ' terminal'
+\}
 
-    nmap <Space>t [terminal]
-    nnoremap [terminal] <Nop>
-    nmap [terminal]c [cd-term]
-    nnoremap [cd-term] <Nop>
-    for [s:key, s:value] in items(s:term_cmd)
-        execute 'nnoremap <silent> [terminal]'       . s:key . ' :<C-U>'  . s:nohls . s:value . s:post_keys
-        execute 'nnoremap <silent> <expr> [cd-term]' . s:key . " ':<C-U>" . s:nohls . s:value . s:post_keys
-                    \ . "cd ' . expand('%:p:h') . '<CR><C-L>'"
+function! g:Define_terminal_mapping(shell, prefix_keys, shown_cmd, ...) abort
+    if exists(':terminal') != 2
+        return
+    endif
+
+    if a:0 != 0 && a:0 != 1
+        throw 'Invalid Arguments'
+    endif
+
+    let l:nohls = (g:Is_plugin_enable('incsearch.vim') || g:Is_plugin_enable('is.vim')) ? 'nohlsearch <Bar> ' : ''
+    let l:spaced_shell = empty(a:shell) ? '' : (' ' . a:shell)
+    let l:post_keys = has('nvim') ? (l:spaced_shell . '<CR><C-\><C-N>i') : (' ++close' . l:spaced_shell . '<CR>')
+
+    execute 'nmap' a:prefix_keys a:shown_cmd
+    execute 'nnoremap' a:shown_cmd '<Nop>'
+    for [l:key, l:commands] in items(s:term_cmd)
+        execute 'nnoremap <silent>' a:shown_cmd . l:key ':<C-U>' . l:nohls . l:commands . l:post_keys
     endfor
-endif
+
+    if a:0 == 1
+        let l:cd_shown_cmd = a:1
+        execute 'nmap' a:shown_cmd . 'c' l:cd_shown_cmd
+        execute 'nnoremap' l:cd_shown_cmd '<Nop>'
+        for [l:key, l:commands] in items(s:term_cmd)
+            execute 'nnoremap <silent> <expr>' l:cd_shown_cmd . l:key "':<C-U>" . l:nohls . l:commands . l:post_keys
+                        \ . "cd ' . expand('%:p:h') . '<CR><C-L>'"
+        endfor
+    endif
+endfunction
+
+call g:Define_terminal_mapping((g:is_windows && executable('powershell')) ? 'powershell' : '',
+            \ '<Space>t', '[terminal]', '[cd-term]')
+
 
 " Repeat jump until another file is found.
 nnoremap <silent> <Space><C-O> :<C-U>call <SID>jump_next_file('old')<CR>
