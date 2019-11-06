@@ -183,7 +183,7 @@ hook_add = '''
     \   'outputter' : 'browser'
     \}
 '''
- 
+
 [[plugins]]
 repo = 'osyo-manga/shabadou.vim'
 depends = 'vim-quickrun'
@@ -228,7 +228,7 @@ hook_add = '''
     \   'errorformat' : '%f:%l:%m'
     \}
 '''
- 
+
 [[plugins]]
 repo = 'cohama/vim-hier'
 
