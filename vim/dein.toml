@@ -39,17 +39,51 @@ if = "has('python3') && g:Version_check(800)"
 on_cmd = ['Denite', 'DeniteBufferDir', 'DeniteCursorWord', 'DeniteProjectDir']
 depends = 'neomru.vim'
 hook_add = '''
-    nnoremap <silent> <Space>n :<C-U>Denite file_rec -mode=normal<CR>
-    nnoremap <silent> <C-P>    :<C-U>Denite file_mru -mode=normal<CR>
-    nnoremap <silent> <C-N>    :<C-U>DeniteBufferDir file_rec -mode=normal<CR>
+    nnoremap <silent> <Space>n :<C-U>Denite file/rec<CR>
+    nnoremap <silent> <C-P>    :<C-U>Denite file_mru<CR>
+    nnoremap <silent> <C-N>    :<C-U>DeniteBufferDir file/rec<CR>
+
+    augroup denite_mappings
+        autocmd!
+        autocmd FileType denite nnoremap <silent> <buffer> <expr> <CR> denite#do_map('do_action')
+        autocmd FileType denite nnoremap <silent> <buffer> <expr> s denite#do_map('do_action', 'split')
+        autocmd FileType denite nnoremap <silent> <buffer> <expr> v denite#do_map('do_action', 'vsplit')
+        autocmd FileType denite nnoremap <silent> <buffer> <expr> t denite#do_map('do_action', 'tabopen')
+        autocmd FileType denite nnoremap <silent> <buffer> <expr> i denite#do_map('open_filter_buffer')
+        autocmd FileType denite nnoremap <silent> <buffer> <expr> <Esc><Esc> denite#do_map('quit')
+        autocmd FileType denite-filter nnoremap <silent> <buffer> <expr> <Esc><Esc> denite#do_map('quit')
+        autocmd FileType denite-filter inoremap <silent> <buffer> <expr> <Esc><Esc> denite#do_map('quit')
+    augroup END
+
+    command! -nargs=? -complete=file_in_path DeniteFind call s:denite_find(<f-args>)
+    function! s:denite_find(...) abort
+        call execute('Denite file/rec' . (a:0 <= 0 ? '' : (' -path=' . expand(a:1))))
+    endfunction
+
+    command! -nargs=? -complete=file_in_path DeniteGrep call s:denite_grep(<f-args>)
+    function! s:denite_grep(...) abort
+        call execute('Denite grep' . (a:0 <= 0 ? '' : (' -path=' . expand(a:1))))
+    endfunction
 '''
 hook_post_source = '''
-    call denite#custom#source('file_rec', 'matchers', ['matcher_regexp'])
+    call denite#custom#source('file/rec', 'matchers', ['matcher_regexp'])
     call denite#custom#source('file_mru', 'matchers', ['matcher_regexp'])
-    call denite#custom#map('normal', 's', '<denite:do_action:split>',  'noremap')
-    call denite#custom#map('normal', 'v', '<denite:do_action:vsplit>', 'noremap')
-    call denite#custom#map('normal', '<ESC>', '<denite:quit>', 'noremap')
-    call denite#custom#map('insert', '<ESC>', '<denite:quit>', 'noremap')
+
+    if executable('rg')
+        call denite#custom#var('grep', 'command', ['rg'])
+        call denite#custom#var('grep', 'default_opts', ['-i', '--vimgrep', '--no-heading'])
+        call denite#custom#var('grep', 'recursive_opts', [])
+        call denite#custom#var('grep', 'pattern_opt', ['--regexp'])
+        call denite#custom#var('grep', 'separator', ['--'])
+        call denite#custom#var('grep', 'final_opts', [])
+    elseif executable('ag')
+        call denite#custom#var('grep', 'command', ['ag'])
+        call denite#custom#var('grep', 'default_opts', ['-i', '--vimgrep'])
+        call denite#custom#var('grep', 'recursive_opts', [])
+        call denite#custom#var('grep', 'pattern_opt', [])
+        call denite#custom#var('grep', 'separator', ['--'])
+        call denite#custom#var('grep', 'final_opts', [])
+    endif
 '''
 
 [[plugins]]
