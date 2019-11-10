@@ -496,10 +496,6 @@ endif
 if g:is_my_layout
     NXOmap <BS> <Space>
     NXnoremap + <C-]>
-    NXnoremap y v
-    NXnoremap Y V
-    NXnoremap <C-Y> <C-V>
-    NXnoremap gy gv
     NXnoremap <C-W>y     <C-W>q
     NXnoremap <C-W><C-Y> <C-W>q
 endif
@@ -740,7 +736,7 @@ if exists(':terminal') == 2 && has('clientserver') && v:servername == ''
 endif
 
 " Display latest update time of the current file by <C-G>.
-nnoremap <C-G> :<C-U>call <SID>display_file_info()<CR>
+nnoremap <silent> <C-G> :<C-U>call <SID>display_file_info()<CR>
 
 function! s:display_file_info() abort
     let l:filename =  expand('%:p:~')
