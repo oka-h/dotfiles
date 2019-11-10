@@ -375,7 +375,7 @@ call g:Define_launching_terminal_key_mappings((g:is_windows && executable('power
 
 " Repeat jump until another file is found.
 nnoremap <silent> <Space><C-O> :<C-U>call <SID>jump_next_file('old')<CR>
-nnoremap <silent> <Space><C-i> :<C-U>call <SID>jump_next_file('new')<CR>
+nnoremap <silent> <Space><C-I> :<C-U>call <SID>jump_next_file('new')<CR>
 
 function! s:jump_next_file(direction) abort
     if a:direction ==? 'old'
