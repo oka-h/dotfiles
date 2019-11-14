@@ -526,8 +526,9 @@ set statusline=%!g:My_status_line()
 
 function! g:My_status_line() abort
     let l:delimiter = g:is_windows ? '\' : '/'
-    let l:pwd = " [%{(getcwd() == $HOME) ? '~" . l:delimiter
-                \ . "': '" . l:delimiter . "' . fnamemodify(getcwd(), ':~:t')}] "
+    let l:pwd = ' [%{' . (g:is_windows ? "getcwd() == fnamemodify('/', ':p') ? getcwd() : " : "")
+                \ . "(getcwd() == $HOME) ? '~" . l:delimiter . "': '"
+                \ . l:delimiter . "' . fnamemodify(getcwd(), ':~:t')}] "
     let l:file = '%<%F%m%r%h%w%= '
 
     let l:format   = "%{&fileformat   == '' ? '' : '| ' . &fileformat   . ' '}"
