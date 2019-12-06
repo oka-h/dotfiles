@@ -270,6 +270,13 @@ repo = 'cohama/vim-hier'
 repo = 'dannyob/quickfixstatus'
 
 [[plugins]]
+repo = 'mbbill/undotree'
+hook_add = '''
+   let g:undotree_WindowLayout = 3 
+   let g:undotree_HelpLine = 0
+'''
+
+[[plugins]]
 repo = 'oka-h/yozakura.vim'
 hook_add = '''
     augroup yozakura
