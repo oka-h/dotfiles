@@ -19,15 +19,7 @@ endif
 set fileencodings=usc-bom,utf-8,iso-2022-jp-3,euc-jp,cp932
 
 
-if g:is_windows
-    for s:link in split(system('fsutil hardlink list ' . fnameescape(expand('~/_vimrc'))), '\n')
-        if s:link =~# escape(expand('dotfiles/vim/.vimrc'), '\') . '$'
-            let s:vimrc = s:link
-        endif
-    endfor
-else
-    let s:vimrc = resolve(expand('<sfile>:p'))
-endif
+let s:vimrc = resolve(expand('<sfile>:p'))
 let s:vimrc_local_pre  = expand('~/.vimrc_local_pre')
 let s:vimrc_local_post = expand('~/.vimrc_local')
 
