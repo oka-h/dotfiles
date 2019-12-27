@@ -31,6 +31,12 @@ hook_add = '''
     nnoremap <silent> <Space>n :<C-U>Unite file_rec<CR>
     nnoremap <silent> <C-P>    :<C-U>Unite file_mru<CR>
     nnoremap <silent> <C-N>    :<C-U>UniteWithBufferDir file_rec<CR>
+    augroup unite_mappings
+        autocmd!
+        autocmd FileType unite imap <buffer> <C-O> <Plug>(unite_insert_leave)
+        autocmd FileType unite nnoremap <buffer> <expr> s unite#do_action('split')
+        autocmd FileType unite nnoremap <buffer> <expr> v unite#do_action('vsplit')
+    augroup END
 '''
 
 [[plugins]]
