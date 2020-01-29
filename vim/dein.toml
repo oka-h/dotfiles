@@ -283,6 +283,9 @@ hook_add = '''
 '''
 
 [[plugins]]
+repo = 'mattn/vim-lexiv'
+
+[[plugins]]
 repo = 'oka-h/yozakura.vim'
 hook_add = '''
     augroup yozakura

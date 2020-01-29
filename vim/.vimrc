@@ -402,21 +402,6 @@ inoremap <C-L> <C-X><C-L>
 inoremap <expr> <C-E> pumvisible() ? '<C-Y><C-E>' : '<C-E>'
 inoremap <expr> <C-Y> pumvisible() ? '<C-Y><C-Y>' : '<C-Y>'
 
-inoremap {     {}<C-G>U<Left>
-inoremap {<CR> {<CR>}<Esc>O
-inoremap {}    {}
-inoremap {{{   {{{
-inoremap (     ()<C-G>U<Left>
-inoremap (<CR> (<CR>)<Esc>O
-inoremap ()    ()
-inoremap [     []<C-G>U<Left>
-inoremap [<CR> [<CR>]<Esc>O
-inoremap []    []
-inoremap "     ""<C-G>U<Left>
-inoremap ""    ""
-inoremap '     ''<C-G>U<Left>
-inoremap ''    ''
-
 cnoremap <C-P> <Up>
 cnoremap <C-N> <Down>
 
@@ -822,34 +807,43 @@ augroup each_language
     autocmd BufRead,BufNewFile *.toml set filetype=conf
     autocmd FileType vim,help         setlocal keywordprg=:help
     autocmd BufRead,BufNewFile *.toml setlocal keywordprg=:help
-    autocmd FileType vim              inoremap <buffer> <nowait> " "
-    autocmd BufRead,BufNewFile *.toml inoremap <buffer> <nowait> " "
     autocmd BufRead,BufNewFile *.toml inoremap <buffer> '''<CR> '''<CR>'''<Esc>O<Tab>
+    autocmd FileType vim              inoremap <buffer> <expr> <CR> <SID>expand_cr()
+    autocmd BufRead,BufNewFile *.toml inoremap <buffer> <expr> <CR> <SID>expand_cr()
 
-    autocmd FileType vim              inoremap <buffer> <silent> <expr> (<CR> <SID>vim_continue_line('(')
-    autocmd BufRead,BufNewFile *.toml inoremap <buffer> <silent> <expr> (<CR> <SID>vim_continue_line('(')
-    autocmd FileType vim              inoremap <buffer> <silent> <expr> [<CR> <SID>vim_continue_line('[')
-    autocmd BufRead,BufNewFile *.toml inoremap <buffer> <silent> <expr> [<CR> <SID>vim_continue_line('[')
-    autocmd FileType vim              inoremap <buffer> <silent> <expr> {<CR> <SID>vim_continue_line('{')
-    autocmd BufRead,BufNewFile *.toml inoremap <buffer> <silent> <expr> {<CR> <SID>vim_continue_line('{')
-    autocmd FileType vim              inoremap <buffer> <silent> <expr> ,<CR> <SID>vim_continue_line(',')
-    autocmd BufRead,BufNewFile *.toml inoremap <buffer> <silent> <expr> ,<CR> <SID>vim_continue_line(',')
+    let s:bracket = {
+    \   '{': '}',
+    \   '[': ']',
+    \   '(': ')'
+    \}
 
-    function! s:vim_continue_line(char) abort
-        let l:indent = matchstr(getline('.'), '\s*\\\?\s*')
-        if match(l:indent,'\') < 0
-            let l:indent .= '\'
+    function! s:expand_cr() abort
+        let l:col = col('.')
+
+        if l:col <# 2
+            return "\<CR>"
         endif
-        let l:pair_char = a:char == '(' ? ')'
-                      \ : a:char == '[' ? ']'
-                      \ : a:char == '{' ? '}'
-                                      \ : ''
-        return a:char . "\<Esc>"
-           \ . ":call append(line('.'), '" . l:indent . "')\<CR>"
-           \ . (l:pair_char != '' ? ":call append(line('.') + 1, '" . l:indent . l:pair_char . "')\<CR>" : '')
-           \ . "jA" . (l:pair_char != '' ? "\<Tab>" : '')
-    endfunction
 
+        let l:line = getline('.')
+        let l:lhs = l:line[l:col - 2]
+        let l:rhs = l:line[l:col - 1]
+
+        if !(has_key(s:bracket, l:lhs) && s:bracket[l:lhs] ==# l:rhs) && l:lhs !=# ','
+            return "\<CR>"
+        endif
+
+        let l:match = matchlist(l:line, '\(\s*\)\\\?\(\s*\)\?')
+        let l:left_indent = l:match[1]
+        let l:right_indent = l:match[2]
+
+        if l:lhs ==# ','
+            let l:right_indent .= len(l:right_indent) == 0 ? "\<Tab>" : ''
+            return "\<CR>\\\<Left> \<C-U>" . l:left_indent . "\<Right>" . l:right_indent
+        else
+            return "\<CR>\\\<Left> \<C-U>" . l:left_indent . "\<Right>" . l:right_indent
+               \ . "\<Esc>O\\\<Left> \<C-U>" . l:left_indent . "\<Right>" . l:right_indent . "\<Tab>"
+        endif
+    endfunction
 
     " yacc
     autocmd BufRead,BufNewFile *.jay set filetype=yacc
