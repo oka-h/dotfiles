@@ -616,7 +616,13 @@ endif
 " ------------------------------------------------------------------------------
 
 " :RemoveTailSpaces
-command! RemoveTailSpaces %s/ \+$//
+command! RemoveTailSpaces call s:remove_tail_spaces()
+
+function! s:remove_tail_spaces() abort
+	%s/\s\+$//e
+	call histdel('/', -1)
+endfunction
+
 
 " :W
 " Write by sudo.
@@ -838,9 +844,9 @@ augroup each_language
 
         if l:lhs ==# ','
             let l:right_indent .= len(l:right_indent) == 0 ? "\<Tab>" : ''
-            return "\<CR>\\\<Left> \<C-U>" . l:left_indent . "\<Right>" . l:right_indent
+            return "\<CR> \<C-U>\\\<Left> \<C-U>" . l:left_indent . "\<Right>" . l:right_indent
         else
-            return "\<CR>\\\<Left> \<C-U>" . l:left_indent . "\<Right>" . l:right_indent
+            return "\<CR> \<C-U>\\\<Left> \<C-U>" . l:left_indent . "\<Right>" . l:right_indent
                \ . "\<Esc>O\\\<Left> \<C-U>" . l:left_indent . "\<Right>" . l:right_indent . "\<Tab>"
         endif
     endfunction
