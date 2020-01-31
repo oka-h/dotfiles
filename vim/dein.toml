@@ -73,6 +73,25 @@ hook_add = '''
 '''
 
 [[plugins]]
+repo = 'Shougo/unite.vim'
+if = "!executable('fzf')"
+depends = 'neomru.vim'
+hook_add = '''
+    nnoremap <silent> <C-P>    :<C-U>Unite file_mru<CR>
+    nnoremap <silent> <C-N>    :<C-U>UniteWithBufferDir file_rec<CR>
+    augroup unite_mappings
+        autocmd!
+        autocmd FileType unite imap <buffer> <C-O> <Plug>(unite_insert_leave)
+        autocmd FileType unite nnoremap <buffer> <expr> s unite#do_action('split')
+        autocmd FileType unite nnoremap <buffer> <expr> v unite#do_action('vsplit')
+    augroup END
+'''
+
+[[plugins]]
+repo = 'Shougo/neomru.vim'
+on_source = 'unite.vim'
+
+[[plugins]]
 repo = 'Shougo/neocomplete.vim'
 if = "!(g:Version_check(800) && has('python3')) && g:Version_check(704, 885) && has('lua')"
 on_i = 1
