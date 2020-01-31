@@ -24,77 +24,53 @@ if = "g:Version_check(702) && !(g:is_windows && has('kaoriya')) && has('reltime'
 build = 'make'
 
 [[plugins]]
-repo = 'Shougo/unite.vim'
-if = "!(has('python3') && g:Version_check(800))"
-depends = 'neomru.vim'
+repo = 'junegunn/fzf'
+if = "executable('fzf')"
 hook_add = '''
-    nnoremap <silent> <Space>n :<C-U>Unite file_rec<CR>
-    nnoremap <silent> <C-P>    :<C-U>Unite file_mru<CR>
-    nnoremap <silent> <C-N>    :<C-U>UniteWithBufferDir file_rec<CR>
-    augroup unite_mappings
-        autocmd!
-        autocmd FileType unite imap <buffer> <C-O> <Plug>(unite_insert_leave)
-        autocmd FileType unite nnoremap <buffer> <expr> s unite#do_action('split')
-        autocmd FileType unite nnoremap <buffer> <expr> v unite#do_action('vsplit')
-    augroup END
+    let $FZF_DEFAULT_OPTS = '-e'
 '''
 
 [[plugins]]
-repo = 'Shougo/denite.nvim'
-if = "has('python3') && g:Version_check(800)"
-on_cmd = ['Denite', 'DeniteBufferDir', 'DeniteCursorWord', 'DeniteProjectDir']
-depends = 'neomru.vim'
+repo = 'junegunn/fzf.vim'
+if = "executable('fzf')"
 hook_add = '''
-    nnoremap <silent> <Space>n :<C-U>Denite file/rec<CR>
-    nnoremap <silent> <C-P>    :<C-U>Denite file_mru<CR>
-    nnoremap <silent> <C-N>    :<C-U>DeniteBufferDir file/rec<CR>
+    nnoremap <silent> <C-P> :<C-U>History<CR>
+    nnoremap <silent> <C-N> :<C-U>FZF %:h<CR>
 
-    augroup denite_mappings
-        autocmd!
-        autocmd FileType denite nnoremap <silent> <buffer> <expr> <CR> denite#do_map('do_action')
-        autocmd FileType denite nnoremap <silent> <buffer> <expr> s denite#do_map('do_action', 'split')
-        autocmd FileType denite nnoremap <silent> <buffer> <expr> v denite#do_map('do_action', 'vsplit')
-        autocmd FileType denite nnoremap <silent> <buffer> <expr> t denite#do_map('do_action', 'tabopen')
-        autocmd FileType denite nnoremap <silent> <buffer> <expr> i denite#do_map('open_filter_buffer')
-        autocmd FileType denite nnoremap <silent> <buffer> <expr> <Esc><Esc> denite#do_map('quit')
-        autocmd FileType denite-filter nnoremap <silent> <buffer> <expr> <Esc><Esc> denite#do_map('quit')
-        autocmd FileType denite-filter inoremap <silent> <buffer> <expr> <Esc><Esc> denite#do_map('quit')
-    augroup END
+    command! -nargs=+ -complete=dir GrepDir call s:grep_with_dir(<f-args>)
 
-    command! -nargs=? -complete=file_in_path DeniteFind call s:denite_find(<f-args>)
-    function! s:denite_find(...) abort
-        call execute('Denite file/rec' . (a:0 <= 0 ? '' : (' -path=' . expand(a:1))))
-    endfunction
+    function! s:grep_with_dir(dir, ...) abort
+        if !isdirectory(a:dir)
+            echoerr printf('"%s" is invalid directory.', a:dir)
+            return
+        endif
 
-    command! -nargs=? -complete=file_in_path DeniteGrep call s:denite_grep(<f-args>)
-    function! s:denite_grep(...) abort
-        call execute('Denite grep' . (a:0 <= 0 ? '' : (' -path=' . expand(a:1))))
+        if a:0 <= 0
+            echoerr 'Please input search word.'
+            return
+        endif
+
+        let l:word = shellescape(join(a:000))
+        let l:has_column = 1
+        let l:opts = { 'dir' : a:dir }
+
+        if executable('rg')
+            let l:grep_cmd = printf('rg --column --line-number --no-heading --color=always --smart-case --hidden %s', l:word)
+        elseif executable('ag')
+            let l:grep_cmd = printf('ag --column --color --smart-case --hidden %s', l:word)
+        elseif g:is_windows
+            let l:grep_cmd = printf('powershell -Command "dir -Recurse | Select-String -Pattern %s | %% { '
+                                \ . '[string]::Format(\"{0}:{1}:{2}:{3}\", $_.RelativePath(\"%s\"), $_.LineNumber, '
+                                \ . '$_.Matches.Index + 1, $_.Line) }"', escape(l:word, '"'), fnamemodify(a:dir, ':p:h'))
+            let l:opts.options = '--prompt "Select-String> "'
+        else
+            let l:grep_cmd = printf('grep --line-number --ignore-case --recursive %s', l:word)
+            let l:has_column = 0
+        endif
+
+        call fzf#vim#grep(l:grep_cmd, l:has_column, l:opts)
     endfunction
 '''
-hook_post_source = '''
-    call denite#custom#source('file/rec', 'matchers', ['matcher_regexp'])
-    call denite#custom#source('file_mru', 'matchers', ['matcher_regexp'])
-
-    if executable('rg')
-        call denite#custom#var('grep', 'command', ['rg'])
-        call denite#custom#var('grep', 'default_opts', ['-i', '--vimgrep', '--no-heading'])
-        call denite#custom#var('grep', 'recursive_opts', [])
-        call denite#custom#var('grep', 'pattern_opt', ['--regexp'])
-        call denite#custom#var('grep', 'separator', ['--'])
-        call denite#custom#var('grep', 'final_opts', [])
-    elseif executable('ag')
-        call denite#custom#var('grep', 'command', ['ag'])
-        call denite#custom#var('grep', 'default_opts', ['-i', '--vimgrep'])
-        call denite#custom#var('grep', 'recursive_opts', [])
-        call denite#custom#var('grep', 'pattern_opt', [])
-        call denite#custom#var('grep', 'separator', ['--'])
-        call denite#custom#var('grep', 'final_opts', [])
-    endif
-'''
-
-[[plugins]]
-repo = 'Shougo/neomru.vim'
-on_source = ['unite.vim', 'denite.nvim']
 
 [[plugins]]
 repo = 'Shougo/neocomplete.vim'
