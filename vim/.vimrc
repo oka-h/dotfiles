@@ -64,7 +64,7 @@ function! g:Is_filetype_enabled(filetype) abort
 endfunction
 
 function! g:Enable_filetype(filetype, ...) abort
-    let s:enabled_state_of_filetype[a:filetype] = a:0 == 0 ? 1 : a:1 ? 1 : 0
+    let s:enabled_state_of_filetype[a:filetype] = (a:0 == 0 || a:1)
 endfunction
 
 
@@ -145,7 +145,7 @@ if g:Version_check(704)
 endif
 
 function! g:Is_plugin_enable(plugin_name) abort
-    return exists('*g:dein#get') ? !empty(g:dein#get(a:plugin_name)) : 0
+    return exists('*g:dein#get') && !empty(g:dein#get(a:plugin_name))
 endfunction
 
 
