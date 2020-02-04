@@ -60,7 +60,7 @@ command! -nargs=1 NXOnoremap nnoremap <args>| xnoremap <args>| onoremap <args>
 
 let s:enabled_state_of_filetype = {}
 function! g:Is_filetype_enabled(filetype) abort
-    return get(s:enabled_state_of_filetype, 'all') ? 1 : get(s:enabled_state_of_filetype, a:filetype)
+    return get(s:enabled_state_of_filetype, 'all') || get(s:enabled_state_of_filetype, a:filetype)
 endfunction
 
 function! g:Enable_filetype(filetype, ...) abort
