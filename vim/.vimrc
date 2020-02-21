@@ -739,20 +739,29 @@ endfunction
 
 
 let s:session_file = expand('~/.vimsession')
+let s:temp_session_file = expand('~/.vimtempsession')
 
-if filereadable(s:session_file)
-    augroup load_session
+augroup load_session
+    autocmd!
+    autocmd CursorHold * execute 'mksession!' s:temp_session_file
+    autocmd VimLeave * if !v:dying
+                   \ |     call delete(s:temp_session_file)
+                   \ | endif
+
+    let s:load_session_file = filereadable(s:session_file) ? s:session_file
+                          \ : filereadable(s:temp_session_file) ? s:temp_session_file : ''
+     if !empty(s:load_session_file)
         autocmd VimEnter * nested if @% == '' && s:get_buf_byte() == 0
-                              \ |     silent execute 'source' s:session_file
-                              \ |     call delete(s:session_file)
+                              \ |     silent execute 'source' s:load_session_file
+                              \ |     call delete(s:load_session_file)
                               \ | endif
-    augroup END
 
-    function! s:get_buf_byte() abort
-        let l:byte = line2byte(line('$') + 1)
-        return l:byte == -1 ? 0 : byte - 1
-    endfunction
-endif
+        function! s:get_buf_byte() abort
+            let l:byte = line2byte(line('$') + 1)
+            return l:byte == -1 ? 0 : byte - 1
+        endfunction
+    endif
+augroup END
 
 command! PauseVim call s:save_session_and_quit()
 function! s:save_session_and_quit() abort
