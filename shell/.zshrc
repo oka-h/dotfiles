@@ -52,16 +52,8 @@ cd-upper() {
   zle accept-line
 }
 
-cd-before() {
-  zle push-line
-  LBUFFER="cd -"
-  zle accept-line
-}
-
 zle -N cd-upper
-zle -N cd-before
 bindkey '^k' cd-upper
-bindkey '^o' cd-before
 
 autoload -Uz smart-insert-last-word
 zstyle :insert-last-word match '*([[:alpha:]/\\]?|?[[:alpha:]/\\])*'

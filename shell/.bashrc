@@ -38,12 +38,6 @@ cd-upper() {
   pwd
 }
 
-cd-before() {
-  echo \$ cd -
-  cd -
-}
-
 bind -x '"\C-k": cd-upper'
-bind -x '"\C-o": cd-before'
 
 [ -f ~/.shellrc_local ] && source ~/.shellrc_local

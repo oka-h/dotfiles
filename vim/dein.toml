@@ -24,61 +24,15 @@ if = "g:Version_check(702) && !(g:is_windows && has('kaoriya')) && has('reltime'
 build = 'make'
 
 [[plugins]]
-repo = 'junegunn/fzf'
-if = "executable('fzf')"
-hook_add = '''
-    let $FZF_DEFAULT_OPTS = '-e'
-'''
-
-[[plugins]]
-repo = 'junegunn/fzf.vim'
-if = "executable('fzf')"
-hook_add = '''
-    nnoremap <silent> <C-P> :<C-U>History<CR>
-    nnoremap <silent> <C-N> :<C-U>FZF %:h<CR>
-
-    command! -nargs=+ -complete=dir GrepDir call s:grep_with_dir(<f-args>)
-
-    function! s:grep_with_dir(dir, ...) abort
-        if !isdirectory(a:dir)
-            echoerr printf('"%s" is invalid directory.', a:dir)
-            return
-        endif
-
-        if a:0 <= 0
-            echoerr 'Please input search word.'
-            return
-        endif
-
-        let l:word = shellescape(join(a:000))
-        let l:has_column = 1
-        let l:opts = { 'dir' : a:dir }
-
-        if executable('rg')
-            let l:grep_cmd = printf('rg --column --line-number --no-heading --color=always --smart-case --hidden %s', l:word)
-        elseif executable('ag')
-            let l:grep_cmd = printf('ag --column --color --smart-case --hidden %s', l:word)
-        elseif g:is_windows
-            let l:grep_cmd = printf('powershell -Command "dir -Recurse | Select-String -Pattern %s | %% { '
-                                \ . '[string]::Format(\"{0}:{1}:{2}:{3}\", $_.RelativePath(\"%s\"), $_.LineNumber, '
-                                \ . '$_.Matches.Index + 1, $_.Line) }"', escape(l:word, '"'), fnamemodify(a:dir, ':p:h'))
-            let l:opts.options = '--prompt "Select-String> "'
-        else
-            let l:grep_cmd = printf('grep --line-number --ignore-case --recursive %s', l:word)
-            let l:has_column = 0
-        endif
-
-        call fzf#vim#grep(l:grep_cmd, l:has_column, l:opts)
-    endfunction
-'''
-
-[[plugins]]
 repo = 'Shougo/unite.vim'
-if = "!executable('fzf')"
+if = "!(g:Version_check(800) && has('python3'))"
 depends = 'neomru.vim'
+on_cmd = ['Unite', 'UniteBookmarkAdd', 'UniteClose', 'UniteDo', 'UniteFirst', 'UniteLast',
+    'UniteNext', 'UnitePrevious', 'UniteResume', 'UniteWithBufferDir', 'UniteWithCurrentDir',
+    'UniteWithCursorWord', 'UniteWithInput', 'UniteWithInputDirectory', 'UniteWithProjectDir']
 hook_add = '''
-    nnoremap <silent> <C-P>    :<C-U>Unite file_mru<CR>
-    nnoremap <silent> <C-N>    :<C-U>UniteWithBufferDir file_rec<CR>
+    nnoremap <silent> <C-P> :<C-U>Unite file_mru<CR>
+    nnoremap <silent> <C-N> :<C-U>UniteWithBufferDir file_rec<CR>
     augroup unite_mappings
         autocmd!
         autocmd FileType unite imap <buffer> <C-O> <Plug>(unite_insert_leave)
@@ -88,8 +42,63 @@ hook_add = '''
 '''
 
 [[plugins]]
+repo = 'Shougo/denite.nvim'
+if = "g:Version_check(800) && has('python3')"
+depends = 'neomru.vim'
+on_cmd = ['Denite', 'DeniteBufferDir', 'DeniteCursorWord', 'DeniteProjectDir']
+hook_add = '''
+    nnoremap <silent> <C-P> :<C-U>Denite file_mru<CR>
+    nnoremap <silent> <C-N> :<C-U>DeniteBufferDir file/rec<CR>
+
+    augroup denite_mappings
+        autocmd!
+        autocmd FileType denite nnoremap <silent> <buffer> <expr> <CR> denite#do_map('do_action')
+        autocmd FileType denite nnoremap <silent> <buffer> <expr> s denite#do_map('do_action', 'split')
+        autocmd FileType denite nnoremap <silent> <buffer> <expr> v denite#do_map('do_action', 'vsplit')
+        autocmd FileType denite nnoremap <silent> <buffer> <expr> t denite#do_map('do_action', 'tabopen')
+        autocmd FileType denite nnoremap <silent> <buffer> <expr> i denite#do_map('open_filter_buffer')
+        autocmd FileType denite nnoremap <silent> <buffer> <expr> <C-O> denite#do_map('quit')
+        autocmd FileType denite-filter nnoremap <silent> <buffer> <expr> <C-O> denite#do_map('quit')
+        autocmd FileType denite-filter inoremap <silent> <buffer> <expr> <C-O> denite#do_map('quit')
+    augroup END
+
+    command! -nargs=? -complete=file_in_path DeniteFind call s:denite_find(<f-args>)
+    function! s:denite_find(...) abort
+        execute 'Denite file/rec' a:0 ? ('-path=' . expand(a:1)) : ''
+    endfunction
+
+    command! -nargs=? -complete=file_in_path DeniteGrep call s:denite_grep(<f-args>)
+    function! s:denite_grep(...) abort
+        execute 'Denite grep' a:0 ? ('-path=' . expand(a:1)) : ''
+    endfunction
+'''
+hook_post_source = '''
+    call denite#custom#option('_', {
+    \   'smartcase' : v:true,
+    \   'max_dynamic_update_candidates' : 100000
+    \})
+    call denite#custom#source('_', 'matchers', ['matcher_regexp'])
+
+    if executable('rg')
+        call denite#custom#var('grep', 'command', ['rg'])
+        call denite#custom#var('grep', 'default_opts', ['-i', '--vimgrep', '--no-heading'])
+        call denite#custom#var('grep', 'recursive_opts', [])
+        call denite#custom#var('grep', 'pattern_opt', ['--regexp'])
+        call denite#custom#var('grep', 'separator', ['--'])
+        call denite#custom#var('grep', 'final_opts', [])
+    elseif executable('ag')
+        call denite#custom#var('grep', 'command', ['ag'])
+        call denite#custom#var('grep', 'default_opts', ['-i', '--vimgrep'])
+        call denite#custom#var('grep', 'recursive_opts', [])
+        call denite#custom#var('grep', 'pattern_opt', [])
+        call denite#custom#var('grep', 'separator', ['--'])
+        call denite#custom#var('grep', 'final_opts', [])
+    endif
+'''
+
+[[plugins]]
 repo = 'Shougo/neomru.vim'
-on_source = 'unite.vim'
+on_source = ['unite.vim', 'denite.nvim']
 
 [[plugins]]
 repo = 'Shougo/neocomplete.vim'
@@ -151,7 +160,6 @@ hook_add = '''
     imap <C-K> <Plug>(neosnippet_expand_or_jump)
     smap <C-K> <Plug>(neosnippet_expand_or_jump)
 
-    " For conceal markers.
     if has('conceal')
       set conceallevel=2
       set concealcursor=niv
@@ -227,7 +235,6 @@ depends = 'vim-quickrun'
 repo = 'osyo-manga/vim-watchdogs'
 depends = ['vimproc.vim', 'vim-quickrun', 'shabadou']
 hook_add = '''
-    " Check syntax after save the file.
     let g:watchdogs_check_BufWritePost_enable = 1
 
     if !exists('g:quickrun_config')
@@ -273,7 +280,7 @@ repo = 'dannyob/quickfixstatus'
 [[plugins]]
 repo = 'mbbill/undotree'
 hook_add = '''
-   let g:undotree_WindowLayout = 3 
+   let g:undotree_WindowLayout = 3
    let g:undotree_HelpLine = 0
 '''
 

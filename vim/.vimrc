@@ -456,7 +456,7 @@ if exists('+termkey')
 endif
 
 if exists(':tnoremap') == 2
-    tnoremap <Esc><Esc> <C-\><C-N>
+    tnoremap <C-O> <C-\><C-N>
     if has('nvim')
         tnoremap <expr> <C-A> '<C-\><C-N>"' . nr2char(getchar()) . 'pi'
     else
@@ -743,7 +743,9 @@ let s:temp_session_file = expand('~/.vimtempsession')
 
 augroup load_session
     autocmd!
-    autocmd CursorHold * execute 'mksession!' s:temp_session_file
+    autocmd CursorHold * if empty(getcmdwintype())
+                     \ |     execute 'mksession!' s:temp_session_file
+                     \ | endif
     autocmd VimLeave * if !v:dying
                    \ |     call delete(s:temp_session_file)
                    \ | endif
