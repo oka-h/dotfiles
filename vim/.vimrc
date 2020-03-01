@@ -137,7 +137,7 @@ if g:Version_check(704)
         call s:load_dein()
     else
         command! DeinInstall call s:install_dein()
-        augroup nodein_call
+        augroup vimrc_no_dein_message
             autocmd!
             autocmd VimEnter * echomsg 'Dein.vim is not installed. Please install it by :DeinIntall.'
         augroup END
@@ -193,7 +193,7 @@ else
     set visualbell t_vb=
 endif
 
-augroup format_options
+augroup vimrc_format_options
     autocmd!
     autocmd BufEnter * setlocal formatoptions+=M
                               \ formatoptions-=r
@@ -210,7 +210,7 @@ endif
 
 set textwidth=0
 if has('win32unix')
-    augroup textwidth_cygwin_vimscript
+    augroup vimrc_textwidth_for_vimscript_on_cygwin
         autocmd!
         autocmd FileType vim set textwidth=0
     augroup END
@@ -295,7 +295,7 @@ xnoremap <silent> <expr> <Space><Space> ':<C-U>' . (g:hlsearch ? 'nohlsearch' : 
             \ . ' \| let g:hlsearch = !g:hlsearch<CR>gv'
 
 if exists('##CmdlineEnter')
-    augroup toggle_hlsearch
+    augroup vimrc_toggle_hlsearch
         autocmd!
         autocmd CmdlineEnter [/\?] let g:hlsearch = 0
     augroup END
@@ -526,7 +526,7 @@ endfunction
 
 set t_Co=256
 
-augroup cursor_line_nr
+augroup vimrc_cursor_line_nr
     autocmd!
     autocmd VimEnter,ColorScheme * highlight CursorLineNr cterm=bold ctermfg=173 gui=bold guifg=#D7875F
 augroup END
@@ -537,7 +537,7 @@ function! s:set_tbs_hl() abort
 endfunction
 
 if has('syntax')
-    augroup two_byte_space
+    augroup vimrc_two_byte_space
         autocmd!
         autocmd ColorScheme * call <SID>set_tbs_hl()
         autocmd VimEnter,WinEnter * match two_byte_space /　/
@@ -563,7 +563,7 @@ set smartcase
 set incsearch
 set wrapscan
 
-augroup hlsearch
+augroup vimrc_hlsearch
     autocmd!
     autocmd VimEnter * set hlsearch
 augroup END
@@ -616,12 +616,8 @@ endif
 " ------------------------------------------------------------------------------
 
 " :RemoveTailSpaces
-command! RemoveTailSpaces call s:remove_tail_spaces()
-
-function! s:remove_tail_spaces() abort
-	%s/\s\+$//e
-	call histdel('/', -1)
-endfunction
+command! RemoveTailSpaces %s/\s\+$//e
+                      \ | call histdel('/', -1)
 
 
 " :W
@@ -741,14 +737,14 @@ endfunction
 let s:session_file = expand('~/.vimsession')
 let s:temp_session_file = expand('~/.vimtempsession')
 
-augroup load_session
+augroup vimrc_session
     autocmd!
     autocmd CursorHold * if empty(getcmdwintype())
                      \ |     execute 'mksession!' s:temp_session_file
                      \ | endif
-    autocmd VimLeave * if !v:dying
-                   \ |     call delete(s:temp_session_file)
-                   \ | endif
+    autocmd ExitPre * if !v:dying
+                  \ |     call delete(s:temp_session_file)
+                  \ | endif
 
     let s:load_session_file = filereadable(s:session_file) ? s:session_file
                           \ : filereadable(s:temp_session_file) ? s:temp_session_file : ''
@@ -765,18 +761,19 @@ augroup load_session
     endif
 augroup END
 
-command! PauseVim call s:save_session_and_quit()
-function! s:save_session_and_quit() abort
-    execute 'mksession!' s:session_file
-    qall
-endfunction
+command! PauseVim execute 'mksession' s:session_file
+              \ | try
+              \ |     qall
+              \ | finally
+              \ |     call delete(s:session_file)
+              \ | endtry
 
 
 " ------------------------------------------------------------------------------
 " Settings for each language
 " ------------------------------------------------------------------------------
 
-augroup each_language
+augroup vimrc_each_language
     autocmd!
     " java
     let g:java_highlight_all       = 1
@@ -810,10 +807,6 @@ augroup each_language
 
     " tex
     autocmd FileType *tex setlocal conceallevel=0
-    " Transform markdown to tex.
-    if executable('pandoc')
-        autocmd FileType *tex setlocal formatprg=pandoc\ --from=markdown\ --to=latex
-    endif
 
     " tsv
     autocmd BufRead,BufNewFile *.tsv set filetype=tsv

@@ -33,7 +33,7 @@ on_cmd = ['Unite', 'UniteBookmarkAdd', 'UniteClose', 'UniteDo', 'UniteFirst', 'U
 hook_add = '''
     nnoremap <silent> <C-P> :<C-U>Unite file_mru<CR>
     nnoremap <silent> <C-N> :<C-U>UniteWithBufferDir file_rec<CR>
-    augroup unite_mappings
+    augroup vimrc_unite
         autocmd!
         autocmd FileType unite imap <buffer> <C-O> <Plug>(unite_insert_leave)
         autocmd FileType unite nnoremap <buffer> <expr> s unite#do_action('split')
@@ -50,7 +50,7 @@ hook_add = '''
     nnoremap <silent> <C-P> :<C-U>Denite file_mru<CR>
     nnoremap <silent> <C-N> :<C-U>DeniteBufferDir file/rec<CR>
 
-    augroup denite_mappings
+    augroup vimrc_denite
         autocmd!
         autocmd FileType denite nnoremap <silent> <buffer> <expr> <CR> denite#do_map('do_action')
         autocmd FileType denite nnoremap <silent> <buffer> <expr> s denite#do_map('do_action', 'split')
@@ -58,19 +58,23 @@ hook_add = '''
         autocmd FileType denite nnoremap <silent> <buffer> <expr> t denite#do_map('do_action', 'tabopen')
         autocmd FileType denite nnoremap <silent> <buffer> <expr> i denite#do_map('open_filter_buffer')
         autocmd FileType denite nnoremap <silent> <buffer> <expr> <C-O> denite#do_map('quit')
-        autocmd FileType denite-filter nnoremap <silent> <buffer> <expr> <C-O> denite#do_map('quit')
-        autocmd FileType denite-filter inoremap <silent> <buffer> <expr> <C-O> denite#do_map('quit')
+        autocmd FileType denite-filter nmap <buffer> <C-O> <Plug>(denite_filter_update)
+        autocmd FileType denite-filter imap <buffer> <C-O> <Plug>(denite_filter_update)
     augroup END
 
-    command! -nargs=? -complete=file_in_path DeniteFind call s:denite_find(<f-args>)
-    function! s:denite_find(...) abort
-        execute 'Denite file/rec' a:0 ? ('-path=' . expand(a:1)) : ''
-    endfunction
-
-    command! -nargs=? -complete=file_in_path DeniteGrep call s:denite_grep(<f-args>)
-    function! s:denite_grep(...) abort
-        execute 'Denite grep' a:0 ? ('-path=' . expand(a:1)) : ''
-    endfunction
+    command! -nargs=? -complete=file_in_path DeniteFind call s:denite_with_path('file/rec', <f-args>)
+    command! -nargs=? -complete=file_in_path DeniteGrep call s:denite_with_path('grep', <f-args>)
+    function! s:denite_with_path(source, ...) abort
+        let l:command = 'Denite ' . a:source
+        if a:0
+            let l:path = fnamemodify(expand(a:1), ':p')
+            if g:is_windows
+                let l:path = substitute(l:path, '\\', '\\\\', 'g')
+            endif
+            let l:command .= ' -path=' . l:path
+        endif
+        execute l:command
+endfunction
 '''
 hook_post_source = '''
     call denite#custom#option('_', {
@@ -101,8 +105,16 @@ repo = 'Shougo/neomru.vim'
 on_source = ['unite.vim', 'denite.nvim']
 
 [[plugins]]
+repo = 'roxma/nvim-yarp'
+if = "g:Version_check(800, 'v') && has('python3')"
+
+[[plugins]]
+repo = 'roxma/vim-hug-neovim-rpc'
+if = "g:Version_check(800, 'v') && has('python3')"
+
+[[plugins]]
 repo = 'Shougo/neocomplete.vim'
-if = "!(g:Version_check(800) && has('python3')) && g:Version_check(704, 885) && has('lua')"
+if = "!g:Version_check(800) && g:Version_check(704, 885) && has('lua')"
 on_i = 1
 hook_add = '''
     let g:acp_enableAtStartup = 0
@@ -120,7 +132,7 @@ hook_add = '''
     endif
     let g:neocomplete#sources#omni#input_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
 
-    augroup neocomplete
+    augroup vimrc_neocomplete
         autocmd!
         autocmd FileType css           setlocal omnifunc=csscomplete#CompleteCSS
         autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
@@ -130,26 +142,33 @@ hook_add = '''
     augroup END
 
     inoremap <expr> <CR>  pumvisible() ? '<C-Y><CR>' : '<CR>'
-    inoremap <expr> <Tab> pumvisible() ? '<C-N>' : '<Tab>'
     inoremap <expr> <BS>  neocomplete#smart_close_popup() . '<BS>'
     inoremap <expr> <C-H> neocomplete#smart_close_popup() . '<C-H>'
 '''
 
 [[plugins]]
-repo = 'roxma/nvim-yarp'
-if = "g:Version_check(800, 'v') && has('python3')"
-
-[[plugins]]
-repo = 'roxma/vim-hug-neovim-rpc'
-if = "g:Version_check(800, 'v') && has('python3')"
-
-[[plugins]]
-repo = 'Shougo/deoplete.nvim'
-if = "g:Version_check(800) && has('python3')"
+repo = 'prabirshrestha/asyncomplete.vim'
+if = 'g:Version_check(800)'
 on_i = 1
 hook_add = '''
-    let g:deoplete#enable_at_startup = 1
-    let g:deoplete#enable_refresh_always = 1
+    let g:asyncomplete_auto_popup = 1
+    let g:asyncomplete_auto_completeopt = 1
+    inoremap <expr> <CR> pumvisible() ? '<C-Y><CR>' : '<CR>'
+'''
+
+[[plugins]]
+repo = 'prabirshrestha/asyncomplete-neosnippet.vim'
+depends = 'neosnippet.vim'
+if = 'g:Version_check(800)'
+hook_add = '''
+    augroup vimrc_asyncomplete_neosnippet
+        autocmd!
+        autocmd User asyncomplete_setup call asyncomplete#register_source(asyncomplete#sources#neosnippet#get_source_options({
+        \   'name': 'neosnippet',
+        \   'whitelist': ['*'],
+        \   'completor': function('asyncomplete#sources#neosnippet#completor')
+        \}))
+    augroup END
 '''
 
 [[plugins]]
@@ -161,8 +180,8 @@ hook_add = '''
     smap <C-K> <Plug>(neosnippet_expand_or_jump)
 
     if has('conceal')
-      set conceallevel=2
-      set concealcursor=niv
+        set conceallevel=2
+        set concealcursor=niv
     endif
 '''
 
@@ -176,6 +195,43 @@ hook_add = '''
     \   g:dotfiles_vim_dir . expand('/snippets')
     \]
 '''
+
+[[plugins]]
+repo = 'prabirshrestha/vim-lsp'
+if = "g:Version_check(800)"
+depends = ['async.vim', 'asyncomplete-lsp.vim']
+hook_add = '''
+    let g:lsp_diagnostics_enabled = 1
+    let g:lsp_diagnostics_echo_cursor = 1
+
+    augroup vimrc_lsp_enable
+        autocmd!
+        autocmd User lsp_buffer_enabled call s:on_lsp_buffer_enabled()
+    augroup END
+    function! s:on_lsp_buffer_enabled() abort
+        setlocal omnifunc=lsp#complete
+        nnoremap <buffer> <Space>? :<C-U>LspHover<CR>
+        if g:is_my_layout
+            nmap <buffer> + <Plug>(lsp-definition)
+        else
+            nmap <buffer> <C-]> <Plug>(lsp-definition)
+        endif
+    endfunction
+'''
+
+[[plugins]]
+repo = 'prabirshrestha/async.vim'
+if = "g:Version_check(800)"
+
+[[plugins]]
+repo = 'prabirshrestha/asyncomplete-lsp.vim'
+if = "g:Version_check(800)"
+
+[[plugins]]
+repo = 'mattn/vim-lsp-settings'
+if = "g:Version_check(800)"
+depends = 'vim-lsp'
+merged = 0
 
 [[plugins]]
 repo = 'thinca/vim-quickrun'
@@ -226,53 +282,11 @@ hook_add = '''
     \   'outputter' : 'browser'
     \}
 '''
-
-[[plugins]]
-repo = 'osyo-manga/shabadou.vim'
-depends = 'vim-quickrun'
-
-[[plugins]]
-repo = 'osyo-manga/vim-watchdogs'
-depends = ['vimproc.vim', 'vim-quickrun', 'shabadou']
-hook_add = '''
-    let g:watchdogs_check_BufWritePost_enable = 1
-
-    if !exists('g:quickrun_config')
-        let g:quickrun_config = {}
+hook_source = '''
+    if has('mac') && executable('mcs')
+        let g:quickrun_config.cs = g:quickrun#default_config['cs/mcs']
     endif
-
-    let g:quickrun_config['watchdogs_checker/_'] = {
-    \   'hook/close_quickfix/enable_exit': 1
-    \}
-
-    let g:quickrun_config['java/watchdogs_checker'] = {
-    \   'type': 'watchdogs_checker/javac'
-    \}
-
-    let g:quickrun_config['watchdogs_checker/javac'] = {
-    \   'command': 'javac',
-    \   'exec': '%c %o %S',
-    \   'errorformat': '%A%f:%l: %m,%-Z%p^,%+C%.%#,%-G%.%#'
-    \}
-
-    let g:quickrun_config['python/watchdogs_checker'] = {
-    \   'type' : 'watchdogs_checker/' . (executable('flake8') ? 'flake8' : 'pyflakes')
-    \}
-
-    let [s:pyfl_cmd, s:pyfl_opt] = executable('pyflakes3') ? ['pyflakes3', '']
-                               \ : executable('python3')   ? ['python3', '-m pyflakes']
-                               \ : executable('pyflakes')  ? ['pyflakes', '']
-                                                         \ : ['python', '-m pyflakes']
-    let g:quickrun_config['watchdogs_checker/pyflakes'] = {
-    \   'command'     : s:pyfl_cmd,
-    \   'cmdopt'      : s:pyfl_opt,
-    \   'exec'        : '%c %o %s:p',
-    \   'errorformat' : '%f:%l:%m'
-    \}
 '''
-
-[[plugins]]
-repo = 'cohama/vim-hier'
 
 [[plugins]]
 repo = 'dannyob/quickfixstatus'
@@ -290,7 +304,7 @@ repo = 'mattn/vim-lexiv'
 [[plugins]]
 repo = 'oka-h/yozakura.vim'
 hook_add = '''
-    augroup yozakura
+    augroup vimrc_yozakura
         autocmd VimEnter * colorscheme yozakura
     augroup END
 '''
@@ -328,19 +342,19 @@ on_cmd = 'AnzuUpdateSearchStatus'
 on_map = '<Plug>(anzu-'
 hook_add = '''
     if exists('##CmdlineLeave')
-        augroup echo_anzu_post_search
+        augroup vimrc_echo_anzu_post_search
             autocmd!
             autocmd CmdlineLeave [/\?] call s:set_echo_anzu_flag()
         augroup END
 
         function! s:set_echo_anzu_flag() abort
-            augroup echo_anzu_flag
+            augroup vimrc_echo_anzu_flag
                 autocmd!
                 autocmd CursorMoved * if v:hlsearch
                                   \ |     AnzuUpdateSearchStatus
                                   \ |     echo anzu#search_status()
                                   \ | endif
-                                  \ | autocmd! echo_anzu_flag
+                                  \ | autocmd! vimrc_echo_anzu_flag
             augroup END
         endfunction
     endif
@@ -376,14 +390,14 @@ hook_add = '''
     let s:event = exists('##TerminalOpen') ? 'TerminalOpen'
               \ : exists('##TermOpen')     ? 'TermOpen'
                                          \ : ''
-    if s:event != ''
-        augroup remove_incsearch_vim_augroup
-            autocmd!
+    augroup vimrc_remove_incsearch_vim_augroup
+        autocmd!
+        if s:event != ''
             execute 'autocmd' s:event '* augroup incsearch-auto-nohlsearch'
                                     \ '|     autocmd!'
                                     \ '| augroup END'
-        augroup END
-    endif
+        endif
+    augroup END
 '''
 
 [[plugins]]
@@ -408,14 +422,14 @@ hook_add = '''
     let s:event = exists('##TerminalOpen') ? 'TerminalOpen'
               \ : exists('##TermOpen')     ? 'TermOpen'
                                          \ : ''
-    if s:event != ''
-        augroup remove_is_vim_augroup
-            autocmd!
+    augroup vimrc_remove_is_vim_augroup
+        autocmd!
+        if s:event != ''
             execute 'autocmd' s:event '* augroup plugin-is-auto-nohlsearch-internal'
                                     \ '|     autocmd!'
                                     \ '| augroup END'
-        augroup END
-    endif
+        endif
+    augroup END
 '''
 
 [[plugins]]
@@ -444,7 +458,7 @@ hook_add = '''
         endif
     endfunction
 
-    augroup remove_vim_over_cmd
+    augroup vimrc_remove_vim_over_cmd
         autocmd!
         autocmd User OverCmdLineEnter if s:is_vim_over_replaced
                                   \ |     call histdel(':', 'OverCommandLine')
@@ -467,12 +481,13 @@ hook_add = '''
 [[plugins]]
 repo = 'oka-h/re-window.vim'
 if = 'g:Version_check(800)'
+on_map = '<Plug>(rewindow-'
 hook_add = '''
     NXmap <Space>w [rewindow]
     NXnoremap [rewindow] <Nop>
 
     for s:d in split('hjklHJKL', '\w\zs')
-        execute 'NXmap [rewindow]' . s:d . ' <Plug>(rewindow-reopen-' . s:d . ')'
+        execute 'NXmap [rewindow]' . s:d '<Plug>(rewindow-reopen-' . s:d . ')'
     endfor
 
     NXmap <C-W>o     <Plug>(rewindow-only)
@@ -541,6 +556,7 @@ hook_source = '''
 [[plugins]]
 repo = 'haya14busa/vim-edgemotion'
 if = 'g:Version_check(704, 313)'
+on_map = '<Plug>(edgemotion-'
 hook_add = '''
     NXOmap <Space>j <Plug>(edgemotion-j)
     NXOmap <Space>k <Plug>(edgemotion-k)
@@ -629,6 +645,7 @@ if = 'g:Version_check(704)'
 [[plugins]]
 repo = 'anyakichi/vim-textobj-subword'
 if = 'g:Version_check(704)'
+on_cmd = '<Plug>(textobj-subword-'
 depends = 'vim-textobj-user'
 hook_add = '''
     if g:is_my_layout
@@ -683,21 +700,11 @@ depends = 'vim-textobj-user'
 # ------------------------------------------------------------------------------
 
 [[plugins]]
-repo = 'zchee/deoplete-clang'
-if = "(g:Is_filetype_enabled('c') || g:Is_filetype_enabled('cpp')) && executable('clang')"
-on_ft = ['c', 'cpp', 'cmake']
-depends = 'deoplete.nvim'
-hook_add = '''
-    let g:deoplete#sources#clang#libclang_path = '/usr/lib/llvm-3.8/lib/libclang-3.8.so.1'
-    let g:deoplete#sources#clang#clang_header = '/usr/include/clang'
-'''
-
-[[plugins]]
 repo = 'vim-scripts/Conque-GDB'
 if = "g:Is_filetype_enabled('c') || g:Is_filetype_enabled('cpp')"
 on_ft = ['c', 'cpp']
 hook_add = '''
-    augroup conque_gdb_mapping
+    augroup vimrc_conque_gdb
         autocmd!
         autocmd FileType c,cpp nmap <buffer> <Space>g [gdb]
         autocmd FileType c,cpp nnoremap <buffer> [gdb] <Nop>
@@ -731,7 +738,7 @@ hook_add = '''
     endif
     let g:neocomplete#sources#omni#input_patterns.cs = '.*[^=\);]'
 
-    augroup omnisharp_mapping
+    augroup vimrc_omnisharp
         autocmd!
         if g:is_my_layout
             autocmd FileType cs,csi,csx nmap <buffer> + <Plug>(omnisharp_go_to_definition)
@@ -742,33 +749,11 @@ hook_add = '''
 '''
 
 [[plugins]]
-repo = 'fatih/vim-go'
-if = "g:Is_filetype_enabled('go') && executable('go')"
-on_ft = 'go'
-
-[[plugins]]
-repo = 'zchee/deoplete-go'
-if = "g:Is_filetype_enabled('go') && g:Version_check(800) && has('python3') && executable('go')"
-on_ft = 'go'
-depends = 'deoplete.nvim'
-
-[[plugins]]
 repo = 'mattn/emmet-vim'
 if = "g:Is_filetype_enabled('html')"
 on_ft = ['html', 'css']
 hook_add = '''
     let g:user_emmet_leader_key = '<C-J>'
-'''
-
-[[plugins]]
-repo = 'artur-shaik/vim-javacomplete2'
-if = "g:Is_filetype_enabled('java') && g:Version_check(704) && (has('python') || has('python3')) && executable('java')"
-on_ft = 'java'
-hook_add = '''
-    augroup javacomplete2
-        autocmd!
-        autocmd FileType java setlocal omnifunc=javacomplete#Complete
-    augroup END
 '''
 
 [[plugins]]
@@ -790,10 +775,3 @@ hook_add = '''
 repo = 'PProvost/vim-ps1'
 if = "g:is_windows || g:Is_filetype_enabled('ps1')"
 on_ft = 'ps1'
-
-[[plugins]]
-repo = 'zchee/deoplete-jedi'
-if = "g:Is_filetype_enabled('python') && g:Version_check(800) && has('python3')"
-on_ft = 'python'
-on_i = 1
-depends = 'deoplete.nvim'
