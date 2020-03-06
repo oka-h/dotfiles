@@ -210,7 +210,7 @@ hook_add = '''
     augroup END
     function! s:on_lsp_buffer_enabled() abort
         setlocal omnifunc=lsp#complete
-        nnoremap <buffer> <Space>? :<C-U>LspHover<CR>
+        nmap <buffer> <Space>? <Plug>(lsp-hover)
         if g:is_my_layout
             nmap <buffer> + <Plug>(lsp-definition)
         else
