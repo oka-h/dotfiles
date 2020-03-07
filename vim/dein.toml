@@ -231,7 +231,6 @@ if = "g:Version_check(800)"
 repo = 'mattn/vim-lsp-settings'
 if = "g:Version_check(800)"
 depends = 'vim-lsp'
-merged = 0
 
 [[plugins]]
 repo = 'thinca/vim-quickrun'
