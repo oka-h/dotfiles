@@ -644,7 +644,7 @@ if = 'g:Version_check(704)'
 [[plugins]]
 repo = 'anyakichi/vim-textobj-subword'
 if = 'g:Version_check(704)'
-on_cmd = '<Plug>(textobj-subword-'
+on_map = '<Plug>(textobj-subword-'
 depends = 'vim-textobj-user'
 hook_add = '''
     if g:is_my_layout
