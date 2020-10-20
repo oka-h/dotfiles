@@ -601,6 +601,19 @@ hook_add = '''
 # ------------------------------------------------------------------------------
 
 [[plugins]]
+repo = 'kana/vim-operator-user'
+if = 'g:Version_check(702)'
+
+[[plugins]]
+repo = 'kana/vim-operator-replace'
+if = 'g:Version_check(702)'
+on_map = '<Plug>(operator-replace)'
+depends = 'vim-operator-user'
+hook_add = '''
+    xmap p <Plug>(operator-replace)
+'''
+
+[[plugins]]
 repo = 'tpope/vim-repeat'
 
 [[plugins]]

@@ -156,6 +156,7 @@ endfunction
 filetype plugin indent on
 set autoread
 set backspace=indent,eol,start
+set clipboard=unnamedplus
 set completeopt-=preview
 set history=10000
 set helplang=ja
@@ -254,10 +255,6 @@ else
 endif
 
 NXOnoremap m y
-
-NXnoremap <Space>m "+y
-NXnoremap <Space>p "+p
-NXnoremap <Space>P "+P
 
 NXnoremap <Space>c "_c
 NXnoremap <Space>C "_C
