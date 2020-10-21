@@ -562,10 +562,12 @@ hook_add = '''
 
 [[plugins]]
 repo = 'fuenor/jpmoveword.vim'
+on_map = ['<Plug>EolMove_', '<Plug>JpMove_', '<Plug>JpTextObjct']
 hook_add = '''
     let g:jpmoveword_enable_WBE = 0
-    let g:moveword_enable_wbe   = 0
+    let g:moveword_enable_wbe = 0
     let g:jpmoveword_separator = '，．、。（）'
+
     nmap <silent> w <Plug>EolMove_w
     nmap <silent> e <Plug>EolMove_b
     nmap <silent> b <Plug>EolMove_e
@@ -586,9 +588,11 @@ hook_add = '''
 
 [[plugins]]
 repo = 'deton/jasentence.vim'
+on_map = '<Plug>JaSentenceTextObj'
 hook_add = '''
     let g:jasentence_endpat = '[。．？！]\+'
     let g:jasentence_no_default_key_mappings = 1
+
     omap <silent> as <Plug>JaSentenceTextObjA
     omap <silent> is <Plug>JaSentenceTextObjI
     xmap <silent> as <Plug>JaSentenceTextObjVA
@@ -619,9 +623,12 @@ repo = 'tpope/vim-repeat'
 [[plugins]]
 repo = 'tpope/vim-surround'
 if = 'g:Version_check(700)'
+on_map = ['<Plug>Dsurround', '<Plug>Csurround', '<Plug>CSurround', '<Plug>Ysurround',
+    '<Plug>YSurround', '<Plug>Yssurround', '<Plug>YSsurround', '<Plug>VSurround', '<Plug>VgSurround']
 hook_add = '''
     let g:surround_no_mappings = 1
     let g:surround_no_insert_mappings = 1
+
     nmap ds  <Plug>Dsurround
     nmap cs  <Plug>Csurround
     nmap cS  <Plug>CSurround
@@ -637,9 +644,11 @@ hook_add = '''
 [[plugins]]
 repo = 'tomtom/tcomment_vim'
 if = 'g:Version_check(702, 407)'
+on_map = '<Plug>TComment_'
 hook_add = '''
     let g:tcomment#mode_extra = 'B'
     let g:tcomment_maps = 0
+
     NXmap <Space>o <Plug>TComment_gc
     nmap <Space>oo <Plug>TComment_gcc
 '''
