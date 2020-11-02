@@ -156,7 +156,7 @@ endfunction
 filetype plugin indent on
 set autoread
 set backspace=indent,eol,start
-set clipboard=unnamedplus
+set clipboard=unnamed,unnamedplus
 set completeopt-=preview
 set history=10000
 set helplang=ja
