@@ -24,93 +24,24 @@ if = "g:Version_check(702) && !(g:is_windows && has('kaoriya')) && has('reltime'
 build = 'make'
 
 [[plugins]]
-repo = 'Shougo/unite.vim'
-if = "!(g:Version_check(800) && has('python3'))"
-depends = 'neomru.vim'
-on_cmd = ['Unite', 'UniteBookmarkAdd', 'UniteClose', 'UniteDo', 'UniteFirst', 'UniteLast',
-    'UniteNext', 'UnitePrevious', 'UniteResume', 'UniteWithBufferDir', 'UniteWithCurrentDir',
-    'UniteWithCursorWord', 'UniteWithInput', 'UniteWithInputDirectory', 'UniteWithProjectDir']
+repo = 'ctrlpvim/ctrlp.vim'
 hook_add = '''
-    nnoremap <silent> <C-P> :<C-U>Unite file_mru<CR>
-    nnoremap <silent> <C-N> :<C-U>UniteWithBufferDir file_rec<CR>
-    augroup vimrc_unite
-        autocmd!
-        autocmd FileType unite imap <buffer> <C-O> <Plug>(unite_insert_leave)
-        autocmd FileType unite nnoremap <buffer> <expr> s unite#do_action('split')
-        autocmd FileType unite nnoremap <buffer> <expr> v unite#do_action('vsplit')
-    augroup END
-'''
+    nnoremap <silent> <C-P> :<C-U>CtrlPMRUFiles<CR>
+    nnoremap <C-N> :<C-U>CtrlP<Space>
 
-[[plugins]]
-repo = 'Shougo/denite.nvim'
-if = "g:Version_check(800) && has('python3')"
-depends = 'neomru.vim'
-on_cmd = ['Denite', 'DeniteBufferDir', 'DeniteCursorWord', 'DeniteProjectDir']
-hook_add = '''
-    nnoremap <silent> <C-P> :<C-U>Denite file_mru<CR>
-    nnoremap <silent> <C-N> :<C-U>DeniteBufferDir file/rec<CR>
-
-    augroup vimrc_denite
-        autocmd!
-        autocmd FileType denite nnoremap <silent> <buffer> <expr> <CR> denite#do_map('do_action')
-        autocmd FileType denite nnoremap <silent> <buffer> <expr> s denite#do_map('do_action', 'split')
-        autocmd FileType denite nnoremap <silent> <buffer> <expr> v denite#do_map('do_action', 'vsplit')
-        autocmd FileType denite nnoremap <silent> <buffer> <expr> t denite#do_map('do_action', 'tabopen')
-        autocmd FileType denite nnoremap <silent> <buffer> <expr> i denite#do_map('open_filter_buffer')
-        autocmd FileType denite nnoremap <silent> <buffer> <expr> <C-O> denite#do_map('quit')
-        autocmd FileType denite-filter nmap <buffer> <C-O> <Plug>(denite_filter_update)
-        autocmd FileType denite-filter imap <buffer> <C-O> <Plug>(denite_filter_update)
-    augroup END
-
-    command! -nargs=? -complete=file_in_path DeniteFind call s:denite_with_path('file/rec', <f-args>)
-    command! -nargs=? -complete=file_in_path DeniteGrep call s:denite_with_path('grep', <f-args>)
-    function! s:denite_with_path(source, ...) abort
-        let l:command = 'Denite ' . a:source
-        if a:0
-            let l:path = fnamemodify(expand(a:1), ':p')
-            if g:is_windows
-                let l:path = substitute(l:path, '\\', '\\\\', 'g')
-            endif
-            let l:command .= ' -path=' . l:path
-        endif
-        execute l:command
-endfunction
-'''
-hook_post_source = '''
-    call denite#custom#option('_', {
-    \   'smartcase' : v:true,
-    \   'max_dynamic_update_candidates' : 100000
-    \})
-    call denite#custom#source('_', 'matchers', ['matcher_regexp'])
+    let g:ctrlp_map = '<Nop>'
+    let g:ctrlp_regexp = 1
+    let g:ctrlp_match_window = 'bottom,order:btt,min:1,max:10,results:50'
+    let g:ctrlp_max_files = 200000
+    let g:ctrlp_lazy_update = 1
+    let g:ctrlp_brief_prompt = 1
 
     if executable('rg')
-        call denite#custom#var('grep', 'command', ['rg'])
-        call denite#custom#var('grep', 'default_opts', ['-i', '--vimgrep', '--no-heading'])
-        call denite#custom#var('grep', 'recursive_opts', [])
-        call denite#custom#var('grep', 'pattern_opt', ['--regexp'])
-        call denite#custom#var('grep', 'separator', ['--'])
-        call denite#custom#var('grep', 'final_opts', [])
+        let g:ctrlp_user_command = 'rg %s --files --color=never --glob ""'
     elseif executable('ag')
-        call denite#custom#var('grep', 'command', ['ag'])
-        call denite#custom#var('grep', 'default_opts', ['-i', '--vimgrep'])
-        call denite#custom#var('grep', 'recursive_opts', [])
-        call denite#custom#var('grep', 'pattern_opt', [])
-        call denite#custom#var('grep', 'separator', ['--'])
-        call denite#custom#var('grep', 'final_opts', [])
+        let g:ctrlp_user_command = 'ag %s --nocolor --nogroup -g ""'
     endif
 '''
-
-[[plugins]]
-repo = 'Shougo/neomru.vim'
-on_source = ['unite.vim', 'denite.nvim']
-
-[[plugins]]
-repo = 'roxma/nvim-yarp'
-if = "g:Version_check(800, 'v') && has('python3')"
-
-[[plugins]]
-repo = 'roxma/vim-hug-neovim-rpc'
-if = "g:Version_check(800, 'v') && has('python3')"
 
 [[plugins]]
 repo = 'Shougo/neocomplete.vim'
