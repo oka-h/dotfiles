@@ -229,6 +229,9 @@ hook_add = '''
 '''
 
 [[plugins]]
+repo = 'will133/vim-dirdiff'
+
+[[plugins]]
 repo = 'mattn/vim-lexiv'
 
 [[plugins]]
