@@ -29,7 +29,7 @@ hook_add = '''
     nnoremap <silent> <C-P> :<C-U>CtrlPMRUFiles<CR>
     nnoremap <C-N> :<C-U>CtrlP<Space>
 
-    let g:ctrlp_map = '<Nop>'
+    let g:ctrlp_map = ''
     let g:ctrlp_regexp = 1
     let g:ctrlp_match_window = 'bottom,order:btt,min:1,max:10,results:50'
     let g:ctrlp_max_files = 200000
