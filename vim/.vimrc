@@ -500,14 +500,14 @@ set statusline=%!g:My_status_line()
 
 function! g:My_status_line() abort
     let l:delimiter = g:is_windows ? '\' : '/'
-    let l:pwd = ' [%{' . (g:is_windows ? "getcwd() == fnamemodify('/', ':p') ? getcwd() : " : "")
+    let l:pwd = ' [%{' . (g:is_windows ? "getcwd() == fnamemodify('/', ':p') ? getcwd() : " : '')
                 \ . "(getcwd() == $HOME) ? '~" . l:delimiter . "': '"
                 \ . l:delimiter . "' . fnamemodify(getcwd(), ':~:t')}] "
     let l:file = '%<%F%m%r%h%w%= '
 
-    let l:format   = "%{&fileformat   == '' ? '' : '| ' . &fileformat   . ' '}"
-    let l:encoding = "%{&fileencoding == '' ? '' : '| ' . &fileencoding . ' '}"
-    let l:filetype = "%{&filetype     == '' ? '' : '| ' . &filetype     . ' '}"
+    let l:format   = "%{empty(&fileformat)   ? '' : '| ' . &fileformat   . ' '}"
+    let l:encoding = "%{empty(&fileencoding) ? '' : '| ' . &fileencoding . ' '}"
+    let l:filetype = "%{empty(&filetype)     ? '' : '| ' . &filetype     . ' '}"
 
     let l:col = '| %3v'
     let l:line = ":%{printf('%' . len(line('$')) . 'd', line('.'))} "
@@ -644,7 +644,7 @@ function! s:redir_output(bang, ...) abort
     silent execute join(a:000)
     redir END
 
-    if a:bang == ''
+    if empty(a:bang)
         let l:win_id = win_getid()
         if winheight(l:win_id) * 5 >= winwidth(l:win_id) * 2
             let l:ex_cmd = 'split'
@@ -708,7 +708,7 @@ if executable('/usr/bin/python3')
     let g:python3_host_prog = '/usr/bin/python3'
 endif
 
-if exists(':terminal') == 2 && has('clientserver') && v:servername == ''
+if exists(':terminal') == 2 && has('clientserver') && empty(v:servername)
     call remote_startserver('vim-server' . getpid())
 endif
 
@@ -717,7 +717,7 @@ nnoremap <silent> <C-G> :<C-U>call <SID>display_file_info()<CR>
 
 function! s:display_file_info() abort
     let l:filename =  expand('%:p:~')
-    if l:filename == ''
+    if empty(l:filename)
         let l:filename = '[No Name]'
     endif
 
@@ -745,8 +745,8 @@ augroup vimrc_session
 
     let s:load_session_file = filereadable(s:session_file) ? s:session_file
                           \ : filereadable(s:temp_session_file) ? s:temp_session_file : ''
-     if !empty(s:load_session_file)
-        autocmd VimEnter * nested if @% == '' && s:get_buf_byte() == 0
+    if !empty(s:load_session_file)
+        autocmd VimEnter * nested if empty(@%) && s:get_buf_byte() == 0
                               \ |     silent execute 'source' s:load_session_file
                               \ |     call delete(s:load_session_file)
                               \ | endif
