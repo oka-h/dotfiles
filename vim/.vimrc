@@ -26,7 +26,7 @@ let s:vimrc_local_post = expand('~/.vimrc_local')
 let s:xdg_cache_home = empty($XDG_CACHE_HOME) ? expand('~/.cache')
                                             \ : $XDG_CACHE_HOME
 
-function! g:Version_check(...) abort
+function! Satisfy_version(...) abort
     if a:0 == 0
         return 1
     endif
@@ -86,18 +86,23 @@ let s:dein_dir = g:plugins_dir . expand('/repos/github.com/Shougo/dein.vim')
 let g:dotfiles_vim_dir = fnamemodify(s:vimrc, ':h')
 let s:toml = g:dotfiles_vim_dir . expand('/dein.toml')
 
-if !isdirectory(g:plugins_dir . expand('/repos/github.com/vim-ja/vimdoc-ja'))
-    let g:dein#install_process_timeout = 300
-endif
-
 function! s:install_dein() abort
     execute '!git clone https://github.com/Shougo/dein.vim' s:dein_dir
-    if !g:Version_check(800)
+
+    if !Satisfy_version(802)
         let l:cwd = getcwd()
         execute 'cd' s:dein_dir
-        execute '!git checkout 1.5'
+
+        if !Satisfy_version(800)
+            let l:branch = '1.5'
+        else
+            let l:branch = '2.2'
+        endif
+
+        execute '!git checkout' l:branch
         execute 'cd' l:cwd
     endif
+
     if isdirectory(s:dein_dir)
         call s:load_dein()
         delcommand DeinInstall
@@ -123,16 +128,20 @@ function! s:load_dein() abort
         call dein#save_state()
     endif
 
+    call dein#disable(g:disable_plugins)
+
+    if Satisfy_version(802)
+        call dein#disable(dein#util#_get_plugins(0)->filter({-> !v:val->get('if', 1)->eval()})->map({-> v:val.repo->matchstr('^[^/]\+/\zs[^/]\+$')}))
+    endif
+
     call dein#call_hook('source')
 
     if dein#check_install()
         call dein#install()
     endif
-
-    call dein#disable(g:disable_plugins)
 endfunction
 
-if g:Version_check(704)
+if Satisfy_version(704)
     if isdirectory(s:dein_dir)
         call s:load_dein()
     else
@@ -199,7 +208,7 @@ augroup vimrc_format_options
     autocmd BufEnter * setlocal formatoptions+=M
                               \ formatoptions-=r
                               \ formatoptions-=o
-    if g:Version_check(704, 541)
+    if Satisfy_version(704, 541)
         autocmd BufEnter * setlocal formatoptions+=j
     endif
 augroup END
