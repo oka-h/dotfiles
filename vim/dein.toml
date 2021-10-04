@@ -584,8 +584,8 @@ hook_add = '''
     let g:tcomment#mode_extra = 'B'
     let g:tcomment_maps = 0
 
-    NXmap <Space>o <Plug>TComment_gc
-    nmap <Space>oo <Plug>TComment_gcc
+    NXmap <silent> <Space>o <Plug>TComment_gc
+    nmap <silent> <Space>oo <Plug>TComment_gcc
 '''
 
 
