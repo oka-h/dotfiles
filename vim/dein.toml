@@ -45,6 +45,19 @@ hook_add = '''
 '''
 
 [[plugins]]
+repo = 'oka-h/ctrlp-grep.vim'
+depends = 'ctrlp.vim'
+hook_add = '''
+    if executable('rg')
+        let g:ctrlpgrep_cmd = 'rg'
+    elseif executable('ag')
+        let g:ctrlpgrep_cmd = 'ag'
+    endif
+
+    let g:ctrlpgrep_highlight_enable = 1
+'''
+
+[[plugins]]
 repo = 'Shougo/neocomplete.vim'
 if = "!Satisfy_version(800) && Satisfy_version(704, 885) && has('lua')"
 on_i = 1
