@@ -772,10 +772,10 @@ command! PauseVim call s:pause_vim()
 
 function! s:pause_vim() abort
     if !empty(execute('ls +'))
-        let l:autowriteall = &autowriteall
-        set noautowriteall
-        qall
-        let &autowriteall = l:autowriteall
+        echohl WarningMsg
+        echomsg 'There are unsaved buffers.'
+        echohl None
+        sbmodified
         return
     endif
 
