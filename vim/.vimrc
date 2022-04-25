@@ -175,6 +175,7 @@ set spelllang&
 set spelllang+=cjk
 set splitbelow
 set splitright
+set switchbuf=usetab
 set tags=./tags;,./.tags;
 set whichwrap=h,l,<,>,[,]
 set wildmenu
@@ -767,12 +768,29 @@ augroup vimrc_session
     endif
 augroup END
 
-command! PauseVim execute 'mksession' s:session_file
-              \ | try
-              \ |     qall
-              \ | finally
-              \ |     call delete(s:session_file)
-              \ | endtry
+command! PauseVim call s:pause_vim()
+
+function! s:pause_vim() abort
+    if !empty(execute('ls +'))
+        let l:autowriteall = &autowriteall
+        set noautowriteall
+        qall
+        let &autowriteall = l:autowriteall
+        return
+    endif
+
+    if exists('?getbufinfo')
+        execute 'bdelete' getbufinfo()->filter({-> !v:val['loaded']})->map({-> v:val['bufnr']})->join()
+    endif
+
+    execute 'mksession' s:session_file
+
+    try
+        qall
+    finally
+        call delete(s:session_file)
+    endtry
+endfunction
 
 
 " ------------------------------------------------------------------------------
