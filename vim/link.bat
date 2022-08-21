@@ -1,7 +1,7 @@
 @echo off
 whoami /priv | find "SeDebugPrivilege" > nul
 if errorlevel 1 (
-    powershell -Command Start-Process \"%~f0\" -verb runas
+    powershell -NoProfile -Command Start-Process \"%~f0\" -verb runas
     exit
 )
 
