@@ -102,7 +102,9 @@ hook_add = '''
 repo = 'lambdalisue/suda.vim'
 if = "executable('sudo')"
 hook_post_source = '''
-    delcommand SudaRead
+    if exists(':SudaRead') == 2
+        delcommand SudaRead
+    endif
 '''
 
 [[plugins]]
@@ -297,7 +299,7 @@ repo = 'oka-h/stare-tab.vim'
 repo = 'Yggdroot/indentLine'
 hook_source = '''
     let g:indentLine_fileTypeExclude = ['help', 'tex', 'text']
-    let g:indentLine_bufNameExclude  = ['term://.//*']
+    let g:indentLine_bufNameExclude = ['term://.//*']
     let g:indentLine_color_term = 236
     let g:indentLine_char = '|'
 '''
@@ -373,14 +375,6 @@ on_map = ['<Plug>Dsurround', '<Plug>Csurround', '<Plug>CSurround', '<Plug>Ysurro
     '<Plug>YSurround', '<Plug>Yssurround', '<Plug>YSsurround', '<Plug>VSurround', '<Plug>VgSurround']
 hook_add = '''
     let g:surround_no_mappings = 1
-    let g:surround_no_insert_mappings = 1
-
-    nmap ds  <Plug>Dsurround
-    nmap cs  <Plug>Csurround
-    let g:surround_no_insert_mappings = 1
-
-    nmap ds  <Plug>Dsurround
-    nmap cs  <Plug>Csurround
     let g:surround_no_insert_mappings = 1
 
     nmap ds  <Plug>Dsurround
@@ -500,11 +494,28 @@ hook_add = '''
 [[plugins]]
 repo = 'PProvost/vim-ps1'
 if = "g:is_windows || g:Is_filetype_enabled('ps1')"
-on_ft = 'ps1'
 
 [[plugins]]
 repo = 'bps/vim-textobj-python'
 if = "g:Is_filetype_enabled('python')"
 depends = 'vim-textobj-user'
 on_ft = 'python'
+
+[[plugins]]
+repo = 'inkarkat/vim-SyntaxRange'
+if = "g:Satisfy_vim_version(700) || has('nvim')"
+on_path = '.toml'
+hook_add = '''
+    augroup vimrc_syntax_range
+        autocmd!
+        autocmd BufWinEnter *.toml call s:syntax_range_toml()
+    augroup END
+
+    function! s:syntax_range_toml() abort
+        let l:hooks = ['add', 'done_update', 'post_source', 'post_update', 'source']
+        let l:start = '^\s*hook_\%('. join(l:hooks, '\|') . '\)\s*=\s*\zs%s$'
+        call SyntaxRange#Include(printf(l:start, repeat("'", 3)), repeat("'", 3), 'vim', 'Constant')
+        call SyntaxRange#Include(printf(l:start, repeat('"', 3)), repeat('"', 3), 'vim', 'Constant')
+    endfunction
+'''
 # }}}

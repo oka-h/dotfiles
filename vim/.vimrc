@@ -12,7 +12,7 @@ endif
 set fileencodings=usc-bom,utf-8,iso-2022-jp-3,euc-jp,cp932
 
 let s:vimrc = resolve(expand('<sfile>:p'))
-let s:vimrc_local_pre  = expand(printf('~/%svimrc_local_pre', g:is_windows ? '_' : '.'))
+let s:vimrc_local_pre = expand(printf('~/%svimrc_local_pre', g:is_windows ? '_' : '.'))
 let s:vimrc_local_post = expand(printf('~/%svimrc_local', g:is_windows ? '_' : '.'))
 
 let s:xdg_cache_home = empty($XDG_CACHE_HOME) ? expand('~/.cache') : $XDG_CACHE_HOME
@@ -131,12 +131,11 @@ function! s:get_useful_plugins(plugins) abort
 
     for l:plugin in a:plugins
         let l:plugin_dict[matchstr(l:plugin['repo'], '/\zs[^/]\+$')] = { 'plugin' : l:plugin }
-    endfo
+    endfor
 
     for l:disable_plugin_name in g:disable_plugins
         let l:plugin_dict[l:disable_plugin_name]['useful'] = 0
     endfor
-    let g:d = l:plugin_dict
 
     return map(filter(keys(l:plugin_dict), 's:is_plugin_useful(v:val, l:plugin_dict)'), "l:plugin_dict[v:val]['plugin']")
 endfunction
@@ -602,7 +601,7 @@ function! s:visual_star_search(key) abort
     let l:count = v:count1
 
     let l:register = '"'
-    let l:save_reg_str  = getreg(l:register, 1, 1)
+    let l:save_reg_str = getreg(l:register, 1, 1)
     let l:save_reg_type = getregtype(l:register)
     execute 'normal! gv"' . l:register . 'y'
     let l:search_word = getreg(l:register)
