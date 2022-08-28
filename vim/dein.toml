@@ -56,6 +56,7 @@ hook_add = '''
 
 [[plugins]]
 repo = 'oka-h/ctrlp-grep.vim'
+if = "g:Satisfy_vim_version(800, 1630) || has('nvim')"
 depends = 'ctrlp.vim'
 on_cmd = 'CtrlPGrep'
 hook_add = '''
