@@ -24,6 +24,7 @@ repo = 'oka-h/load-indent.vim'
 [[plugins]]
 repo = 'thinca/vim-ambicmd'
 if = "g:Satisfy_vim_version(703) || has('nvim')"
+on_func = 'ambicmd#expand'
 hook_add = '''
     cnoremap <expr> <Space> ambicmd#expand('<Space>')
 '''
@@ -72,6 +73,7 @@ hook_add = '''
 [[plugins]]
 repo = 'osyo-manga/vim-over'
 if = 'g:Satisfy_vim_version(703)'
+on_cmd = 'OverCommandLine'
 hook_add = '''
     cnoremap <expr> / <SID>replace_vim_over('/')
 
@@ -102,6 +104,7 @@ hook_add = '''
 [[plugins]]
 repo = 'lambdalisue/suda.vim'
 if = "executable('sudo')"
+on_cmd = 'SudaWrite'
 hook_post_source = '''
     if exists(':SudaRead') == 2
         delcommand SudaRead
@@ -128,12 +131,12 @@ hook_add = '''
     \   'alc' : {
     \       'url' : 'https://eow.alc.co.jp/search?q=%s',
     \       'line' : 81
-    \    },
-    \    'weblio' : {
+    \   },
+    \   'weblio' : {
     \       'url' : 'https://ejje.weblio.jp/content/%s',
     \       'filter' : funcref('s:remove_wasted_blank_lines'),
     \       'line' : 20
-    \    }
+    \   }
     \}
 
     function! g:ref_source_webdict_sites.alc.filter(content) abort
@@ -160,6 +163,7 @@ if = "executable('curl') || executable('wget')"
 
 [[plugins]]
 repo = 'mbbill/undotree'
+on_cmd = ['UndotreeToggle', 'UndotreeHide', 'UndotreeShow', 'UndotreeFocus']
 hook_add = '''
    let g:undotree_WindowLayout = 3
    let g:undotree_HelpLine = 0
@@ -167,16 +171,18 @@ hook_add = '''
 
 [[plugins]]
 repo = 'will133/vim-dirdiff'
+on_cmd = ['DirDiff', 'DirDiffOpen', 'DirDiffNext', 'DirDiffPrev', 'DirDiffUpdate', 'DirDiffQuit']
 
 [[plugins]]
 repo = 'oka-h/re-window.vim'
 if = "g:Satisfy_vim_version(800) || has('nvim')"
+on_map = '<Plug>(rewindow-'
 hook_add = '''
     NXmap <Space>w [rewindow]
     NXnoremap [rewindow] <Nop>
 
     for s:key in ['h', 'j', 'k', 'l', 'H', 'J', 'K', 'L']
-        execute 'NXmap [rewindow]' . s:key '<Plug>(rewindow-reopen-' . s:key . ')'
+        execute printf('NXmap [rewindow]%s <Plug>(rewindow-reopen-%s)', s:key, s:key)
     endfor
 
     NXmap <C-W>o     <Plug>(rewindow-only)
@@ -224,9 +230,9 @@ hook_add = '''
     augroup vimrc_asyncomplete_neosnippet
         autocmd!
         autocmd User asyncomplete_setup call asyncomplete#register_source(asyncomplete#sources#neosnippet#get_source_options({
-        \   'name': 'neosnippet',
-        \   'allowlist': ['*'],
-        \   'completor': function('asyncomplete#sources#neosnippet#completor')
+        \   'name' : 'neosnippet',
+        \   'allowlist' : ['*'],
+        \   'completor' : function('asyncomplete#sources#neosnippet#completor')
         \}))
     augroup END
 '''
@@ -234,7 +240,6 @@ hook_add = '''
 [[plugins]]
 repo = 'Shougo/neosnippet.vim'
 if = "g:Satisfy_vim_version(704) || has('nvim')"
-on_i = 1
 hook_add = '''
     imap <C-K> <Plug>(neosnippet_expand_or_jump)
     smap <C-K> <Plug>(neosnippet_expand_or_jump)
@@ -270,6 +275,7 @@ hook_add = '''
     function! s:on_lsp_buffer_enabled() abort
         setlocal omnifunc=lsp#complete
         nmap <buffer> <Space>? <Plug>(lsp-hover)
+
         if g:is_my_layout
             nmap <buffer> + <Plug>(lsp-definition)
         else
@@ -295,6 +301,7 @@ hook_add = '''
 
 [[plugins]]
 repo = 'oka-h/stare-tab.vim'
+on_event = 'TabNew'
 
 [[plugins]]
 repo = 'Yggdroot/indentLine'
@@ -304,13 +311,32 @@ hook_source = '''
     let g:indentLine_color_term = 236
     let g:indentLine_char = '|'
 '''
+
+[[plugins]]
+repo = 'inkarkat/vim-SyntaxRange'
+if = "g:Satisfy_vim_version(700) || has('nvim')"
+on_func = ['SyntaxRange#Include', 'SyntaxRange#IncludeEx', 'SyntaxRange#SyntaxIgnore', 'SyntaxRange#SyntaxInclude']
+hook_add = '''
+    augroup vimrc_syntax_range
+        autocmd!
+        autocmd BufWinEnter *.toml call s:syntax_range_toml()
+    augroup END
+
+    let s:hooks = ['add', 'done_update', 'post_source', 'post_update', 'source']
+    let s:start = '^\s*hook_\%(' . join(s:hooks, '\|') . '\)\s*=\s*\zs%s$'
+
+    function! s:syntax_range_toml() abort
+        call SyntaxRange#Include(printf(s:start, repeat("'", 3)), repeat("'", 3), 'vim', 'Constant')
+        call SyntaxRange#Include(printf(s:start, repeat('"', 3)), repeat('"', 3), 'vim', 'Constant')
+    endfunction
+'''
 # }}}
 
 # {{{ Motion plugins
 [[plugins]]
 repo = 'haya14busa/vim-edgemotion'
 if = "g:Satisfy_vim_version(704, 313) || has('nvim')"
-on_map = '<Plug>(edgemotion-'
+on_map = { 'nxo' = '<Plug>(edgemotion-' }
 hook_add = '''
     NXOmap <Space>j <Plug>(edgemotion-j)
     NXOmap <Space>k <Plug>(edgemotion-k)
@@ -318,7 +344,11 @@ hook_add = '''
 
 [[plugins]]
 repo = 'fuenor/jpmoveword.vim'
-on_map = ['<Plug>EolMove_', '<Plug>JpMove_', '<Plug>JpTextObjct']
+on_map = {
+    'n'   = '<Plug>EolMove_',
+    'nxo' = '<Plug>JpMove_',
+    'xo'  = '<Plug>JpTextObjct'
+}
 hook_add = '''
     let g:jpmoveword_enable_WBE = 0
     let g:moveword_enable_wbe = 0
@@ -328,24 +358,24 @@ hook_add = '''
     nmap <silent> e <Plug>EolMove_b
     nmap <silent> b <Plug>EolMove_e
     nmap <silent> W <Plug>JpMove_nW
-    omap <silent> W <Plug>JpMove_oW
     xmap <silent> W <Plug>JpMove_xW
+    omap <silent> W <Plug>JpMove_oW
     nmap <silent> E <Plug>JpMove_nB
-    omap <silent> E <Plug>JpMove_oB
     xmap <silent> E <Plug>JpMove_xB
+    omap <silent> E <Plug>JpMove_oB
     nmap <silent> B <Plug>JpMove_nE
-    omap <silent> B <Plug>JpMove_oE
     xmap <silent> B <Plug>JpMove_xE
-    omap <silent> iW <Plug>JpTextObjctIon
+    omap <silent> B <Plug>JpMove_oE
     xmap <silent> iW <Plug>JpTextObjctIxn
-    omap <silent> aW <Plug>JpTextObjctAon
+    omap <silent> iW <Plug>JpTextObjctIon
     xmap <silent> aW <Plug>JpTextObjctAxn
+    omap <silent> aW <Plug>JpTextObjctAon
 '''
 
 [[plugins]]
 repo = 'deton/jasentence.vim'
 if = "!has('kaoriya')"
-on_map = '<Plug>JaSentenceTextObj'
+on_map = { 'xo' = '<Plug>JaSentenceTextObj' }
 hook_add = '''
     let g:jasentence_endpat = '[。！．？]\+'
     let g:jasentence_no_default_key_mappings = 1
@@ -365,15 +395,18 @@ if = "g:Satisfy_vim_version(702) || has('nvim')"
 [[plugins]]
 repo = 'kana/vim-operator-replace'
 depends = 'vim-operator-user'
-on_map = '<Plug>(operator-replace)'
+on_map = { 'x' = '<Plug>(operator-replace)' }
 hook_add = '''
     xmap p <Plug>(operator-replace)
 '''
 
 [[plugins]]
 repo = 'tpope/vim-surround'
-on_map = ['<Plug>Dsurround', '<Plug>Csurround', '<Plug>CSurround', '<Plug>Ysurround',
-    '<Plug>YSurround', '<Plug>Yssurround', '<Plug>YSsurround', '<Plug>VSurround', '<Plug>VgSurround']
+on_map = {
+    'n' = ['<Plug>Dsurround', '<Plug>Csurround', '<Plug>CSurround',
+        '<Plug>Ysurround', '<Plug>YSurround', '<Plug>Yssurround', '<Plug>YSsurround']
+    'x' = ['<Plug>VSurround', '<Plug>VgSurround']
+}
 hook_add = '''
     let g:surround_no_mappings = 1
     let g:surround_no_insert_mappings = 1
@@ -414,6 +447,7 @@ on_i = 1
 
 [[plugins]]
 repo = 'h1mesuke/vim-alignta'
+on_cmd = ['Alignta', 'Align']
 hook_add = '''
     nnoremap <silent> <Space>a :<C-U>set operatorfunc=<SID>alignta<CR>g@
     xnoremap <Space>a :Alignta<Space>
@@ -432,7 +466,7 @@ if = "g:Satisfy_vim_version(704) || has('nvim')"
 [[plugins]]
 repo = 'anyakichi/vim-textobj-subword'
 depends = 'vim-textobj-user'
-on_map = '<Plug>(textobj-subword-'
+on_map = { 'nxo' = '<Plug>(textobj-subword-' }
 hook_add = '''
     if g:is_my_layout
         NXOmap - <Plug>(textobj-subword-n)
@@ -495,28 +529,11 @@ hook_add = '''
 [[plugins]]
 repo = 'PProvost/vim-ps1'
 if = "g:is_windows || g:Is_filetype_enabled('ps1')"
+on_path = '.ps1'
 
 [[plugins]]
 repo = 'bps/vim-textobj-python'
 if = "g:Is_filetype_enabled('python')"
 depends = 'vim-textobj-user'
 on_ft = 'python'
-
-[[plugins]]
-repo = 'inkarkat/vim-SyntaxRange'
-if = "g:Satisfy_vim_version(700) || has('nvim')"
-on_path = '.toml'
-hook_add = '''
-    augroup vimrc_syntax_range
-        autocmd!
-        autocmd BufWinEnter *.toml call s:syntax_range_toml()
-    augroup END
-
-    function! s:syntax_range_toml() abort
-        let l:hooks = ['add', 'done_update', 'post_source', 'post_update', 'source']
-        let l:start = '^\s*hook_\%('. join(l:hooks, '\|') . '\)\s*=\s*\zs%s$'
-        call SyntaxRange#Include(printf(l:start, repeat("'", 3)), repeat("'", 3), 'vim', 'Constant')
-        call SyntaxRange#Include(printf(l:start, repeat('"', 3)), repeat('"', 3), 'vim', 'Constant')
-    endfunction
-'''
 # }}}

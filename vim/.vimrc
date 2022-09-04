@@ -185,6 +185,8 @@ endfunction
 
 " {{{ Set options
 filetype plugin indent on
+syntax enable
+
 set autoread
 set backspace=indent,eol,start
 set completeopt-=preview
@@ -230,7 +232,7 @@ else
     set t_vb=
 endif
 
-augroup vimrc_format_options
+augroup vimrc_formatoptions
     autocmd!
     autocmd BufEnter * setlocal formatoptions-=r
                               \ formatoptions-=o
@@ -239,6 +241,12 @@ augroup vimrc_format_options
     if g:Satisfy_vim_version(704, 541) || has('nvim')
         autocmd BufEnter * setlocal formatoptions+=j
     endif
+augroup END
+
+augroup vimrc_cursorline
+    autocmd!
+    autocmd WinEnter * set cursorline
+    autocmd WinLeave * set nocursorline
 augroup END
 
 let s:dict = expand('/usr/share/dict/words')
@@ -250,7 +258,7 @@ endif
 set textwidth=0
 
 if has('win32unix')
-    augroup vimrc_textwidth_for_vimscript_on_cygwin
+    augroup vimrc_textwidth_for_cygwin
         autocmd!
         autocmd FileType vim set textwidth=0
     augroup END
@@ -281,18 +289,13 @@ NXOnoremap ; :
 NXOnoremap : ;
 NXnoremap q; q:
 
-NXOnoremap j gj
-NXOnoremap gj j
-NXOnoremap k gk
-NXOnoremap gk k
-
 XOnoremap e b
 XOnoremap b e
 
 if !g:Is_plugin_enable('jpmoveword.vim')
     nnoremap e b
-    nnoremap E B
-    NXOnoremap b e
+    nnoremap b e
+    NXOnoremap E B
     NXOnoremap B E
 endif
 
@@ -336,48 +339,31 @@ endif
 
 NXnoremap + <C-]>
 
-nnoremap <silent> <Space>h :<C-U>call <SID>go_to_line_head('n')<CR>
-xnoremap <silent> <Space>h :<C-U>call <SID>go_to_line_head('x')<CR>
+nnoremap <silent> <Space>h :<C-U>call <SID>go_to_line_edge('n', ['g^', '^', '0'])<CR>
+xnoremap <silent> <Space>h :<C-U>call <SID>go_to_line_head('x', ['g^', '^', '0'])<CR>
 onoremap          <Space>h ^
-nnoremap <silent> <Space>l :<C-U>call <SID>go_to_line_tail('n')<CR>
-xnoremap <silent> <Space>l :<C-U>call <SID>go_to_line_tail('x')<CR>
+nnoremap <silent> <Space>l :<C-U>call <SID>go_to_line_edge('n', ['g$', '$'])<CR>
+xnoremap <silent> <Space>l :<C-U>call <SID>go_to_line_tail('x', ['g$', '$'])<CR>
 onoremap          <Space>l $
 
-function! s:go_to_line_head(mode) abort
+function! s:go_to_line_edge(mode, keys) abort
+    let l:initial_col = col('.')
+
     if a:mode == 'x'
         normal! gv
     endif
 
-    let l:bef_col = col('.')
-    normal! g^
-    let l:aft_col = col('.')
+    for l:key in a:keys
+        execute 'normal!' l:key
 
-    if l:bef_col == l:aft_col
-        normal! ^
-        let l:aft_col = col('.')
-
-        if l:bef_col == l:aft_col
-            normal! 0
+        if col('.') != l:initial_col
+            return
         endif
-    endif
-endfunction
-
-function! s:go_to_line_tail(mode) abort
-    if a:mode == 'x'
-        normal! gv
-    endif
-
-    let l:bef_col = col('.')
-    normal! g$
-    let l:aft_col = col('.')
-
-    if l:bef_col == l:aft_col
-        normal! $
-    endif
+    endfor
 endfunction
 
 for s:i in range(10)
-    execute 'nnoremap <silent> <Space>' . s:i . ' :<C-U>call <SID>go_to_tab(' . s:i . ')<CR>'
+    execute printf('nnoremap <silent> <Space>%s :<C-U>call <SID>go_to_tab(%s)<CR>', s:i, s:i)
 endfor
 
 function! s:go_to_tab(num) abort
@@ -439,19 +425,17 @@ function! g:Define_launching_terminal_key_mappings(shell, prefix_keys, shown_cmd
         return
     endif
 
-    let l:spaced_shell = empty(a:shell) ? '' : (' ' . a:shell)
-
     if has('nvim')
-        let l:post_keys = l:spaced_shell . '<CR><C-\><C-N>i'
+        let l:post_keys = a:shell . '<CR><C-\><C-N>i'
     else
-        let l:post_keys = ' ++close' . l:spaced_shell . '<CR>'
+        let l:post_keys = printf('++close%s<CR>', empty(a:shell) ? '' : (' ' . a:shell))
     endif
 
     execute 'nmap' a:prefix_keys a:shown_cmd
     execute 'nnoremap' a:shown_cmd '<Nop>'
 
-    for [l:key, l:commands] in items(s:term_cmd)
-        execute 'nnoremap <silent>' a:shown_cmd . l:key ':<C-U>' . l:commands . l:post_keys
+    for [l:key, l:command] in items(s:term_cmd)
+        execute printf('nnoremap <silent> %s%s :<C-U>%s %s', a:shown_cmd, l:key, l:command, l:post_keys)
     endfor
 
     if a:0
@@ -459,9 +443,9 @@ function! g:Define_launching_terminal_key_mappings(shell, prefix_keys, shown_cmd
         execute 'nmap' a:shown_cmd . 'c' l:cd_shown_cmd
         execute 'nnoremap' l:cd_shown_cmd '<Nop>'
 
-        for [l:key, l:commands] in items(s:term_cmd)
-            execute 'nnoremap <silent> <expr>' l:cd_shown_cmd . l:key "':<C-U>" . l:commands . l:post_keys
-                        \ . "cd ' . expand('%:p:h') . '<CR><C-L>'"
+        for [l:key, l:command] in items(s:term_cmd)
+            execute printf("nnoremap <silent> <expr> %s%s ':<C-U>%s%scd ' . expand('%%:p:h') . '<CR><C-L>'",
+            \   l:cd_shown_cmd, l:key, l:command, l:post_keys)
         endfor
     endif
 endfunction
@@ -522,6 +506,7 @@ set relativenumber
 set scrolloff=3
 set showcmd
 set showmode
+set t_Co=256
 
 set statusline=%!g:My_status_line()
 
@@ -532,9 +517,9 @@ function! g:My_status_line() abort
                 \ . l:delimiter . "' . fnamemodify(getcwd(), ':~:t')}] "
     let l:file = '%<%F%m%r%h%w%= '
 
-    let l:format   = "%{empty(&fileformat)   ? '' : '| ' . &fileformat   . ' '}"
+    let l:format   = "%{empty(&fileformat) ? '' : '| ' . &fileformat . ' '}"
     let l:encoding = "%{empty(&fileencoding) ? '' : '| ' . &fileencoding . ' '}"
-    let l:filetype = "%{empty(&filetype)     ? '' : '| ' . &filetype     . ' '}"
+    let l:filetype = "%{empty(&filetype) ? '' : '| ' . &filetype . ' '}"
 
     let l:col = '| %3v'
     let l:line = ":%{printf('%' . len(line('$')) . 'd', line('.'))} "
@@ -542,35 +527,9 @@ function! g:My_status_line() abort
 
     return l:pwd . l:file . l:format . l:encoding . l:filetype . l:col . l:line . l:lastline
 endfunction
-" }}}
-
-" {{{ Color settings
-set t_Co=256
-
-augroup vimrc_cursor_line_nr
-    autocmd!
-    autocmd VimEnter,ColorScheme * highlight CursorLineNr cterm=bold ctermfg=173 gui=bold guifg=#D7875F
-augroup END
-
-if has('syntax')
-    function! s:set_two_byte_space_highlight() abort
-        highlight two_byte_space cterm=underline ctermfg=red gui=underline guifg=red
-    endfunction
-
-    augroup vimrc_two_byte_space
-        autocmd!
-        autocmd ColorScheme * call <SID>set_two_byte_space_highlight()
-        autocmd VimEnter,WinEnter * match two_byte_space /　/
-        autocmd VimEnter,WinEnter * match two_byte_space '\%u3000'
-    augroup END
-
-    call s:set_two_byte_space_highlight()
-endif
-
-syntax enable
 
 if !g:Is_plugin_enable('yozakura.vim')
-    colorscheme torte
+    colorscheme desert
 endif
 " }}}
 
@@ -696,8 +655,8 @@ command! PauseVim call s:pause_vim()
 
 function! s:pause_vim() abort
     if !empty(execute('ls +'))
-        echohl WarningMsg
-        echomsg 'There are unsaved buffers.'
+        echohl ErrorMsg
+        echomsg '最後の変更が保存されていません'
         echohl None
         sbmodified
         return
@@ -760,9 +719,9 @@ augroup vimrc_filetypes
     autocmd BufRead,BufNewFile *.toml inoremap <buffer> <expr> <CR> <SID>expand_cr()
 
     let s:bracket = {
-    \   '{': '}',
-    \   '[': ']',
-    \   '(': ')'
+    \   '{' : '}',
+    \   '[' : ']',
+    \   '(' : ')'
     \}
 
     function! s:expand_cr() abort
