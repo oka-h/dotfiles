@@ -447,7 +447,6 @@ on_i = 1
 
 [[plugins]]
 repo = 'h1mesuke/vim-alignta'
-on_cmd = ['Alignta', 'Align']
 hook_add = '''
     nnoremap <silent> <Space>a :<C-U>set operatorfunc=<SID>alignta<CR>g@
     xnoremap <Space>a :Alignta<Space>
