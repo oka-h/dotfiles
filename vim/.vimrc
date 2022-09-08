@@ -340,10 +340,10 @@ endif
 NXnoremap + <C-]>
 
 nnoremap <silent> <Space>h :<C-U>call <SID>go_to_line_edge('n', ['g^', '^', '0'])<CR>
-xnoremap <silent> <Space>h :<C-U>call <SID>go_to_line_head('x', ['g^', '^', '0'])<CR>
+xnoremap <silent> <Space>h :<C-U>call <SID>go_to_line_edge('x', ['g^', '^', '0'])<CR>
 onoremap          <Space>h ^
 nnoremap <silent> <Space>l :<C-U>call <SID>go_to_line_edge('n', ['g$', '$'])<CR>
-xnoremap <silent> <Space>l :<C-U>call <SID>go_to_line_tail('x', ['g$', '$'])<CR>
+xnoremap <silent> <Space>l :<C-U>call <SID>go_to_line_edge('x', ['g$', '$'])<CR>
 onoremap          <Space>l $
 
 function! s:go_to_line_edge(mode, keys) abort
