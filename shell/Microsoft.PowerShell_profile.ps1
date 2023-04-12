@@ -54,5 +54,11 @@ elseif (Get-Command vim 2>${NULL}) {
 # Chocolatey profile
 $ChocolateyProfile = "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
 if (Test-Path($ChocolateyProfile)) {
-  Import-Module "$ChocolateyProfile"
+    Import-Module "$ChocolateyProfile"
+}
+
+# Chocolatey profile
+$LocalProfile = "$(Split-Path -Path $PROFILE)\Microsoft.PowerShell_profile_local.ps1"
+if (Test-Path($LocalProfile)) {
+    . $LocalProfile
 }
