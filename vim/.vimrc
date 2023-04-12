@@ -611,6 +611,25 @@ function! s:redir_output(bang, ...) abort
 
     execute l:ex_cmd l:temp_file_name
 endfunction
+
+command! -nargs=1 -complete=file Rename call s:rename_file(<f-args>)
+
+function! s:rename_file(file_name) abort
+    let l:old_path = expand('%:p')
+    let l:separator = g:is_windows ? '\' : '/'
+
+    if stridx(a:file_name, l:separator) >= 0
+        let l:new_path = a:file_name
+    else
+        let l:new_path = expand('%:h') . l:separator . a:file_name
+    endif
+
+    execute 'saveas' l:new_path
+
+    if filereadable(l:new_path)
+        call delete(l:old_path)
+    endif
+endfunction
 " }}}
 
 " {{{ Other settings
