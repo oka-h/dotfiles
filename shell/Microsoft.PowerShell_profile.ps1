@@ -57,7 +57,6 @@ if (Test-Path($ChocolateyProfile)) {
     Import-Module "$ChocolateyProfile"
 }
 
-# Chocolatey profile
 $LocalProfile = "$(Split-Path -Path $PROFILE)\Microsoft.PowerShell_profile_local.ps1"
 if (Test-Path($LocalProfile)) {
     . $LocalProfile
