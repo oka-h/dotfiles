@@ -2,9 +2,27 @@ Set-PSReadlineOption -BellStyle None
 Set-PSReadlineOption -EditMode Vi
 
 function prompt {
+    $TempPreference = $ErrorActionPreference
+    $ErrorActionPreference = "SilentlyContinue"
+
+    if (Get-Command git) {
+        $Branches = git branch
+    }
+
+    $ErrorActionPreference = $TempPreference
+
     Write-Host
-    Write-Host -NoNewLine -ForegroundColor "Green" "$env:USERNAME@$env:COMPUTERNAME"
-    Write-Host " $(Get-Location)"
+    Write-Host -NoNewLine -ForegroundColor "Green" "$Env:USERNAME@$Env:COMPUTERNAME"
+    Write-Host -NoNewLine " $(Get-Location)"
+
+    if ($Branches -ne $null) {
+        Write-Host -NoNewLine " ["
+        Write-Host -NoNewLine -ForegroundColor "Cyan" $(($Branches | Select-String "^\*").ToString().Trim() -replace '^\* *', '')
+        Write-Host -NoNewLine "]"
+    }
+
+    Write-Host
+
     if (([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).`
         IsInRole([Security.Principal.WindowsBuiltInRole]"Administrator")) {
         return "# "
@@ -24,7 +42,7 @@ Set-PSReadlineKeyHandler -Chord Ctrl+k -ScriptBlock {
     [Microsoft.PowerShell.PSConsoleReadLine]::InvokePrompt()
 }
 
-if (Get-Alias ls 2>${NULL}) {
+if (Get-Alias ls 2>$null) {
     Remove-Item alias:ls
 }
 
@@ -44,15 +62,18 @@ Set-Alias l ls
 Set-Alias ll Get-ChildItem
 Set-Alias lla lal
 
-if (Get-Command gvim 2>${NULL}) {
+if (Get-Command gvim 2>$null) {
     Set-Alias e gvim
 }
-elseif (Get-Command vim 2>${NULL}) {
+elseif (Get-Command vim 2>$null) {
     Set-Alias e vim
 }
 
-# Chocolatey profile
-$ChocolateyProfile = "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
+if (Get-Command git) {
+    chcp 65001
+}
+
+$ChocolateyProfile = "$Env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
 if (Test-Path($ChocolateyProfile)) {
     Import-Module "$ChocolateyProfile"
 }
