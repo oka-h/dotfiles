@@ -525,6 +525,15 @@ hook_add = '''
     augroup END
 '''
 
+
+[[plugins]]
+repo = 'skanehira/preview-markdown.vim'
+if = "executable('glow')"
+hook_add = '''
+    let g:preview_markdown_parser = 'glow'
+    let g:preview_markdown_auto_update = 1
+'''
+
 [[plugins]]
 repo = 'PProvost/vim-ps1'
 if = "g:is_windows || g:Is_filetype_enabled('ps1')"
