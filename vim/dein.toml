@@ -525,10 +525,19 @@ hook_add = '''
     augroup END
 '''
 
+[[plugins]]
+repo = 'previm/previm'
+depends = 'open-browser.vim'
+on_ft = 'markdown'
+
+[[plugins]]
+repo = 'tyru/open-browser.vim'
+on_ft = 'markdown'
 
 [[plugins]]
 repo = 'skanehira/preview-markdown.vim'
 if = "executable('glow')"
+on_ft = 'markdown'
 hook_add = '''
     let g:preview_markdown_parser = 'glow'
     let g:preview_markdown_auto_update = 1
