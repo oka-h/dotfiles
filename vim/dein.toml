@@ -176,7 +176,6 @@ on_cmd = ['DirDiff', 'DirDiffOpen', 'DirDiffNext', 'DirDiffPrev', 'DirDiffUpdate
 [[plugins]]
 repo = 'oka-h/re-window.vim'
 if = "g:Satisfy_vim_version(800) || has('nvim')"
-on_map = '<Plug>(rewindow-'
 hook_add = '''
     NXmap <Space>w [rewindow]
     NXnoremap [rewindow] <Nop>
