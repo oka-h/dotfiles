@@ -62,6 +62,14 @@ Set-Alias l ls
 Set-Alias ll Get-ChildItem
 Set-Alias lla lal
 
+if (Get-Alias diff 2>$null) {
+    Remove-Item -Force alias:diff
+}
+
+function global:diff {
+    cmd /c fc /n $args
+}
+
 if (Get-Command gvim 2>$null) {
     Set-Alias e gvim
 }

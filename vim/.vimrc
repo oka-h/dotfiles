@@ -339,6 +339,25 @@ endif
 
 NXnoremap + <C-]>
 
+NXnoremap <expr> j <SID>move_jk_or_gjgk('j', 0)
+NXnoremap <expr> k <SID>move_jk_or_gjgk('k', 0)
+NXnoremap <expr> gj <SID>move_jk_or_gjgk('j', 1)
+NXnoremap <expr> gk <SID>move_jk_or_gjgk('k', 1)
+
+let s:is_swapped = 1
+
+function! s:move_jk_or_gjgk(key, has_g) abort
+    if mode() ==# 'V'
+        return (a:has_g ? 'g' : '') . a:key
+    endif
+
+    if a:has_g
+        let s:is_swapped = !s:is_swapped
+    endif
+
+    return (s:is_swapped ? 'g' : '') . a:key
+endfunction
+
 nnoremap <silent> <Space>h :<C-U>call <SID>go_to_line_edge('n', ['g^', '^', '0'])<CR>
 xnoremap <silent> <Space>h :<C-U>call <SID>go_to_line_edge('x', ['g^', '^', '0'])<CR>
 onoremap          <Space>h ^
@@ -444,7 +463,7 @@ function! g:Define_launching_terminal_key_mappings(shell, prefix_keys, shown_cmd
         execute 'nnoremap' l:cd_shown_cmd '<Nop>'
 
         for [l:key, l:command] in items(s:term_cmd)
-            execute printf("nnoremap <silent> <expr> %s%s ':<C-U>%s%scd ' . expand('%%:p:h') . '<CR><C-L>'",
+            execute printf("nnoremap <silent> <expr> %s%s ':<C-U>%s %scd ' . expand('%%:p:h') . '<CR>'",
             \   l:cd_shown_cmd, l:key, l:command, l:post_keys)
         endfor
     endif
