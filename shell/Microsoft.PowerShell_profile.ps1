@@ -78,7 +78,7 @@ elseif (Get-Command vim 2>$null) {
 }
 
 if (Get-Command git) {
-    chcp 65001
+    [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 }
 
 $ChocolateyProfile = "$Env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
