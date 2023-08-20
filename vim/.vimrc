@@ -1,8 +1,6 @@
 " {{{ Pre-settings
-let g:is_windows = has('win32') || has('win64')
-
 if has('vim_starting')
-    let s:encoding = (g:is_windows && !has('gui_running')) ? 'cp932' : 'utf-8'
+    let s:encoding = (has('win32') && !has('gui_running')) ? 'cp932' : 'utf-8'
 
     if &encoding !=# s:encoding
         let &encoding = s:encoding
@@ -12,10 +10,10 @@ endif
 set fileencodings=usc-bom,utf-8,iso-2022-jp-3,euc-jp,cp932
 
 let s:vimrc = resolve(expand('<sfile>:p'))
-let s:vimrc_local_pre = expand(printf('~/%svimrc_local_pre', g:is_windows ? '_' : '.'))
-let s:vimrc_local_post = expand(printf('~/%svimrc_local', g:is_windows ? '_' : '.'))
+let s:vimrc_local_pre = expand(printf('~/%svimrc_local_pre', has('win32') ? '_' : '.'))
+let s:vimrc_local_post = expand(printf('~/%svimrc_local', has('win32') ? '_' : '.'))
 
-let s:xdg_cache_home = empty($XDG_CACHE_HOME) ? expand('~/.cache') : $XDG_CACHE_HOME
+let s:cache_home = empty($XDG_CACHE_HOME) ? expand('~/.cache') : $XDG_CACHE_HOME
 
 command! -nargs=1 NXmap      nmap     <args>| xmap     <args>
 command! -nargs=1 NXnoremap  nnoremap <args>| xnoremap <args>
@@ -61,11 +59,11 @@ endif
 " }}}
 
 " {{{ Dein.vim setting
-let g:plugins_dir = s:xdg_cache_home . expand('/dein')
+let g:plugins_dir = s:cache_home . expand('/dein' . (has('nvim') ? '/nvim' : '/vim'))
 let s:dein_dir = g:plugins_dir . expand('/repos/github.com/Shougo/dein.vim')
 let g:dotfiles_vim_dir = fnamemodify(s:vimrc, ':h')
 let s:toml = g:dotfiles_vim_dir . expand('/dein.toml')
-let s:local_toml = expand(printf('~/%sdein_local.toml', g:is_windows ? '_' : '.'))
+let s:local_toml = expand(printf('~/%sdein_local.toml', has('win32') ? '_' : '.'))
 
 function! s:install_dein() abort
     execute '!git clone https://github.com/Shougo/dein.vim' s:dein_dir
@@ -190,12 +188,12 @@ syntax enable
 set autoread
 set backspace=indent,eol,start
 set completeopt-=preview
+set diffopt+=algorithm:patience
 set foldlevelstart=99
 set foldmethod=marker
 set helplang=ja
 set history=10000
-set mouse=
-set noundofile
+set mouse=n
 set spelllang&
 set spelllang+=cjk
 set splitbelow
@@ -206,7 +204,7 @@ set whichwrap=h,l,<,>,[,]
 set wildmenu
 set wildmode=longest:full,full
 
-let s:temp_dir = s:xdg_cache_home . expand('/vim')
+let s:temp_dir = s:cache_home . expand('/temp' . (has('nvim') ? '/nvim' : '/vim'))
 
 if !isdirectory(s:temp_dir)
     call mkdir(s:temp_dir, 'p')
@@ -368,7 +366,7 @@ onoremap          <Space>l $
 function! s:go_to_line_edge(mode, keys) abort
     let l:initial_col = col('.')
 
-    if a:mode == 'x'
+    if a:mode ==? 'x'
         normal! gv
     endif
 
@@ -425,51 +423,67 @@ function! s:jump_next_file(forward) abort
     endfor
 endfunction
 
-let s:term_cmd = {
-\   '<Space>' : 'terminal' . (has('nvim') ? '' : ' ++curwin'),
-\   't'       : (has('nvim') ? 'tabedit <Bar>' : 'tab') . ' terminal',
-\   'r'       : (has('nvim') ? '-tabedit <Bar>' : '-tab') . ' terminal',
-\   'k'       : 'leftabove'           . (has('nvim') ? ' split <Bar>' : '') . ' terminal',
-\   'j'       : 'rightbelow'          . (has('nvim') ? ' split <Bar>' : '') . ' terminal',
-\   'h'       : 'vertical leftabove'  . (has('nvim') ? ' split <Bar>' : '') . ' terminal',
-\   'l'       : 'vertical rightbelow' . (has('nvim') ? ' split <Bar>' : '') . ' terminal',
-\   'K'       : 'topleft'             . (has('nvim') ? ' split <Bar>' : '') . ' terminal',
-\   'J'       : 'botright'            . (has('nvim') ? ' split <Bar>' : '') . ' terminal',
-\   'H'       : 'vertical topleft'    . (has('nvim') ? ' split <Bar>' : '') . ' terminal',
-\   'L'       : 'vertical botright'   . (has('nvim') ? ' split <Bar>' : '') . ' terminal'
-\}
+if exists(':terminal') == 2
+    let s:term_cmd = {
+    \   '<Space>' : 'terminal' . (has('nvim') ? '' : ' ++curwin'),
+    \   't'       : (has('nvim') ? 'tabedit <Bar>' : 'tab') . ' terminal',
+    \   'r'       : (has('nvim') ? '-tabedit <Bar>' : '-tab') . ' terminal',
+    \   'k'       : 'leftabove'           . (has('nvim') ? ' split <Bar>' : '') . ' terminal',
+    \   'j'       : 'rightbelow'          . (has('nvim') ? ' split <Bar>' : '') . ' terminal',
+    \   'h'       : 'vertical leftabove'  . (has('nvim') ? ' split <Bar>' : '') . ' terminal',
+    \   'l'       : 'vertical rightbelow' . (has('nvim') ? ' split <Bar>' : '') . ' terminal',
+    \   'K'       : 'topleft'             . (has('nvim') ? ' split <Bar>' : '') . ' terminal',
+    \   'J'       : 'botright'            . (has('nvim') ? ' split <Bar>' : '') . ' terminal',
+    \   'H'       : 'vertical topleft'    . (has('nvim') ? ' split <Bar>' : '') . ' terminal',
+    \   'L'       : 'vertical botright'   . (has('nvim') ? ' split <Bar>' : '') . ' terminal'
+    \}
 
-function! g:Define_launching_terminal_key_mappings(shell, prefix_keys, shown_cmd, ...) abort
-    if exists(':terminal') != 2
-        return
-    endif
+    function! g:Keymap_launching_shell(shell, prefix_keys, shown_cmd, ...) abort
+        if has('nvim')
+            let l:post_keys = a:shell . '<CR><C-\><C-N>i'
+        else
+            let l:post_keys = printf('++close%s<CR>', empty(a:shell) ? '' : (' ' . a:shell))
+        endif
 
-    if has('nvim')
-        let l:post_keys = a:shell . '<CR><C-\><C-N>i'
-    else
-        let l:post_keys = printf('++close%s<CR>', empty(a:shell) ? '' : (' ' . a:shell))
-    endif
-
-    execute 'nmap' a:prefix_keys a:shown_cmd
-    execute 'nnoremap' a:shown_cmd '<Nop>'
-
-    for [l:key, l:command] in items(s:term_cmd)
-        execute printf('nnoremap <silent> %s%s :<C-U>%s %s', a:shown_cmd, l:key, l:command, l:post_keys)
-    endfor
-
-    if a:0
-        let l:cd_shown_cmd = a:1
-        execute 'nmap' a:shown_cmd . 'c' l:cd_shown_cmd
-        execute 'nnoremap' l:cd_shown_cmd '<Nop>'
+        execute 'nmap' a:prefix_keys a:shown_cmd
+        execute 'nnoremap' a:shown_cmd '<Nop>'
 
         for [l:key, l:command] in items(s:term_cmd)
-            execute printf("nnoremap <silent> <expr> %s%s ':<C-U>%s %scd ' . expand('%%:p:h') . '<CR>'",
-            \   l:cd_shown_cmd, l:key, l:command, l:post_keys)
+            execute printf('nnoremap <silent> %s%s :<C-U>%s %s', a:shown_cmd, l:key, l:command, l:post_keys)
         endfor
-    endif
-endfunction
 
-call g:Define_launching_terminal_key_mappings(g:is_windows ? 'powershell' : '', '<Space>t', '[terminal]', '[cd-term]')
+        if a:0
+            let l:cd_shown_cmd = a:1
+            execute 'nmap' a:shown_cmd . 'c' l:cd_shown_cmd
+            execute 'nnoremap' l:cd_shown_cmd '<Nop>'
+
+            for [l:key, l:command] in items(s:term_cmd)
+                execute printf("nnoremap <silent> <expr> %s%s ':<C-U>%s %scd ' . expand('%%:p:h') . '<CR>'",
+                \   l:cd_shown_cmd, l:key, l:command, l:post_keys)
+            endfor
+        endif
+    endfunction
+
+    if has('win32')
+        call g:Keymap_launching_shell('powershell', '<Space>t', '[terminal]', '[cd-term]')
+        call g:Keymap_launching_shell('cmd', '[terminal]m', '[cmd]', '[cd-cmd]')
+
+        if executable('sudo')
+            call g:Keymap_launching_shell('sudo powershell', '[terminal]s', '[sudo]', '[cd-sudo]')
+            call g:Keymap_launching_shell('sudo cmd', '[cmd]s', '[sudo-cmd]', '[cd-sucmd]')
+
+            if executable('pwsh')
+                call g:Keymap_launching_shell('sudo pwsh', '[pwsh]s', '[sudo-pws]', '[cd-supws]')
+            endif
+        endif
+    else
+        call g:Keymap_launching_shell('', '<Space>t', '[terminal]', '[cd-term]')
+    endif
+
+    if executable('pwsh')
+        call g:Keymap_launching_shell('pwsh', '[terminal]p', '[pwsh]', '[cd-pwsh]')
+    endif
+endif
 
 inoremap <C-L> <C-X><C-L>
 
@@ -530,9 +544,9 @@ set t_Co=256
 set statusline=%!g:My_status_line()
 
 function! g:My_status_line() abort
-    let l:delimiter = g:is_windows ? '\' : '/'
-    let l:pwd = ' [%{' . (g:is_windows ? "getcwd() == fnamemodify('/', ':p') ? getcwd() : " : '')
-                \ . "(getcwd() == $HOME) ? '~" . l:delimiter . "': '"
+    let l:delimiter = has('win32') ? '\' : '/'
+    let l:pwd = ' [%{' . (has('win32') ? "getcwd() ==# fnamemodify('/', ':p') ? getcwd() : " : '')
+                \ . "(getcwd() ==# $HOME) ? '~" . l:delimiter . "': '"
                 \ . l:delimiter . "' . fnamemodify(getcwd(), ':~:t')}] "
     let l:file = '%<%F%m%r%h%w%= '
 
@@ -635,12 +649,11 @@ command! -nargs=1 -complete=file Rename call s:rename_file(<f-args>)
 
 function! s:rename_file(file_name) abort
     let l:old_path = expand('%:p')
-    let l:separator = g:is_windows ? '\' : '/'
 
-    if stridx(a:file_name, l:separator) >= 0
-        let l:new_path = a:file_name
+    if match(a:file_name, '[/\\]') >= 0
+        let l:new_path = expand(a:file_name)
     else
-        let l:new_path = expand('%:h') . l:separator . a:file_name
+        let l:new_path = expand('%:h') . expand('/' . a:file_name)
     endif
 
     execute 'saveas' l:new_path
@@ -656,8 +669,8 @@ if exists(':terminal') == 2 && has('clientserver') && empty(v:servername)
     call remote_startserver('vim-server' . getpid())
 endif
 
-let s:session_file = expand(printf('~/%svimsession', g:is_windows ? '_' : '.'))
-let s:temp_session_file = expand(printf('~/%svimtempsession', g:is_windows ? '_' : '.'))
+let s:session_file = s:cache_home . expand((has('nvim') ? '/nvim' : 'vim') . 'session')
+let s:temp_session_file = s:cache_home . expand((has('nvim') ? '/nvim' : 'vim') . 'tempsession')
 
 augroup vimrc_session
     autocmd!
@@ -773,7 +786,7 @@ augroup vimrc_filetypes
         let l:lhs = l:line[l:col - 2]
         let l:rhs = l:line[l:col - 1]
 
-        if !(has_key(s:bracket, l:lhs) && s:bracket[l:lhs] ==# l:rhs) && l:lhs !=# ','
+        if l:lhs != ',' && (empty(l:rhs) || l:rhs != get(s:bracket, l:lhs, ''))
             return "\<CR>"
         endif
 
@@ -781,7 +794,7 @@ augroup vimrc_filetypes
         let l:left_indent = l:match[1]
         let l:right_indent = l:match[2]
 
-        if l:lhs ==# ','
+        if l:lhs == ','
             let l:right_indent .= empty(l:right_indent) ? "\<Tab>" : ''
             return "\<CR> \<C-U>\\\<Left> \<C-U>" . l:left_indent . "\<Right>" . l:right_indent
         else

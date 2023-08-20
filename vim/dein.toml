@@ -5,6 +5,7 @@ if = "g:Satisfy_vim_version(704) || has('nvim')"
 
 [[plugins]]
 repo = 'vim-jp/vimdoc-ja'
+if = "!has('nvim')"
 timeout = 300
 hook_post_update = '''
     let s:doc_dir = g:plugins_dir . expand('/repos/github.com/vim-jp/vimdoc-ja/doc')
@@ -13,7 +14,7 @@ hook_post_update = '''
 
 [[plugins]]
 repo = 'thinca/vim-singleton'
-if = "has('gui_running')"
+if = "has('clientserver') && has('gui_running')"
 hook_source = '''
     call singleton#enable()
 '''
@@ -93,7 +94,7 @@ hook_add = '''
         let s:is_vim_over_replaced = 1
         let l:cmdline = getcmdline()
 
-        if getcmdtype() ==# ':' && getcmdpos() == len(l:cmdline) + 1 && l:cmdline =~# s:substitute_expr
+        if getcmdtype() == ':' && getcmdpos() == len(l:cmdline) + 1 && l:cmdline =~# s:substitute_expr
             return "\<C-U>OverCommandLine\<CR>" . l:cmdline . a:key
         else
             return a:key
@@ -117,9 +118,25 @@ if = "g:Satisfy_vim_version(702) || has('nvim')"
 depends = 'wwwrenderer-vim'
 on_cmd = 'Ref'
 hook_add = '''
-    let g:ref_source_webdict_cmd = "=wwwrenderer#render('%s')"
     let g:ref_source_webdict_encoding = 'utf-8'
     let g:ref_source_webdict_use_cache = 1
+
+    if has('win32') && has('nvim')
+        let g:ref_source_webdict_cmd = "=g:Wwwrender_with_reset_sxq('%s')"
+
+        function! g:Wwwrender_with_reset_sxq(text) abort
+            if &shellxquote != '"'
+                return wwwrenderer#render(a:text)
+            endif
+
+            set shellxquote=(
+            let l:result = wwwrenderer#render(a:text)
+            set shellxquote=\"
+            return l:result
+        endfunction
+    else
+        let g:ref_source_webdict_cmd = "=wwwrenderer#render('%s')"
+    endif
 
     function! s:remove_wasted_blank_lines(text) abort
         let l:text = substitute(a:text, '^\n\+', '', '')
@@ -206,6 +223,28 @@ hook_source = '''
     call submode#map('winsize', 'n', '', '-', '<C-W>-')
     call submode#map('winsize', 'n', '', '>', '<C-W>>')
     call submode#map('winsize', 'n', '', '<', '<C-W><')
+'''
+
+[[plugins]]
+repo = 'tpope/vim-fugitive'
+if = "(g:Satisfy_vim_version(704) || has('nvim')) && executable('git')"
+hook_add = '''
+    nmap <Space>g [git]
+    nnoremap [git] <Nop>
+    nmap [git]d [git-diff]
+    nnoremap [git-diff] <Nop>
+    nnoremap [git-diff]l :<C-U>Gvdiffsplit<Space>
+    nnoremap [git-diff]j :<C-U>Ghdiffsplit<Space>
+'''
+
+[[plugins]]
+repo = 'junegunn/gv.vim'
+depends = 'vim-fugitive'
+hook_add = '''
+    nmap [git]l [git-log]
+    nnoremap [git-log] <Nop>
+    nnoremap [git-log]l :<C-U>GV<CR>
+    nnoremap [git-log]f :<C-U>GV!<CR>
 '''
 # }}}
 
@@ -509,7 +548,7 @@ repo = 'OmniSharp/omnisharp-vim'
 if = "g:Is_filetype_enabled('cs')"
 on_ft = ['cs', 'csi', 'csx']
 hook_post_update = '''
-    let s:build_cmd = g:is_windows ? 'msbuild' : 'xbuild'
+    let s:build_cmd = has('win32') ? 'msbuild' : 'xbuild'
     let g:dein#plugin.build = s:build_cmd . ' server/OmniSharp.sln'
 '''
 hook_add = '''
@@ -544,7 +583,7 @@ hook_add = '''
 
 [[plugins]]
 repo = 'PProvost/vim-ps1'
-if = "g:is_windows || g:Is_filetype_enabled('ps1')"
+if = "has('win32') || g:Is_filetype_enabled('ps1')"
 on_path = '.ps1'
 
 [[plugins]]

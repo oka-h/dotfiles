@@ -1,7 +1,3 @@
-" ------------------------------------------------------------------------------
-" dotfiles/vim/.gvimrc
-" ------------------------------------------------------------------------------
-
 set cmdheight=1
 set guicursor=a:blinkon0
 set guioptions=
@@ -21,7 +17,7 @@ augroup disable_ime
     autocmd InsertEnter * set iminsert=0
     autocmd CmdwinEnter [:/\?] call feedkeys(":\<ESC>\<C-L>", 'n')
     if exists('##CmdlineEnter')
-        autocmd CmdlineEnter [/\?] if mode() == 'c' && (&imsearch == 2 || (&imsearch == -1 && &iminsert == 2))
+        autocmd CmdlineEnter [/\?] if mode() ==# 'c' && (&imsearch == 2 || (&imsearch == -1 && &iminsert == 2))
                                \ |     call feedkeys("\<C-^>", 'n')
                                \ | end
     endif
