@@ -330,6 +330,9 @@ if !g:Is_plugin_enable('re-window.vim')
     endif
 endif
 
+NXnoremap <expr> n 'Nn'[v:searchforward]
+NXnoremap <expr> N 'nN'[v:searchforward]
+
 if g:is_my_layout
     nnoremap ( *
     nnoremap ) #
@@ -669,8 +672,8 @@ if exists(':terminal') == 2 && has('clientserver') && empty(v:servername)
     call remote_startserver('vim-server' . getpid())
 endif
 
-let s:session_file = s:cache_home . expand((has('nvim') ? '/nvim' : 'vim') . 'session')
-let s:temp_session_file = s:cache_home . expand((has('nvim') ? '/nvim' : 'vim') . 'tempsession')
+let s:session_file = s:cache_home . expand((has('nvim') ? '/nvim' : '/vim') . 'session')
+let s:temp_session_file = s:cache_home . expand((has('nvim') ? '/nvim' : '/vim') . 'tempsession')
 
 augroup vimrc_session
     autocmd!
