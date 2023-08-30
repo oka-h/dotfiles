@@ -1,8 +1,11 @@
 set cmdheight=1
-set guicursor=a:blinkon0
 set guioptions=
 set noimdisable
 set sessionoptions-=options
+
+if !has('nvim')
+    set guicursor=a:blinkon0
+endif
 
 for s:button in ['Left', 'Right', 'Middle']
     for s:i in range(1, 4)
