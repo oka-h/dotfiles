@@ -39,20 +39,49 @@ if = "g:Satisfy_vim_version(704, 2008) || has('nvim')"
 [[plugins]]
 repo = 'ctrlpvim/ctrlp.vim'
 hook_add = '''
-    nnoremap <silent> <C-P> :<C-U>CtrlPMRUFiles<CR>
-    nnoremap <C-N> :<C-U>CtrlP<Space>
-
     let g:ctrlp_map = ''
     let g:ctrlp_regexp = 1
     let g:ctrlp_match_window = 'bottom,order:btt,min:1,max:10,results:50'
     let g:ctrlp_max_files = 200000
     let g:ctrlp_lazy_update = 1
     let g:ctrlp_brief_prompt = 1
+    let g:ctrlp_cache_dir = g:data_dir
 
     if executable('rg')
         let g:ctrlp_user_command = 'rg %s --files --color=never --glob ""'
     elseif executable('ag')
         let g:ctrlp_user_command = 'ag %s --nocolor --nogroup -g ""'
+    endif
+
+    nnoremap <silent> <C-P> :<C-U>CtrlPMRUFiles<CR>
+'''
+hook_post_source = '''
+    if !get(g:, 'loaded_ctrlp_dotfiles', 0)
+        let g:loaded_ctrlp_dotfiles = 1
+
+        command! Dotfiles call ctrlp#init(s:id)
+
+        if !exists('g:ctrlp_ext_vars')
+            let g:ctrlp_ext_vars = []
+        endif
+
+        call add(g:ctrlp_ext_vars, {
+        \   'init' : 'g:Dotfiles_init()',
+        \   'accept' : 'ctrlp#acceptfile',
+        \   'lname' : 'dotfiles',
+        \   'sname' : 'dotfiles',
+        \   'type' : 'path'
+        \})
+
+        let s:id = g:ctrlp_builtins + len(g:ctrlp_ext_vars)
+
+        function! g:Dotfiles_init(...) abort
+            let l:dotfiles_dir = fnamemodify(g:dotfiles_vim_dir, ':h')
+            let l:dotfiles = filter(flatten(map(['/*', '/*/*', '/*/.*'],
+            \   'glob(l:dotfiles_dir . v:val, 0, 1)')), 'filereadable(v:val)')
+            let l:dotfiles += [g:vimrc_local_pre, g:vimrc_local_post, g:local_toml]
+            return map(l:dotfiles, "fnamemodify(v:val, ':~')")
+        endfunction
     endif
 '''
 
@@ -171,7 +200,6 @@ hook_add = '''
 
 [[plugins]]
 repo = 'mattn/wwwrenderer-vim'
-if = "executable('curl')"
 depends = 'webapi-vim'
 
 [[plugins]]
@@ -204,7 +232,7 @@ hook_add = '''
     NXmap <C-W>o     <Plug>(rewindow-only)
     NXmap <C-W><C-O> <Plug>(rewindow-only)
 
-    if g:is_my_layout
+    if g:use_own_keyboard
         NXmap <C-W>ay <Plug>(rewindow-tabclose)
     else
         NXmap <C-W>aq <Plug>(rewindow-tabclose)
@@ -228,24 +256,10 @@ hook_source = '''
 [[plugins]]
 repo = 'tpope/vim-fugitive'
 if = "(g:Satisfy_vim_version(704) || has('nvim')) && executable('git')"
-hook_add = '''
-    nmap <Space>g [git]
-    nnoremap [git] <Nop>
-    nmap [git]d [git-diff]
-    nnoremap [git-diff] <Nop>
-    nnoremap [git-diff]l :<C-U>Gvdiffsplit<Space>
-    nnoremap [git-diff]j :<C-U>Ghdiffsplit<Space>
-'''
 
 [[plugins]]
 repo = 'junegunn/gv.vim'
 depends = 'vim-fugitive'
-hook_add = '''
-    nmap [git]l [git-log]
-    nnoremap [git-log] <Nop>
-    nnoremap [git-log]l :<C-U>GV<CR>
-    nnoremap [git-log]f :<C-U>GV!<CR>
-'''
 # }}}
 
 # {{{ Complete plugins
@@ -279,6 +293,8 @@ hook_add = '''
 repo = 'Shougo/neosnippet.vim'
 if = "g:Satisfy_vim_version(704) || has('nvim')"
 hook_add = '''
+    let g:neosnippet#data_directory = g:data_dir . expand('/neosnippet')
+
     imap <C-K> <Plug>(neosnippet_expand_or_jump)
     smap <C-K> <Plug>(neosnippet_expand_or_jump)
 
@@ -314,7 +330,7 @@ hook_add = '''
         setlocal omnifunc=lsp#complete
         nmap <buffer> <Space>? <Plug>(lsp-hover)
 
-        if g:is_my_layout
+        if g:use_own_keyboard
             nmap <buffer> + <Plug>(lsp-definition)
         else
             nmap <buffer> <C-]> <Plug>(lsp-definition)
@@ -505,7 +521,7 @@ repo = 'anyakichi/vim-textobj-subword'
 depends = 'vim-textobj-user'
 on_map = { 'nxo' = '<Plug>(textobj-subword-' }
 hook_add = '''
-    if g:is_my_layout
+    if g:use_own_keyboard
         NXOmap - <Plug>(textobj-subword-n)
         NXOmap _ <Plug>(textobj-subword-p)
         XOmap a- <Plug>(textobj-subword-a)
@@ -555,7 +571,7 @@ hook_add = '''
     augroup vimrc_omnisharp
         autocmd!
 
-        if g:is_my_layout
+        if g:use_own_keyboard
             autocmd FileType cs,csi,csx nmap <buffer> + <Plug>(omnisharp_go_to_definition)
         else
             autocmd FileType cs,csi,csx nmap <buffer> <C-]> <Plug>(omnisharp_go_to_definition)

@@ -10,10 +10,25 @@ endif
 set fileencodings=usc-bom,utf-8,iso-2022-jp-3,euc-jp,cp932
 
 let s:vimrc = resolve(expand('<sfile>:p'))
-let s:vimrc_local_pre = expand(printf('~/%svimrc_local_pre', has('win32') ? '_' : '.'))
-let s:vimrc_local_post = expand(printf('~/%svimrc_local', has('win32') ? '_' : '.'))
 
-let s:cache_home = empty($XDG_CACHE_HOME) ? expand('~/.cache') : $XDG_CACHE_HOME
+if has('win32')
+    let g:config_dir = expand((empty($LOCALAPPDATA) ? '~\AppData\Local' : $LOCALAPPDATA) . '\vim')
+    let g:data_dir = expand((empty($LOCALAPPDATA) ? '~\AppData\Local' : $LOCALAPPDATA) . '\vim-data')
+else
+    let g:config_dir = expand((empty($XDG_CONFIG_HOME) ? '~/.config' : $XDG_CONFIG_HOME) . '/vim')
+    let g:data_dir = expand((empty($XDG_DATA_HOME) ? '~/.local/share' : $XDG_DATA_HOME) . '/vim')
+endif
+
+let g:data_env_dir = has('nvim') ? stdpath('data') : g:data_dir
+
+for s:dir in [g:config_dir, g:data_dir, g:data_env_dir]
+    if !isdirectory(s:dir)
+        call mkdir(s:dir, 'p')
+    endif
+endfor
+
+let g:vimrc_local_pre = g:config_dir . expand('/vimrc_local_pre.vim')
+let g:vimrc_local_post = g:config_dir . expand('/vimrc_local.vim')
 
 command! -nargs=1 NXmap      nmap     <args>| xmap     <args>
 command! -nargs=1 NXnoremap  nnoremap <args>| xnoremap <args>
@@ -31,13 +46,7 @@ function! g:Satisfy_vim_version(version, ...) abort
         return a:version < v:version
     endif
 
-    for l:patch in a:000
-        if !has('patch' . l:patch)
-            return 0
-        endif
-    endfor
-
-    return 1
+    return empty(filter(copy(a:000), "!has('patch' . v:val)"))
 endfunction
 
 let s:enabled_state_of_filetype = {}
@@ -50,25 +59,24 @@ function! g:Enable_filetype(filetype, ...) abort
     let s:enabled_state_of_filetype[a:filetype] = (a:0 == 0 || a:1)
 endfunction
 
-let g:disable_plugins = []
-let g:is_my_layout = 0
+let g:use_own_keyboard = 1
 
-if filereadable(s:vimrc_local_pre)
-    execute 'source' s:vimrc_local_pre
+if filereadable(g:vimrc_local_pre)
+    execute 'source' g:vimrc_local_pre
 endif
 " }}}
 
 " {{{ Dein.vim setting
-let g:plugins_dir = s:cache_home . expand('/dein' . (has('nvim') ? '/nvim' : '/vim'))
+let g:plugins_dir = g:data_env_dir . expand('/dein')
 let s:dein_dir = g:plugins_dir . expand('/repos/github.com/Shougo/dein.vim')
 let g:dotfiles_vim_dir = fnamemodify(s:vimrc, ':h')
 let s:toml = g:dotfiles_vim_dir . expand('/dein.toml')
-let s:local_toml = expand(printf('~/%sdein_local.toml', has('win32') ? '_' : '.'))
+let g:local_toml = g:config_dir . expand('/dein_local.toml')
 
 function! s:install_dein() abort
     execute '!git clone https://github.com/Shougo/dein.vim' s:dein_dir
 
-    if !(g:Satisfy_vim_version(802) || has('nvim'))
+    if !(g:Satisfy_vim_version(900) || has('nvim'))
         let l:cwd = getcwd()
         execute 'cd' s:dein_dir
 
@@ -94,12 +102,13 @@ function! s:load_dein() abort
     endif
 
     if dein#load_state(g:plugins_dir)
-        let l:vimrcs = [s:vimrc, s:vimrc_local_pre, s:vimrc_local_post, s:toml]
+        let l:vimrcs = [s:vimrc, s:toml]
+        let l:vimrcs += filter([g:vimrc_local_pre, g:vimrc_local_post], 'filereadable(v:val)')
         let l:plugins = get(dein#toml#parse_file(s:toml), 'plugins', [])
 
-        if filereadable(s:local_toml)
-            call add(l:vimrcs, s:local_toml)
-            let l:plugins += get(dein#toml#parse_file(s:local_toml), 'plugins', [])
+        if filereadable(g:local_toml)
+            call add(l:vimrcs, g:local_toml)
+            let l:plugins += get(dein#toml#parse_file(g:local_toml), 'plugins', [])
         endif
 
         call dein#begin(g:plugins_dir, l:vimrcs)
@@ -131,7 +140,7 @@ function! s:get_useful_plugins(plugins) abort
         let l:plugin_dict[matchstr(l:plugin['repo'], '/\zs[^/]\+$')] = { 'plugin' : l:plugin }
     endfor
 
-    for l:disable_plugin_name in g:disable_plugins
+    for l:disable_plugin_name in get(g:, 'disable_plugins', [])
         let l:plugin_dict[l:disable_plugin_name]['useful'] = 0
     endfor
 
@@ -187,6 +196,7 @@ syntax enable
 
 set autoread
 set backspace=indent,eol,start
+set backup
 set completeopt-=preview
 set diffopt+=algorithm:patience
 set foldlevelstart=99
@@ -200,24 +210,25 @@ set splitbelow
 set splitright
 set switchbuf=usetab
 set tags=./tags;,./.tags;
+set undofile
 set whichwrap=h,l,<,>,[,]
 set wildmenu
 set wildmode=longest:full,full
 
-let s:temp_dir = s:cache_home . expand('/temp' . (has('nvim') ? '/nvim' : '/vim'))
+if has('nvim')
+    set backupdir-=.
+else
+    let &backupdir = g:data_env_dir . expand('/backup')
+    let &directory = g:data_env_dir . expand('/swap')
+    let &undodir = g:data_env_dir . expand('/undo')
+    let &viminfofile = g:data_env_dir . expand('/viminfo.txt')
 
-if !isdirectory(s:temp_dir)
-    call mkdir(s:temp_dir, 'p')
+    for s:dir in [&backupdir, &directory, &undodir]
+        if !isdirectory(s:dir)
+            call mkdir(s:dir, 'p')
+        endif
+    endfor
 endif
-
-set backup
-let &backupdir = s:temp_dir
-
-set swapfile
-let &directory = s:temp_dir
-
-set undofile
-let &undodir = s:temp_dir
 
 if exists('+clipboard')
     set clipboard=unnamed,unnamedplus
@@ -277,7 +288,7 @@ endif
 NXOnoremap <Space> <Nop>
 nnoremap <Space><Space> :<C-U>set hlsearch<CR>
 
-if g:is_my_layout
+if g:use_own_keyboard
     NXOmap <BS> <Space>
 else
     NXOnoremap <BS> <Nop>
@@ -314,7 +325,7 @@ NXnoremap <Space>X "_X
 NXnoremap <C-W>t     <C-W>T
 NXnoremap <C-W><C-T> <C-W>T
 
-if g:is_my_layout
+if g:use_own_keyboard
     NXnoremap <C-W>y <C-W>q
     NXnoremap <C-W><C-Y> <C-W>q
     NXnoremap <C-W>Y :<C-U>quit!<CR>
@@ -323,7 +334,7 @@ else
 endif
 
 if !g:Is_plugin_enable('re-window.vim')
-    if g:is_my_layout
+    if g:use_own_keyboard
         NXnoremap <silent> <C-W>ay :<C-U>tabclose<CR>
     else
         NXnoremap <silent> <C-W>aq :<C-U>tabclose<CR>
@@ -333,7 +344,7 @@ endif
 NXnoremap <expr> n 'Nn'[v:searchforward]
 NXnoremap <expr> N 'nN'[v:searchforward]
 
-if g:is_my_layout
+if g:use_own_keyboard
     nnoremap ( *
     nnoremap ) #
 endif
@@ -496,7 +507,7 @@ inoremap <expr> <C-Y> pumvisible() ? '<C-Y><C-Y>' : '<C-Y>'
 cnoremap <C-P> <Up>
 cnoremap <C-N> <Down>
 
-if g:is_my_layout
+if g:use_own_keyboard
     cnoremap <C-T> <C-F>
 endif
 
@@ -584,7 +595,7 @@ augroup vimrc_hlsearch
     autocmd VimEnter * set hlsearch
 augroup END
 
-if g:is_my_layout
+if g:use_own_keyboard
     xnoremap <silent> ( :<C-U>call <SID>visual_star_search('/')<CR>
     xnoremap <silent> ) :<C-U>call <SID>visual_star_search('?')<CR>
 else
@@ -672,8 +683,8 @@ if exists(':terminal') == 2 && has('clientserver') && empty(v:servername)
     call remote_startserver('vim-server' . getpid())
 endif
 
-let s:session_file = s:cache_home . expand((has('nvim') ? '/nvim' : '/vim') . 'session')
-let s:temp_session_file = s:cache_home . expand((has('nvim') ? '/nvim' : '/vim') . 'tempsession')
+let s:session_file = g:data_env_dir . expand('/session.vim')
+let s:temp_session_file = g:data_env_dir . expand('/tempsession.vim')
 
 augroup vimrc_session
     autocmd!
@@ -809,7 +820,7 @@ augroup END
 " }}}
 
 " {{{ Local settings
-if filereadable(s:vimrc_local_post)
-    execute 'source' s:vimrc_local_post
+if filereadable(g:vimrc_local_post)
+    execute 'source' g:vimrc_local_post
 endif
 " }}}

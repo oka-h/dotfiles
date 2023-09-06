@@ -25,7 +25,3 @@ augroup disable_ime
                                \ | end
     endif
 augroup END
-
-if !exists('g:colors_name')
-    colorscheme torte
-endif
