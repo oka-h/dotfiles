@@ -96,12 +96,10 @@ function! s:load_dein() abort
     endif
 
     if dein#load_state(g:plugins_dir)
-        let l:vimrcs = [s:vimrc, s:toml]
-        let l:vimrcs += filter([g:vimrc_local_pre, g:vimrc_local_post], 'filereadable(v:val)')
+        let l:vimrcs = [s:vimrc, g:vimrc_local_pre, g:vimrc_local_post, s:toml, g:local_toml]
         let l:plugins = get(dein#toml#parse_file(s:toml), 'plugins', [])
 
         if filereadable(g:local_toml)
-            call add(l:vimrcs, g:local_toml)
             let l:plugins += get(dein#toml#parse_file(g:local_toml), 'plugins', [])
         endif
 
