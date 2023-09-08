@@ -49,14 +49,8 @@ function! g:Satisfy_vim_version(version, ...) abort
     return empty(filter(copy(a:000), "!has('patch' . v:val)"))
 endfunction
 
-let s:enabled_state_of_filetype = {}
-
 function! g:Is_filetype_enabled(filetype) abort
-    return get(s:enabled_state_of_filetype, 'all') || get(s:enabled_state_of_filetype, a:filetype)
-endfunction
-
-function! g:Enable_filetype(filetype, ...) abort
-    let s:enabled_state_of_filetype[a:filetype] = (a:0 == 0 || a:1)
+    return !empty(filter(get(g:, 'enable_filetypes', []), "v:val ==? 'all' || v:val ==? a:filetype"))
 endfunction
 
 let g:use_own_keyboard = 1
@@ -254,7 +248,7 @@ augroup END
 
 augroup vimrc_cursorline
     autocmd!
-    autocmd WinEnter * set cursorline
+    autocmd BufEnter * set cursorline
     autocmd WinLeave * set nocursorline
 augroup END
 

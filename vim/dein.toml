@@ -77,9 +77,12 @@ hook_post_source = '''
 
         function! g:Dotfiles_init(...) abort
             let l:dotfiles_dir = fnamemodify(g:dotfiles_vim_dir, ':h')
-            let l:dotfiles = filter(flatten(map(['/*', '/*/*', '/*/.*'],
-            \   'glob(l:dotfiles_dir . v:val, 0, 1)')), 'filereadable(v:val)')
-            let l:dotfiles += [g:vimrc_local_pre, g:vimrc_local_post, g:local_toml]
+            let l:dotfiles = [g:vimrc_local_pre, g:vimrc_local_post, g:local_toml]
+
+            for l:tail in ['/*', '/*/*', '/*/.*']
+                let l:dotfiles += filter(glob(l:dotfiles_dir . l:tail, 0, 1), 'filereadable(v:val)')
+            endfor
+
             return map(l:dotfiles, "fnamemodify(v:val, ':~')")
         endfunction
     endif
