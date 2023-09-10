@@ -45,7 +45,7 @@ hook_add = '''
     let g:ctrlp_max_files = 200000
     let g:ctrlp_lazy_update = 1
     let g:ctrlp_brief_prompt = 1
-    let g:ctrlp_cache_dir = g:data_dir
+    let g:ctrlp_cache_dir = g:data_dir . expand('/.ctrlp_cache')
 
     if executable('rg')
         let g:ctrlp_user_command = 'rg %s --files --color=never --glob ""'

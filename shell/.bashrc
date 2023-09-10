@@ -1,8 +1,4 @@
-# ------------------------------------------------------------------------------
-# dotfiles/shell/.bashrc
-# ------------------------------------------------------------------------------
-
-source $(dirname $(readlink ~/.bashrc))/shellrc
+source $(dirname $(readlink ~/.bashrc))/shellrc.sh
 
 export HISTFILE=~/.bash_history
 
@@ -40,4 +36,4 @@ cd-upper() {
 
 bind -x '"\C-k": cd-upper'
 
-[ -f ~/.shellrc_local ] && source ~/.shellrc_local
+[ -f ~/.shellrc_local.sh ] && source ~/.shellrc_local.sh

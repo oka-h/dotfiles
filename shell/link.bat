@@ -2,7 +2,7 @@
 
 whoami /priv | find "SeDebugPrivilege" > nul
 
-if errorlevel 1 (
+if %ERRORLEVEL% == 1 (
     powershell -NoProfile -Command Start-Process \"%~f0\" -verb runas
     exit
 )

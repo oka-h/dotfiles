@@ -1,8 +1,4 @@
-# ------------------------------------------------------------------------------
-# dotfiles/shell/.zshrc
-# ------------------------------------------------------------------------------
-
-source $ZDOTDIR/shellrc
+source $ZDOTDIR/shellrc.sh
 
 autoload -Uz colors
 colors
@@ -60,4 +56,4 @@ zstyle :insert-last-word match '*([[:alpha:]/\\]?|?[[:alpha:]/\\])*'
 zle -N insert-last-word smart-insert-last-word
 bindkey '^t' insert-last-word
 
-[ -f ~/.shellrc_local ] && source ~/.shellrc_local
+[ -f ~/.shellrc_local.sh ] && source ~/.shellrc_local.sh

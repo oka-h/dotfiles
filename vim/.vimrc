@@ -70,14 +70,14 @@ let g:local_toml = g:config_dir . expand('/dein_local.toml')
 function! s:install_dein() abort
     execute '!git clone https://github.com/Shougo/dein.vim' s:dein_dir
 
-    if !(g:Satisfy_vim_version(900) || has('nvim'))
+    if !(g:Satisfy_vim_version(900) || has('nvim-0.8.0'))
         let l:cwd = getcwd()
         execute 'cd' s:dein_dir
 
-        if !g:Satisfy_vim_version(800)
-            let l:branch = '1.5'
-        else
+        if g:Satisfy_vim_version(800) || has('nvim')
             let l:branch = '2.2'
+        else
+            let l:branch = '1.5'
         endif
 
         execute '!git checkout' l:branch
@@ -196,6 +196,10 @@ set foldmethod=marker
 set helplang=ja
 set history=10000
 set mouse=n
+set sessionoptions-=blank
+set sessionoptions-=buffers
+set sessionoptions-=options
+set sessionoptions-=terminal
 set spelllang&
 set spelllang+=cjk
 set splitbelow
@@ -246,7 +250,7 @@ augroup END
 
 augroup vimrc_cursorline
     autocmd!
-    autocmd BufEnter * set cursorline
+    autocmd BufEnter,WinEnter * set cursorline
     autocmd WinLeave * set nocursorline
 augroup END
 
@@ -527,6 +531,22 @@ if exists(':tnoremap') == 2
     endif
 endif
 
+if has('mouse')
+    let s:maps = ['noremap', 'lnoremap']
+
+    if exists(':tnoremap') == 2
+        call add(s:maps, 'tnoremap')
+    endif
+
+    for s:map in s:maps
+        for s:button in ['LeftMouse', 'RightMouse', 'MiddleMouse']
+            for s:index in range(1, 4)
+                execute s:map '<' . (s:index > 1 ? (s:index . '-') : '') . s:button . '> <Nop>'
+            endfor
+        endfor
+    endfor
+endif
+
 " Solve the problem that Delete key does not work.
 if has('unix') && !has('gui_running')
     inoremap  
@@ -719,13 +739,6 @@ function! s:pause_vim() abort
         return
     endif
 
-    if exists('?getbufinfo')
-        try
-            execute 'bdelete' getbufinfo()->filter({-> !v:val['loaded']})->map({-> v:val['bufnr']})->join()
-        catch
-        endtry
-    endif
-
     execute 'mksession' s:session_file
 
     try
@@ -760,7 +773,6 @@ augroup vimrc_filetypes
 
     autocmd FileType *sh setlocal tabstop=2
     autocmd FileType *sh setlocal shiftwidth=2
-    autocmd BufRead,BufNewFile *shellrc* set filetype=sh
 
     autocmd FileType *tex setlocal conceallevel=0
 
