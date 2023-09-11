@@ -532,7 +532,7 @@ if exists(':tnoremap') == 2
 endif
 
 if has('mouse')
-    let s:maps = ['noremap', 'lnoremap']
+    let s:maps = ['noremap', 'noremap!', 'lnoremap']
 
     if exists(':tnoremap') == 2
         call add(s:maps, 'tnoremap')
