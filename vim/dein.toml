@@ -33,6 +33,13 @@ hook_add = '''
 [[plugins]]
 repo = 'romainl/vim-cool'
 if = "g:Satisfy_vim_version(704, 2008) || has('nvim')"
+
+[[plugins]]
+repo = 'pepo-le/win-ime-con.nvim'
+if = "has('win32') && has('nvim') && (has('pythonx') || has('python3') || has('python'))"
+hook_add = '''
+    let g:win_ime_con_mode = 0
+'''
 # }}}
 
 # {{{ Define command plugins
