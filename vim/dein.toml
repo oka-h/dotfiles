@@ -127,7 +127,7 @@ hook_add = '''
                                   \ | endif
     augroup END
 
-    let s:substitute_expr = "^\\s\\?\\(%\\|'<,'>\\)\\?\\s\\?s\\%[ubstitute]\\s\\?$"
+    let s:substitute_expr = '^\s\?\(%\|''<,''>\)\?\s\?s\%[ubstitute]\s\?$'
 
     function! s:replace_vim_over(key) abort
         let s:is_vim_over_replaced = 1
@@ -253,14 +253,10 @@ hook_add = '''
 repo = 'kana/vim-submode'
 if = "g:Satisfy_vim_version(702) || has('nvim')"
 hook_source = '''
-    call submode#enter_with('winsize', 'n', '', '<C-W>+', '<C-W>+')
-    call submode#enter_with('winsize', 'n', '', '<C-W>-', '<C-W>-')
-    call submode#enter_with('winsize', 'n', '', '<C-W>>', '<C-W>>')
-    call submode#enter_with('winsize', 'n', '', '<C-W><', '<C-W><')
-    call submode#map('winsize', 'n', '', '+', '<C-W>+')
-    call submode#map('winsize', 'n', '', '-', '<C-W>-')
-    call submode#map('winsize', 'n', '', '>', '<C-W>>')
-    call submode#map('winsize', 'n', '', '<', '<C-W><')
+    for s:key in ['+', '-', '>', '<']
+        call submode#enter_with('winsize', 'n', '', '<C-W>' . s:key, '<C-W>' . s:key)
+        call submode#map('winsize', 'n', '', s:key, '<C-W>' . s:key)
+    endfor
 '''
 
 [[plugins]]
@@ -370,8 +366,8 @@ on_event = 'TabNew'
 [[plugins]]
 repo = 'Yggdroot/indentLine'
 hook_source = '''
-    let g:indentLine_fileTypeExclude = ['help', 'tex', 'text']
-    let g:indentLine_bufNameExclude = ['term://.//*']
+    let g:indentLine_fileTypeExclude = ['help', 'json', 'tex', 'text']
+    let g:indentLine_bufNameExclude = ['term://*']
     let g:indentLine_color_term = 236
     let g:indentLine_char = '|'
 '''

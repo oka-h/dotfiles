@@ -77,10 +77,6 @@ elseif (Get-Command vim 2>$null) {
     Set-Alias e vim
 }
 
-if (Get-Command git) {
-    [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
-}
-
 $ChocolateyProfile = "$Env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
 if (Test-Path($ChocolateyProfile)) {
     Import-Module "$ChocolateyProfile"
