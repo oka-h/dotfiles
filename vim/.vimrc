@@ -716,10 +716,9 @@ function! s:source_session_file() abort
 
     if filereadable(s:session_file)
         silent execute 'source' s:session_file
-        call delete(s:session_file)
+        call rename(s:session_file, s:temp_session_file)
     elseif filereadable(s:temp_session_file)
         silent execute 'source' s:temp_session_file
-        call delete(s:temp_session_file)
     endif
 endfunction
 
